@@ -25,6 +25,11 @@ function initializeFirebase() {
       projectId,
     });
   }
+  // Use Application Default Credentials (ADC)
+  else if (projectId) {
+    console.log('Using Application Default Credentials for project:', projectId);
+    initializeApp({ projectId });
+  }
   // Inline credentials
   else if (process.env.FIREBASE_PRIVATE_KEY) {
     console.log('Using inline credentials');
