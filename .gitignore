@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# service account keys
+*.json
+!package.json
+!package-lock.json
+!tsconfig*.json
+!seed/questions.json
+!jest.config.js
+
+# compiled scripts
+/dist
