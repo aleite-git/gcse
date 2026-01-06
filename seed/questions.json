@@ -1,0 +1,1130 @@
+[
+  {
+    "stem": "What is the main function of the CPU?",
+    "options": ["To store data permanently", "To process instructions and perform calculations", "To display graphics on screen", "To connect to the internet"],
+    "correctIndex": 1,
+    "explanation": "The CPU (Central Processing Unit) is the brain of the computer that processes instructions from programs and performs calculations.",
+    "topic": "CPU",
+    "difficulty": 1
+  },
+  {
+    "stem": "Which component of the CPU temporarily holds data and instructions during processing?",
+    "options": ["ALU", "Control Unit", "Registers", "Cache"],
+    "correctIndex": 2,
+    "explanation": "Registers are small, fast storage locations within the CPU that temporarily hold data and instructions being processed.",
+    "topic": "CPU",
+    "difficulty": 2
+  },
+  {
+    "stem": "What does the ALU stand for and what is its purpose?",
+    "options": ["Automatic Logic Unit - manages peripherals", "Arithmetic Logic Unit - performs calculations and logical operations", "Advanced Loading Unit - loads programs", "Application Layer Unit - handles applications"],
+    "correctIndex": 1,
+    "explanation": "The ALU (Arithmetic Logic Unit) performs mathematical calculations (add, subtract) and logical operations (AND, OR, NOT) on data.",
+    "topic": "CPU",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the role of the Control Unit in the CPU?",
+    "options": ["Perform arithmetic calculations", "Store permanent data", "Coordinate and control all CPU operations", "Display output to the user"],
+    "correctIndex": 2,
+    "explanation": "The Control Unit coordinates all CPU activities, directing the flow of data between the CPU and other components, and controlling the execution of instructions.",
+    "topic": "CPU",
+    "difficulty": 2
+  },
+  {
+    "stem": "What does clock speed measure?",
+    "options": ["The amount of RAM available", "The number of instruction cycles per second", "The size of the hard drive", "The resolution of the monitor"],
+    "correctIndex": 1,
+    "explanation": "Clock speed, measured in Hertz (Hz), indicates how many instruction cycles the CPU can complete per second. Higher clock speed generally means faster processing.",
+    "topic": "CPU",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the fetch-decode-execute cycle?",
+    "options": ["The process of saving files to disk", "The sequence of steps the CPU follows to process each instruction", "The method of connecting to the internet", "The way graphics are rendered"],
+    "correctIndex": 1,
+    "explanation": "The fetch-decode-execute cycle is the fundamental operation cycle where the CPU fetches an instruction from memory, decodes what action is needed, and executes it.",
+    "topic": "CPU",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is CPU cache used for?",
+    "options": ["Long-term data storage", "Storing frequently accessed data for quick retrieval", "Running the operating system", "Displaying graphics"],
+    "correctIndex": 1,
+    "explanation": "CPU cache is a small amount of high-speed memory located close to or within the CPU that stores frequently used data and instructions for faster access than main RAM.",
+    "topic": "CPU",
+    "difficulty": 2
+  },
+  {
+    "stem": "How does having multiple cores affect CPU performance?",
+    "options": ["It increases storage capacity", "It allows multiple tasks to be processed simultaneously", "It improves internet speed", "It reduces power consumption only"],
+    "correctIndex": 1,
+    "explanation": "Multiple cores allow the CPU to process multiple instructions or threads simultaneously, improving performance especially for multi-threaded applications.",
+    "topic": "CPU",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the Program Counter (PC) register used for?",
+    "options": ["Storing the result of calculations", "Holding the address of the next instruction to be executed", "Counting the number of programs installed", "Measuring CPU temperature"],
+    "correctIndex": 1,
+    "explanation": "The Program Counter holds the memory address of the next instruction to be fetched and executed, ensuring instructions are processed in the correct order.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is pipelining in CPU architecture?",
+    "options": ["A way to cool the CPU", "A technique where multiple instructions are overlapped in execution", "A method of connecting cables", "A type of memory storage"],
+    "correctIndex": 1,
+    "explanation": "Pipelining is a technique where the CPU starts processing a new instruction before completing the previous one, allowing multiple instructions to be in different stages of the fetch-decode-execute cycle simultaneously.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the Memory Address Register (MAR) used for?",
+    "options": ["Storing calculation results", "Holding the address of data to be read or written in memory", "Managing user accounts", "Controlling display output"],
+    "correctIndex": 1,
+    "explanation": "The MAR holds the memory address of data that needs to be read from or written to main memory during the fetch-decode-execute cycle.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the Memory Data Register (MDR) used for?",
+    "options": ["Storing memory addresses", "Temporarily holding data being transferred to or from memory", "Managing disk storage", "Processing graphics"],
+    "correctIndex": 1,
+    "explanation": "The MDR (also called MBR - Memory Buffer Register) temporarily holds data that has just been read from memory or data that is about to be written to memory.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is embedded system?",
+    "options": ["A computer hidden inside a desk", "A dedicated computer system designed for a specific function within a larger system", "A type of virus", "A network configuration"],
+    "correctIndex": 1,
+    "explanation": "An embedded system is a computer system with a dedicated function within a larger mechanical or electronic system, like microcontrollers in washing machines, cars, or medical devices.",
+    "topic": "Embedded",
+    "difficulty": 1
+  },
+  {
+    "stem": "Which of the following is an example of an embedded system?",
+    "options": ["Desktop computer", "Laptop", "Traffic light controller", "Tablet"],
+    "correctIndex": 2,
+    "explanation": "A traffic light controller is an embedded system because it's a dedicated computer designed for the specific task of controlling traffic lights within the traffic management system.",
+    "topic": "Embedded",
+    "difficulty": 1
+  },
+  {
+    "stem": "What characteristic is typical of embedded systems?",
+    "options": ["They run multiple operating systems", "They are designed for general-purpose computing", "They perform a specific, dedicated task", "They always require a keyboard and mouse"],
+    "correctIndex": 2,
+    "explanation": "Embedded systems are designed to perform specific, dedicated tasks rather than general-purpose computing, making them efficient for their intended function.",
+    "topic": "Embedded",
+    "difficulty": 2
+  },
+  {
+    "stem": "Why do embedded systems often use less power than desktop computers?",
+    "options": ["They have larger batteries", "They are designed to perform limited, specific tasks efficiently", "They are always solar powered", "They run faster"],
+    "correctIndex": 1,
+    "explanation": "Embedded systems are optimized for specific tasks, requiring less processing power and components than general-purpose computers, resulting in lower power consumption.",
+    "topic": "Embedded",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is RAM primarily used for?",
+    "options": ["Storing data permanently", "Temporarily storing data and programs currently in use", "Processing calculations", "Connecting to the internet"],
+    "correctIndex": 1,
+    "explanation": "RAM (Random Access Memory) temporarily stores data and programs that are currently being used by the CPU, allowing quick access. Data is lost when power is turned off.",
+    "topic": "RAM_ROM",
+    "difficulty": 1
+  },
+  {
+    "stem": "What type of memory is RAM?",
+    "options": ["Non-volatile", "Volatile", "Permanent", "Read-only"],
+    "correctIndex": 1,
+    "explanation": "RAM is volatile memory, meaning it loses all stored data when the power is turned off. This is different from non-volatile storage like hard drives.",
+    "topic": "RAM_ROM",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is ROM and what is stored in it?",
+    "options": ["Volatile memory storing user files", "Non-volatile memory storing firmware and boot instructions", "Memory for gaming graphics", "Temporary memory for calculations"],
+    "correctIndex": 1,
+    "explanation": "ROM (Read-Only Memory) is non-volatile memory that stores firmware and boot instructions (like BIOS). Data is retained even when power is off.",
+    "topic": "RAM_ROM",
+    "difficulty": 1
+  },
+  {
+    "stem": "Why is ROM described as 'read-only'?",
+    "options": ["Because users can only view but not use the computer", "Because under normal operation its contents cannot be modified", "Because it's too small to write to", "Because it's encrypted"],
+    "correctIndex": 1,
+    "explanation": "ROM is called 'read-only' because its contents are typically set during manufacture and cannot be modified during normal operation, unlike RAM which can be freely read and written.",
+    "topic": "RAM_ROM",
+    "difficulty": 2
+  },
+  {
+    "stem": "How does increasing RAM affect computer performance?",
+    "options": ["It increases permanent storage space", "It allows more programs and data to be active simultaneously", "It makes the CPU faster", "It improves graphics quality"],
+    "correctIndex": 1,
+    "explanation": "More RAM allows the computer to hold more programs and data in memory simultaneously, reducing the need to swap data to slower storage, thus improving performance.",
+    "topic": "RAM_ROM",
+    "difficulty": 2
+  },
+  {
+    "stem": "What happens to data in RAM when the computer is turned off?",
+    "options": ["It is saved automatically to the hard drive", "It is permanently stored", "It is lost", "It is compressed"],
+    "correctIndex": 2,
+    "explanation": "Since RAM is volatile memory, all data stored in it is lost when power is removed. This is why you need to save your work to permanent storage.",
+    "topic": "RAM_ROM",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is virtual memory?",
+    "options": ["Memory that doesn't exist", "A section of hard drive used as an extension of RAM", "Cloud storage", "A type of ROM"],
+    "correctIndex": 1,
+    "explanation": "Virtual memory is a memory management technique where a portion of the hard drive is used as an extension of RAM when physical RAM is full, allowing more programs to run.",
+    "topic": "RAM_ROM",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is flash memory?",
+    "options": ["Memory that works faster than light", "Non-volatile memory that can be electrically erased and reprogrammed", "Temporary memory used by the CPU", "Memory used only for photos"],
+    "correctIndex": 1,
+    "explanation": "Flash memory is a type of non-volatile storage that can be electrically erased and reprogrammed, used in USB drives, SSDs, and memory cards.",
+    "topic": "RAM_ROM",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a Hard Disk Drive (HDD)?",
+    "options": ["A type of RAM", "A magnetic storage device with spinning platters", "A processor component", "A network device"],
+    "correctIndex": 1,
+    "explanation": "An HDD is a secondary storage device that uses magnetic platters that spin at high speeds, with a read/write head that moves across them to store and retrieve data.",
+    "topic": "Storage",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the main advantage of SSD over HDD?",
+    "options": ["Larger storage capacity", "Faster data access with no moving parts", "Lower cost per gigabyte", "Better for storing movies"],
+    "correctIndex": 1,
+    "explanation": "SSDs have no moving parts and use flash memory, providing much faster data access, quicker boot times, and better durability compared to HDDs with their mechanical components.",
+    "topic": "Storage",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is secondary storage?",
+    "options": ["A backup for RAM", "Non-volatile storage for long-term data retention", "Memory inside the CPU", "Cloud-only storage"],
+    "correctIndex": 1,
+    "explanation": "Secondary storage refers to non-volatile storage devices like HDDs, SSDs, and USB drives that retain data even when power is off, used for long-term data storage.",
+    "topic": "Storage",
+    "difficulty": 1
+  },
+  {
+    "stem": "What technology do SSDs use to store data?",
+    "options": ["Magnetic platters", "Flash memory chips", "Optical lasers", "Paper tape"],
+    "correctIndex": 1,
+    "explanation": "SSDs (Solid State Drives) use flash memory chips (NAND) to store data electronically without any moving mechanical parts.",
+    "topic": "Storage",
+    "difficulty": 2
+  },
+  {
+    "stem": "Which storage type is most suitable for frequently accessed data requiring fast read/write speeds?",
+    "options": ["Magnetic tape", "CD-ROM", "SSD", "Floppy disk"],
+    "correctIndex": 2,
+    "explanation": "SSDs provide the fastest read/write speeds among common storage types due to their lack of moving parts and direct electronic access to data.",
+    "topic": "Storage",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is optical storage?",
+    "options": ["Storage using magnets", "Storage using lasers to read/write data on discs", "Storage in eyeglasses", "Virtual reality storage"],
+    "correctIndex": 1,
+    "explanation": "Optical storage uses lasers to read and write data on reflective discs like CDs, DVDs, and Blu-rays by creating or reading tiny pits on the disc surface.",
+    "topic": "Storage",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is cloud storage?",
+    "options": ["Storing data in the atmosphere", "Remote servers accessed via the internet for data storage", "A type of RAM", "Storage in weather satellites"],
+    "correctIndex": 1,
+    "explanation": "Cloud storage involves storing data on remote servers managed by a provider and accessed via the internet, allowing access from anywhere with connectivity.",
+    "topic": "Storage",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the main disadvantage of HDDs compared to SSDs?",
+    "options": ["Lower storage capacity", "Slower access speeds due to mechanical parts", "Higher cost", "Cannot store videos"],
+    "correctIndex": 1,
+    "explanation": "HDDs have slower access speeds because they rely on mechanical parts (spinning platters and moving read/write heads), which creates physical limitations on speed.",
+    "topic": "Storage",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is data redundancy in storage?",
+    "options": ["Deleting duplicate files", "Storing multiple copies of data for backup and reliability", "Compressing data", "Encrypting files"],
+    "correctIndex": 1,
+    "explanation": "Data redundancy involves keeping multiple copies of data, often across different storage devices, to protect against data loss and ensure system reliability.",
+    "topic": "Storage",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is RAID in computer storage?",
+    "options": ["A virus removal tool", "A system combining multiple drives for improved performance or redundancy", "A type of RAM", "A backup software"],
+    "correctIndex": 1,
+    "explanation": "RAID (Redundant Array of Independent Disks) combines multiple storage drives to improve performance, provide redundancy, or both, protecting against drive failures.",
+    "topic": "Storage",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the main function of an operating system?",
+    "options": ["To create documents", "To manage hardware resources and provide services for programs", "To browse the internet", "To play games"],
+    "correctIndex": 1,
+    "explanation": "An operating system manages computer hardware resources (CPU, memory, storage) and provides common services for application programs to run.",
+    "topic": "OS",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is multitasking in an operating system?",
+    "options": ["Running one program very fast", "Running multiple programs or processes seemingly simultaneously", "Having multiple monitors", "Using multiple keyboards"],
+    "correctIndex": 1,
+    "explanation": "Multitasking allows an OS to run multiple programs apparently at the same time by rapidly switching between them, sharing CPU time among processes.",
+    "topic": "OS",
+    "difficulty": 1
+  },
+  {
+    "stem": "What does the file management system in an OS do?",
+    "options": ["Creates music files", "Organizes, stores, retrieves, and manages files on storage devices", "Connects to the internet", "Runs games"],
+    "correctIndex": 1,
+    "explanation": "The file management system handles organizing files in directories, tracking file locations on storage devices, managing file permissions, and handling file operations.",
+    "topic": "OS",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is memory management in an operating system?",
+    "options": ["Deleting old photos", "Allocating and managing RAM usage among running programs", "Installing more RAM", "Cleaning the computer"],
+    "correctIndex": 1,
+    "explanation": "Memory management allocates RAM to programs, ensures programs don't interfere with each other's memory space, and handles virtual memory when physical RAM is full.",
+    "topic": "OS",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a device driver?",
+    "options": ["A person who delivers computers", "Software that allows the OS to communicate with hardware devices", "A type of steering wheel", "A storage device"],
+    "correctIndex": 1,
+    "explanation": "A device driver is software that enables communication between the operating system and hardware devices like printers, graphics cards, and keyboards.",
+    "topic": "OS",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the purpose of a user interface?",
+    "options": ["To make computers heavier", "To allow users to interact with the computer system", "To store files", "To connect to printers"],
+    "correctIndex": 1,
+    "explanation": "A user interface provides the means for users to interact with a computer system, whether through graphical elements (GUI) or command-line text (CLI).",
+    "topic": "OS",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the difference between GUI and CLI?",
+    "options": ["GUI uses graphics and icons; CLI uses text commands", "They are the same thing", "GUI is slower than CLI", "CLI has more colors"],
+    "correctIndex": 0,
+    "explanation": "A GUI (Graphical User Interface) uses visual elements like windows and icons for interaction, while a CLI (Command Line Interface) requires typing text commands.",
+    "topic": "OS",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is process scheduling?",
+    "options": ["Planning your daily tasks", "How the OS decides which process gets CPU time", "Installing programs", "Deleting processes"],
+    "correctIndex": 1,
+    "explanation": "Process scheduling is how the operating system determines which process should use the CPU at any given time, managing the order and duration of process execution.",
+    "topic": "OS",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is peripheral management?",
+    "options": ["Managing eyesight", "The OS controlling and coordinating input/output devices", "Managing storage only", "Internet management"],
+    "correctIndex": 1,
+    "explanation": "Peripheral management is how the OS handles communication with and control of peripheral devices like printers, mice, keyboards, and monitors.",
+    "topic": "OS",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is utility software?",
+    "options": ["Software for paying utility bills", "System software that maintains and optimizes computer performance", "Gaming software", "Word processing software"],
+    "correctIndex": 1,
+    "explanation": "Utility software includes tools that help maintain, analyze, configure, and optimize the computer, such as antivirus programs, disk cleanup tools, and backup utilities.",
+    "topic": "OS",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a LAN?",
+    "options": ["A type of computer", "A Local Area Network connecting devices in a limited area", "A programming language", "A storage device"],
+    "correctIndex": 1,
+    "explanation": "A LAN (Local Area Network) connects computers and devices in a limited geographical area like a home, office, or school building.",
+    "topic": "NetworksBasics",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is a WAN?",
+    "options": ["A Wide Area Network covering large geographical areas", "A small network in one room", "A type of RAM", "A wireless mouse"],
+    "correctIndex": 0,
+    "explanation": "A WAN (Wide Area Network) spans large geographical areas, potentially worldwide, connecting multiple LANs together. The internet is the largest WAN.",
+    "topic": "NetworksBasics",
+    "difficulty": 1
+  },
+  {
+    "stem": "What device connects multiple devices in a network and directs data packets?",
+    "options": ["Monitor", "Router", "Printer", "Speaker"],
+    "correctIndex": 1,
+    "explanation": "A router connects multiple devices in a network and intelligently directs data packets to their correct destinations, often providing the gateway to the internet.",
+    "topic": "NetworksBasics",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is a switch in networking?",
+    "options": ["A power button", "A device that connects devices on a network and forwards data to specific destinations", "A programming command", "A type of cable"],
+    "correctIndex": 1,
+    "explanation": "A network switch connects multiple devices on a LAN and uses MAC addresses to forward data frames only to the specific device they're intended for.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is bandwidth?",
+    "options": ["The physical width of a cable", "The maximum rate of data transfer across a network", "A type of music", "A network security measure"],
+    "correctIndex": 1,
+    "explanation": "Bandwidth refers to the maximum amount of data that can be transmitted over a network connection in a given time, usually measured in bits per second (bps).",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the function of a Network Interface Card (NIC)?",
+    "options": ["To display graphics", "To enable a device to connect to a network", "To store files", "To process sound"],
+    "correctIndex": 1,
+    "explanation": "A NIC provides the hardware interface between a computer and a network, enabling the device to send and receive data over the network.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a network topology?",
+    "options": ["The speed of a network", "The physical or logical arrangement of nodes in a network", "A network password", "A type of cable"],
+    "correctIndex": 1,
+    "explanation": "Network topology describes how nodes (computers/devices) are arranged and connected in a network, such as star, bus, ring, or mesh configurations.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a star topology?",
+    "options": ["A topology shaped like stars in space", "A network where all devices connect to a central hub or switch", "A type of wireless network", "A network that only works at night"],
+    "correctIndex": 1,
+    "explanation": "In a star topology, all network devices are connected to a central device (hub or switch), making it easy to add devices and isolate problems.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a client-server network?",
+    "options": ["A network in a restaurant", "A network where a central server provides resources to client devices", "A peer-to-peer network", "A single computer setup"],
+    "correctIndex": 1,
+    "explanation": "In a client-server network, one or more powerful central servers provide resources, data, and services to client computers that request them.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a peer-to-peer network?",
+    "options": ["A network where devices are of equal status and can share resources directly", "A network with one server", "A network only for gaming", "A network using only wireless"],
+    "correctIndex": 0,
+    "explanation": "In a peer-to-peer network, all connected devices have equal status and can share resources directly with each other without a central server.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a MAC address?",
+    "options": ["An address on Apple computers only", "A unique hardware identifier assigned to network interface cards", "A mailing address", "A software license key"],
+    "correctIndex": 1,
+    "explanation": "A MAC (Media Access Control) address is a unique hardware identifier permanently assigned to a network interface card, used for identifying devices on a local network.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is an IP address?",
+    "options": ["A postal code", "A numerical label identifying a device on a network", "A password", "A type of cable"],
+    "correctIndex": 1,
+    "explanation": "An IP (Internet Protocol) address is a numerical label assigned to each device on a network, used for identifying and locating devices for communication.",
+    "topic": "Protocols",
+    "difficulty": 1
+  },
+  {
+    "stem": "What does TCP/IP stand for?",
+    "options": ["Total Computer Power / Internet Protocol", "Transmission Control Protocol / Internet Protocol", "Text Communication Protocol / Input Protocol", "Technical Computer Programming / Information Processing"],
+    "correctIndex": 1,
+    "explanation": "TCP/IP (Transmission Control Protocol/Internet Protocol) is the fundamental suite of protocols that enables internet communication, handling how data is packaged and routed.",
+    "topic": "Protocols",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the purpose of HTTP?",
+    "options": ["To send emails", "To transfer web pages between servers and browsers", "To store files", "To connect printers"],
+    "correctIndex": 1,
+    "explanation": "HTTP (HyperText Transfer Protocol) is the protocol used for transferring web pages and other resources between web servers and web browsers.",
+    "topic": "Protocols",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the difference between HTTP and HTTPS?",
+    "options": ["HTTPS is faster", "HTTPS encrypts data for secure transmission", "They are identical", "HTTP is more secure"],
+    "correctIndex": 1,
+    "explanation": "HTTPS (HTTP Secure) encrypts data using SSL/TLS, protecting sensitive information during transmission between browser and server, unlike unsecured HTTP.",
+    "topic": "Protocols",
+    "difficulty": 2
+  },
+  {
+    "stem": "What does FTP stand for and what is it used for?",
+    "options": ["Fast Transfer Protocol - speeds up internet", "File Transfer Protocol - transferring files between computers", "Final Test Program - testing software", "First Technology Process - starting computers"],
+    "correctIndex": 1,
+    "explanation": "FTP (File Transfer Protocol) is a standard protocol used for transferring files between a client and server over a network.",
+    "topic": "Protocols",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the purpose of SMTP?",
+    "options": ["Browsing websites", "Sending emails from client to server", "File storage", "Video streaming"],
+    "correctIndex": 1,
+    "explanation": "SMTP (Simple Mail Transfer Protocol) is used for sending emails from an email client to a mail server and between mail servers.",
+    "topic": "Protocols",
+    "difficulty": 2
+  },
+  {
+    "stem": "What protocol is used for retrieving emails from a server?",
+    "options": ["HTTP", "SMTP", "POP3 or IMAP", "FTP"],
+    "correctIndex": 2,
+    "explanation": "POP3 (Post Office Protocol 3) and IMAP (Internet Message Access Protocol) are used to retrieve emails from a mail server to an email client.",
+    "topic": "Protocols",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is DNS and what does it do?",
+    "options": ["Data Network System - stores data", "Domain Name System - translates domain names to IP addresses", "Digital Notification Service - sends alerts", "Device Network Scanner - finds devices"],
+    "correctIndex": 1,
+    "explanation": "DNS (Domain Name System) translates human-readable domain names (like google.com) into numerical IP addresses that computers use to identify each other.",
+    "topic": "Protocols",
+    "difficulty": 2
+  },
+  {
+    "stem": "What are the four layers of the TCP/IP model?",
+    "options": ["Physical, Data Link, Network, Transport", "Application, Transport, Internet, Network Access", "Hardware, Software, User, Network", "Input, Process, Output, Storage"],
+    "correctIndex": 1,
+    "explanation": "The TCP/IP model has four layers: Application (HTTP, FTP), Transport (TCP, UDP), Internet (IP), and Network Access (Ethernet, Wi-Fi).",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is packet switching?",
+    "options": ["Changing network cables", "Breaking data into packets that take independent routes to the destination", "Turning packets on and off", "A type of encryption"],
+    "correctIndex": 1,
+    "explanation": "Packet switching divides data into small packets that travel independently across the network, potentially via different routes, then reassemble at the destination.",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What information is contained in a packet header?",
+    "options": ["Only the data being sent", "Source address, destination address, and other control information", "Just the recipient's name", "The sender's password"],
+    "correctIndex": 1,
+    "explanation": "A packet header contains source and destination IP addresses, packet sequence number, protocol information, and other data needed for routing and reassembly.",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is malware?",
+    "options": ["Helpful software", "Malicious software designed to damage or gain unauthorized access", "A type of hardware", "A programming language"],
+    "correctIndex": 1,
+    "explanation": "Malware is any software intentionally designed to cause damage, disrupt operations, or gain unauthorized access to computer systems.",
+    "topic": "Security",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is a computer virus?",
+    "options": ["A hardware malfunction", "Malware that replicates by inserting copies into other programs", "A broken monitor", "A slow internet connection"],
+    "correctIndex": 1,
+    "explanation": "A computer virus is malware that attaches itself to legitimate programs and spreads when the infected program is executed, often causing damage.",
+    "topic": "Security",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is phishing?",
+    "options": ["A water sport", "A fraudulent attempt to obtain sensitive information by disguising as trustworthy", "A programming technique", "A type of network"],
+    "correctIndex": 1,
+    "explanation": "Phishing is a social engineering attack where attackers impersonate legitimate entities to trick users into revealing sensitive information like passwords or credit card numbers.",
+    "topic": "Security",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is encryption?",
+    "options": ["Compressing files", "Converting data into a code to prevent unauthorized access", "Deleting files securely", "Speeding up the internet"],
+    "correctIndex": 1,
+    "explanation": "Encryption transforms readable data into an encoded format that can only be decoded with the correct key, protecting data confidentiality.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a firewall?",
+    "options": ["A wall that catches fire", "A security system that monitors and controls network traffic", "A type of virus", "A backup system"],
+    "correctIndex": 1,
+    "explanation": "A firewall is a network security device or software that monitors incoming and outgoing traffic and decides whether to allow or block specific traffic based on security rules.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is two-factor authentication (2FA)?",
+    "options": ["Using two passwords", "A security method requiring two different forms of identification", "Having two accounts", "A type of encryption"],
+    "correctIndex": 1,
+    "explanation": "2FA adds an extra security layer by requiring two different types of verification, such as a password (something you know) and a code sent to your phone (something you have).",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a brute force attack?",
+    "options": ["Physically breaking a computer", "Trying all possible combinations to guess passwords or encryption keys", "A network speed test", "Installing software forcefully"],
+    "correctIndex": 1,
+    "explanation": "A brute force attack systematically tries all possible combinations of passwords or encryption keys until the correct one is found.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is social engineering in cybersecurity?",
+    "options": ["Building social networks", "Manipulating people into revealing confidential information", "Programming social media", "Creating online communities"],
+    "correctIndex": 1,
+    "explanation": "Social engineering manipulates people psychologically to divulge confidential information or perform actions that compromise security, exploiting human nature rather than technical vulnerabilities.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is ransomware?",
+    "options": ["Software for organizing files", "Malware that encrypts files and demands payment for decryption", "Antivirus software", "Backup software"],
+    "correctIndex": 1,
+    "explanation": "Ransomware encrypts victims' files and demands a ransom payment, usually in cryptocurrency, in exchange for the decryption key.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a DDoS attack?",
+    "options": ["A type of virus", "An attack that overwhelms a server with traffic from multiple sources", "A data backup method", "A programming error"],
+    "correctIndex": 1,
+    "explanation": "A DDoS (Distributed Denial of Service) attack floods a target server with traffic from many sources simultaneously, making it unavailable to legitimate users.",
+    "topic": "Security",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is SQL injection?",
+    "options": ["A database backup method", "An attack that inserts malicious code into database queries", "A programming language", "A network protocol"],
+    "correctIndex": 1,
+    "explanation": "SQL injection inserts malicious SQL code into application queries through user input, potentially allowing attackers to access, modify, or delete database data.",
+    "topic": "Security",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is penetration testing?",
+    "options": ["Testing internet speed", "Authorized simulated attacks to identify security vulnerabilities", "Testing physical building security", "Testing software functionality"],
+    "correctIndex": 1,
+    "explanation": "Penetration testing involves authorized security experts attempting to exploit system vulnerabilities to identify weaknesses before malicious attackers do.",
+    "topic": "Security",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the Data Protection Act concerned with?",
+    "options": ["Protecting computer hardware", "Regulating how personal data is collected, stored, and used", "Protecting against viruses", "Speeding up computers"],
+    "correctIndex": 1,
+    "explanation": "The Data Protection Act regulates how organizations collect, store, process, and share personal data, giving individuals rights over their data.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the Computer Misuse Act designed to prevent?",
+    "options": ["Computer theft", "Unauthorized access to computer systems and data", "Software piracy only", "Hardware damage"],
+    "correctIndex": 1,
+    "explanation": "The Computer Misuse Act makes it illegal to access computer systems without authorization, modify data without permission, or use computers to commit crimes.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is software piracy?",
+    "options": ["Stealing computer hardware", "Unauthorized copying, distribution, or use of software", "Writing software", "Testing software"],
+    "correctIndex": 1,
+    "explanation": "Software piracy involves illegally copying, distributing, or using software without proper licensing or authorization from the copyright holder.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is the environmental impact of e-waste?",
+    "options": ["It has no impact", "Toxic materials can pollute soil and water if not properly disposed", "It only affects the air", "It improves the environment"],
+    "correctIndex": 1,
+    "explanation": "E-waste contains toxic materials like lead, mercury, and cadmium that can contaminate soil and groundwater if improperly disposed, posing environmental and health risks.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is copyright in relation to digital content?",
+    "options": ["The right to copy anything", "Legal protection giving creators exclusive rights to their work", "A type of software", "Permission to share files"],
+    "correctIndex": 1,
+    "explanation": "Copyright gives creators exclusive legal rights to reproduce, distribute, and display their creative works, including software, music, and digital content.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the digital divide?",
+    "options": ["A mathematical operation", "The gap between those with and without access to digital technology", "A type of storage", "A programming concept"],
+    "correctIndex": 1,
+    "explanation": "The digital divide refers to the inequality in access to digital technology, internet connectivity, and the skills to use them effectively, often based on geographic, economic, or social factors.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is GDPR?",
+    "options": ["A programming language", "European regulation on data protection and privacy", "A type of malware", "A network protocol"],
+    "correctIndex": 1,
+    "explanation": "GDPR (General Data Protection Regulation) is an EU regulation that strengthens data protection and privacy for individuals, with strict rules on how organizations handle personal data.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What are cookies on websites used for?",
+    "options": ["Making the website taste better", "Storing user preferences and tracking browsing activity", "Protecting against viruses", "Speeding up downloads"],
+    "correctIndex": 1,
+    "explanation": "Website cookies are small text files that store user preferences, login information, and can track browsing behavior for personalization or advertising purposes.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is open source software?",
+    "options": ["Free software with no code", "Software with source code freely available for modification and distribution", "Software that only works online", "Expensive enterprise software"],
+    "correctIndex": 1,
+    "explanation": "Open source software has its source code freely available for anyone to view, modify, and distribute, often developed collaboratively by communities.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is proprietary software?",
+    "options": ["Free software", "Software owned by a company with restricted access to source code", "Open source software", "Abandoned software"],
+    "correctIndex": 1,
+    "explanation": "Proprietary software is owned by an individual or company, with the source code kept secret and distribution controlled through licenses.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What factors affect CPU performance?",
+    "options": ["Only clock speed", "Clock speed, number of cores, and cache size", "Only the number of cores", "The color of the computer case"],
+    "correctIndex": 1,
+    "explanation": "CPU performance is affected by clock speed (processing speed), number of cores (parallel processing capability), and cache size (fast memory for frequently used data).",
+    "topic": "Performance",
+    "difficulty": 1
+  },
+  {
+    "stem": "How does more RAM improve performance?",
+    "options": ["It makes the CPU faster", "It allows more applications and data to be held in memory simultaneously", "It increases storage space", "It improves graphics"],
+    "correctIndex": 1,
+    "explanation": "More RAM allows the computer to keep more programs and data in fast-access memory, reducing the need to swap data with slower storage and improving multitasking.",
+    "topic": "Performance",
+    "difficulty": 1
+  },
+  {
+    "stem": "Why is an SSD faster than an HDD?",
+    "options": ["It's larger", "It has no moving parts and uses electronic data access", "It's more expensive", "It uses more power"],
+    "correctIndex": 1,
+    "explanation": "SSDs use flash memory chips for instant electronic data access, while HDDs rely on slower mechanical spinning platters and moving read/write heads.",
+    "topic": "Performance",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the impact of insufficient RAM on performance?",
+    "options": ["Faster processing", "Increased use of virtual memory, causing slowdowns", "Better graphics", "More storage space"],
+    "correctIndex": 1,
+    "explanation": "Insufficient RAM forces the system to use virtual memory (hard drive space), which is much slower than RAM, significantly slowing down system performance.",
+    "topic": "Performance",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the purpose of a GPU?",
+    "options": ["General data storage", "Processing graphics and visual data efficiently", "Managing the operating system", "Connecting to networks"],
+    "correctIndex": 1,
+    "explanation": "A GPU (Graphics Processing Unit) is specialized hardware designed to rapidly process graphics and visual data, essential for gaming, video editing, and visual applications.",
+    "topic": "Performance",
+    "difficulty": 2
+  },
+  {
+    "stem": "How does cache memory improve CPU performance?",
+    "options": ["It replaces RAM", "It stores frequently used data closer to the CPU for faster access", "It connects to the internet", "It displays graphics"],
+    "correctIndex": 1,
+    "explanation": "Cache memory stores frequently accessed data and instructions very close to the CPU, allowing much faster access than main RAM and reducing processing delays.",
+    "topic": "Performance",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the relationship between clock speed and power consumption?",
+    "options": ["No relationship", "Higher clock speed generally requires more power", "Higher clock speed uses less power", "They are inversely proportional"],
+    "correctIndex": 1,
+    "explanation": "Higher clock speeds generally require more electrical power and generate more heat, which is why mobile devices often use lower clock speeds than desktop computers.",
+    "topic": "Performance",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is thermal throttling?",
+    "options": ["A type of network attack", "Automatic reduction of CPU speed to prevent overheating", "A cooling technique", "A type of virus"],
+    "correctIndex": 1,
+    "explanation": "Thermal throttling is a protective mechanism where the CPU automatically reduces its clock speed when temperature exceeds safe limits, preventing hardware damage but reducing performance.",
+    "topic": "Performance",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the difference between latency and bandwidth?",
+    "options": ["They are the same", "Latency is delay time; bandwidth is maximum data transfer rate", "Bandwidth is delay; latency is speed", "Neither affects performance"],
+    "correctIndex": 1,
+    "explanation": "Latency measures the time delay for data to travel from source to destination, while bandwidth measures the maximum amount of data that can be transferred per second.",
+    "topic": "Performance",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is compression used for in computing?",
+    "options": ["Making computers physically smaller", "Reducing file size for storage and transmission", "Speeding up the CPU", "Increasing RAM"],
+    "correctIndex": 1,
+    "explanation": "Compression reduces file sizes by encoding data more efficiently, saving storage space and reducing transmission time, especially useful for images, video, and file archives.",
+    "topic": "Performance",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the difference between lossy and lossless compression?",
+    "options": ["There is no difference", "Lossy removes some data permanently; lossless preserves all original data", "Lossless is always smaller", "Lossy is always better"],
+    "correctIndex": 1,
+    "explanation": "Lossy compression (like JPEG) discards some data to achieve smaller sizes, while lossless compression (like PNG) preserves all original data but with less size reduction.",
+    "topic": "Performance",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a buffer in computing?",
+    "options": ["A type of storage device", "Temporary memory area for data being transferred between devices", "A security feature", "A type of processor"],
+    "correctIndex": 1,
+    "explanation": "A buffer is a temporary storage area that holds data while it's being transferred between devices or processes with different speeds, preventing data loss.",
+    "topic": "Performance",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is a worm in computing?",
+    "options": ["A helpful program", "Self-replicating malware that spreads across networks without user action", "A type of cable", "A programming loop"],
+    "correctIndex": 1,
+    "explanation": "A worm is malware that self-replicates and spreads across networks automatically without requiring user interaction or attachment to other programs.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a trojan horse in computing?",
+    "options": ["A useful utility program", "Malware disguised as legitimate software", "A network topology", "A type of processor"],
+    "correctIndex": 1,
+    "explanation": "A trojan horse is malware that disguises itself as legitimate software to trick users into installing it, then performs malicious actions.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is spyware?",
+    "options": ["Security software", "Malware that secretly monitors user activity and collects information", "A type of firewall", "Antivirus software"],
+    "correctIndex": 1,
+    "explanation": "Spyware is malware that covertly monitors user activities, collecting sensitive information like passwords, browsing habits, and personal data without consent.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What does BIOS stand for?",
+    "options": ["Basic Input Output System", "Binary Integrated Operating Software", "Built-in Operating System", "Basic Internet Operating Service"],
+    "correctIndex": 0,
+    "explanation": "BIOS (Basic Input Output System) is firmware stored in ROM that initializes hardware during boot and provides basic services between the OS and hardware.",
+    "topic": "OS",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is booting a computer?",
+    "options": ["Kicking it", "The process of starting up and loading the operating system", "Shutting it down", "Installing software"],
+    "correctIndex": 1,
+    "explanation": "Booting is the startup process where the computer initializes hardware, loads the BIOS/UEFI, then loads the operating system into memory.",
+    "topic": "OS",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is kernel in an operating system?",
+    "options": ["A type of popcorn", "The core component managing system resources and hardware", "A security feature", "A user interface"],
+    "correctIndex": 1,
+    "explanation": "The kernel is the core of the operating system, managing memory, processes, device drivers, and system calls, serving as the bridge between hardware and software.",
+    "topic": "OS",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is defragmentation?",
+    "options": ["Breaking files into pieces", "Reorganizing fragmented data on a disk for faster access", "Deleting files", "Compressing data"],
+    "correctIndex": 1,
+    "explanation": "Defragmentation reorganizes fragmented files on a hard drive so their parts are stored contiguously, reducing read times and improving performance (mainly for HDDs).",
+    "topic": "OS",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the purpose of an interrupt in a CPU?",
+    "options": ["To stop the computer permanently", "To signal the CPU that an event needs immediate attention", "To increase processing speed", "To save files"],
+    "correctIndex": 1,
+    "explanation": "An interrupt signals the CPU to temporarily pause its current task to handle a more urgent event, like keyboard input or a hardware request.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the accumulator register?",
+    "options": ["A battery", "A register that stores intermediate results of calculations", "A type of memory", "A network device"],
+    "correctIndex": 1,
+    "explanation": "The accumulator is a CPU register that stores intermediate arithmetic and logic results during processing, serving as a temporary workspace for the ALU.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is bus width in a computer?",
+    "options": ["The physical size of the computer", "The number of bits that can be transferred simultaneously", "The width of cables", "Screen resolution"],
+    "correctIndex": 1,
+    "explanation": "Bus width refers to the number of bits that can be transmitted simultaneously over a bus. A wider bus can transfer more data at once, improving performance.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the address bus used for?",
+    "options": ["Sending data", "Carrying memory addresses from CPU to memory", "Displaying graphics", "Network communication"],
+    "correctIndex": 1,
+    "explanation": "The address bus carries memory addresses from the CPU to main memory, specifying where data should be read from or written to.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the data bus used for?",
+    "options": ["Carrying memory addresses", "Transferring data between CPU and other components", "Controlling devices", "Power supply"],
+    "correctIndex": 1,
+    "explanation": "The data bus transfers actual data between the CPU, memory, and other components. It's bidirectional, allowing data to flow in both directions.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is Wi-Fi?",
+    "options": ["A type of cable", "Wireless networking technology using radio waves", "Wired internet connection", "A programming language"],
+    "correctIndex": 1,
+    "explanation": "Wi-Fi is wireless networking technology that uses radio waves to provide high-speed internet and network connections without physical cables.",
+    "topic": "NetworksBasics",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is Bluetooth used for?",
+    "options": ["Long-distance communication", "Short-range wireless data exchange between devices", "Dental care", "Video streaming only"],
+    "correctIndex": 1,
+    "explanation": "Bluetooth is a short-range wireless technology for exchanging data between devices like phones, headphones, and keyboards over distances typically up to 10 meters.",
+    "topic": "NetworksBasics",
+    "difficulty": 1
+  },
+  {
+    "stem": "What is an access point in networking?",
+    "options": ["A security checkpoint", "A device that allows wireless devices to connect to a wired network", "A type of password", "An entry door"],
+    "correctIndex": 1,
+    "explanation": "A wireless access point creates a wireless local area network, allowing Wi-Fi devices to connect to a wired network and access network resources.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the purpose of a modem?",
+    "options": ["To display graphics", "To convert digital signals to analog for transmission and vice versa", "To store data", "To process calculations"],
+    "correctIndex": 1,
+    "explanation": "A modem (modulator-demodulator) converts digital data from computers into analog signals for transmission over phone lines or cable, and converts incoming analog signals back to digital.",
+    "topic": "NetworksBasics",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a subnet mask?",
+    "options": ["A physical covering for networks", "A number that defines which part of an IP address is network vs host", "A type of firewall", "A password"],
+    "correctIndex": 1,
+    "explanation": "A subnet mask is a 32-bit number that divides an IP address into network and host portions, used to determine whether a destination is on the local network or must be routed.",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What port number does HTTP typically use?",
+    "options": ["21", "80", "443", "25"],
+    "correctIndex": 1,
+    "explanation": "HTTP typically uses port 80 for unencrypted web traffic. Port 443 is used for HTTPS (secure HTTP), port 21 for FTP, and port 25 for SMTP.",
+    "topic": "Protocols",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is UDP?",
+    "options": ["Universal Data Protocol", "User Datagram Protocol - a connectionless transport protocol", "Unified Device Port", "User Development Program"],
+    "correctIndex": 1,
+    "explanation": "UDP (User Datagram Protocol) is a connectionless transport protocol that sends data without establishing a connection first, offering speed but no delivery guarantee.",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the difference between TCP and UDP?",
+    "options": ["They are identical", "TCP is connection-oriented with guaranteed delivery; UDP is connectionless and faster but unreliable", "UDP is more secure", "TCP is wireless only"],
+    "correctIndex": 1,
+    "explanation": "TCP establishes connections and guarantees ordered, error-checked delivery. UDP sends data without connection setup, offering speed for applications like streaming where some data loss is acceptable.",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is biometric authentication?",
+    "options": ["Using passwords", "Using unique physical characteristics like fingerprints for identification", "Using security questions", "Using email verification"],
+    "correctIndex": 1,
+    "explanation": "Biometric authentication uses unique physical characteristics like fingerprints, facial features, or iris patterns to verify identity, providing strong security.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a hash function in security?",
+    "options": ["A function that creates passwords", "An algorithm that converts data into a fixed-size string of characters", "A type of encryption", "A network protocol"],
+    "correctIndex": 1,
+    "explanation": "A hash function takes input data and produces a fixed-size string (hash value). It's one-way (can't be reversed) and used for password storage and data integrity verification.",
+    "topic": "Security",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the Creative Commons license?",
+    "options": ["A programming license", "A flexible copyright license allowing creators to share work with specific permissions", "A software development tool", "A type of malware"],
+    "correctIndex": 1,
+    "explanation": "Creative Commons provides copyright licenses that allow creators to grant the public permission to use their creative work under certain conditions.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is planned obsolescence?",
+    "options": ["Accidental product failure", "Deliberately designing products to become outdated or fail", "Product improvement", "Quality control"],
+    "correctIndex": 1,
+    "explanation": "Planned obsolescence is the deliberate design of products to have a limited useful life, encouraging consumers to purchase replacements sooner, contributing to e-waste.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is net neutrality?",
+    "options": ["Network security", "The principle that ISPs should treat all internet traffic equally", "A type of firewall", "Network optimization"],
+    "correctIndex": 1,
+    "explanation": "Net neutrality is the principle that Internet Service Providers must treat all data on the internet equally, without blocking, throttling, or charging differently based on content.",
+    "topic": "Ethics_Law_Env",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a solid-state drive's main component?",
+    "options": ["Spinning platters", "NAND flash memory chips", "Magnetic tape", "Optical discs"],
+    "correctIndex": 1,
+    "explanation": "SSDs use NAND flash memory chips to store data electronically, with no moving parts, providing faster access and better durability than mechanical drives.",
+    "topic": "Storage",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is the Accumulator in the FDE cycle?",
+    "options": ["A storage device", "A register storing results of operations performed by the ALU", "A type of memory", "The control unit"],
+    "correctIndex": 1,
+    "explanation": "The Accumulator is a register in the CPU that stores intermediate and final results of arithmetic and logic operations performed by the ALU during the fetch-decode-execute cycle.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is the Current Instruction Register (CIR)?",
+    "options": ["A storage device", "A register holding the instruction currently being decoded and executed", "A type of RAM", "An output device"],
+    "correctIndex": 1,
+    "explanation": "The CIR holds the current instruction that has been fetched from memory and is being decoded and executed by the CPU.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is von Neumann architecture?",
+    "options": ["A type of network", "Computer architecture where programs and data share the same memory", "A programming language", "A security protocol"],
+    "correctIndex": 1,
+    "explanation": "Von Neumann architecture is a computer design where both program instructions and data are stored in the same memory and share the same bus, creating the 'von Neumann bottleneck'.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is Harvard architecture?",
+    "options": ["A university network", "Computer architecture with separate memory and buses for instructions and data", "A type of operating system", "A programming style"],
+    "correctIndex": 1,
+    "explanation": "Harvard architecture has separate storage and signal pathways for instructions and data, allowing simultaneous access to both and potentially faster processing.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is RISC?",
+    "options": ["A security risk", "Reduced Instruction Set Computer - CPU with simpler instructions", "A type of memory", "A network protocol"],
+    "correctIndex": 1,
+    "explanation": "RISC (Reduced Instruction Set Computer) is a CPU design philosophy using a smaller set of simpler instructions that execute quickly, often in one clock cycle.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is CISC?",
+    "options": ["A security system", "Complex Instruction Set Computer - CPU with many complex instructions", "A type of storage", "A programming language"],
+    "correctIndex": 1,
+    "explanation": "CISC (Complex Instruction Set Computer) is a CPU design with many specialized instructions, some taking multiple clock cycles but potentially requiring fewer instructions per program.",
+    "topic": "CPU",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is error checking in data transmission?",
+    "options": ["Deleting errors", "Methods to detect and correct errors in transmitted data", "Ignoring errors", "Creating backups"],
+    "correctIndex": 1,
+    "explanation": "Error checking involves techniques like parity bits, checksums, and cyclic redundancy checks (CRC) to detect (and sometimes correct) errors that occur during data transmission.",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is a parity bit?",
+    "options": ["A type of encryption", "A bit added to data for basic error detection", "A network address", "A programming variable"],
+    "correctIndex": 1,
+    "explanation": "A parity bit is a single bit added to data that indicates whether the number of 1-bits is even or odd, used for simple error detection in data transmission.",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is a checksum?",
+    "options": ["A bank balance", "A calculated value used to verify data integrity", "A type of password", "A network topology"],
+    "correctIndex": 1,
+    "explanation": "A checksum is a value calculated from data using an algorithm. The same calculation performed after transmission can verify if data was corrupted during transfer.",
+    "topic": "Protocols",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is a VPN?",
+    "options": ["Very Personal Network", "Virtual Private Network - creates secure connection over public network", "Virtual Processing Node", "Verified Protocol Number"],
+    "correctIndex": 1,
+    "explanation": "A VPN (Virtual Private Network) creates an encrypted connection over a public network, allowing secure remote access as if connected to a private network.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is symmetric encryption?",
+    "options": ["Using two different keys", "Using the same key for encryption and decryption", "Using no keys", "Using biometrics"],
+    "correctIndex": 1,
+    "explanation": "Symmetric encryption uses the same secret key for both encrypting and decrypting data, requiring secure key exchange between parties.",
+    "topic": "Security",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is asymmetric encryption?",
+    "options": ["Using the same key for encryption and decryption", "Using a public key for encryption and private key for decryption", "Using no encryption", "Using passwords only"],
+    "correctIndex": 1,
+    "explanation": "Asymmetric encryption uses a pair of keys: a public key to encrypt data (shareable) and a private key to decrypt it (kept secret), solving the key distribution problem.",
+    "topic": "Security",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is an SSL/TLS certificate?",
+    "options": ["A graduation certificate", "A digital certificate that authenticates website identity and enables encryption", "A programming license", "A hardware component"],
+    "correctIndex": 1,
+    "explanation": "SSL/TLS certificates verify a website's identity and enable encrypted connections, shown by the padlock icon and HTTPS in browsers.",
+    "topic": "Security",
+    "difficulty": 2
+  },
+  {
+    "stem": "What is a man-in-the-middle attack?",
+    "options": ["A physical attack", "An attack where the attacker secretly intercepts communication between two parties", "A type of virus", "A network configuration"],
+    "correctIndex": 1,
+    "explanation": "In a man-in-the-middle attack, the attacker secretly intercepts and potentially alters communication between two parties who believe they're communicating directly.",
+    "topic": "Security",
+    "difficulty": 3
+  },
+  {
+    "stem": "What is access control in computer security?",
+    "options": ["Controlling internet access", "Regulating who can view or use resources in a computing environment", "Antivirus software", "Firewall settings"],
+    "correctIndex": 1,
+    "explanation": "Access control determines what resources users can access and what operations they can perform, using authentication, authorization, and permissions.",
+    "topic": "Security",
+    "difficulty": 2
+  }
+]
