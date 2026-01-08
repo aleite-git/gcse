@@ -3,9 +3,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { QuizResponse, QuizQuestion, Answer, SubmitResponse, QuestionFeedback } from '@/types';
+import { QuizResponse, QuizQuestion, Answer, SubmitResponse, QuestionFeedback, StreakStatus } from '@/types';
+import { studyNotes, StudyNote } from '@/lib/studyNotes';
+import { StreakDisplay, StreakCelebration } from '@/components/StreakDisplay';
 
 type QuizState = 'loading' | 'quiz' | 'submitting' | 'results';
+
+interface StreakResult {
+  currentStreak: number;
+  freezeDays: number;
+  freezeEarned: boolean;
+}
 
 export default function QuizPage() {
   const [state, setState] = useState<QuizState>('loading');
@@ -14,6 +22,10 @@ export default function QuizPage() {
   const [results, setResults] = useState<SubmitResponse | null>(null);
   const [error, setError] = useState('');
   const [startTime] = useState(() => Date.now());
+  const [streakStatus, setStreakStatus] = useState<StreakStatus | null>(null);
+  const [streakResult, setStreakResult] = useState<StreakResult | null>(null);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [timezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone);
   const router = useRouter();
 
   const loadQuiz = useCallback(async () => {
@@ -34,11 +46,22 @@ export default function QuizPage() {
       setQuiz(data);
       setAnswers(new Map());
       setState('quiz');
+
+      // Fetch streak status
+      try {
+        const streakResponse = await fetch(`/api/streak?timezone=${encodeURIComponent(timezone)}`);
+        if (streakResponse.ok) {
+          const streakData = await streakResponse.json();
+          setStreakStatus(streakData);
+        }
+      } catch {
+        console.error('Failed to fetch streak');
+      }
     } catch {
       setError('Failed to load quiz. Please try again.');
       setState('quiz');
     }
-  }, [router]);
+  }, [router, timezone]);
 
   useEffect(() => {
     loadQuiz();
@@ -53,7 +76,7 @@ export default function QuizPage() {
   };
 
   const handleSubmit = async () => {
-    if (!quiz || answers.size !== 5) return;
+    if (!quiz || answers.size !== quiz.questions.length) return;
 
     setState('submitting');
     setError('');
@@ -68,7 +91,10 @@ export default function QuizPage() {
 
       const response = await fetch('/api/quiz/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-timezone': timezone,
+        },
         body: JSON.stringify({ answers: answerArray, durationSeconds }),
       });
 
@@ -77,8 +103,21 @@ export default function QuizPage() {
         throw new Error(data.error || 'Failed to submit quiz');
       }
 
-      const data: SubmitResponse = await response.json();
+      const data = await response.json();
       setResults(data);
+
+      // Capture streak result if returned
+      if (data.streak) {
+        setStreakResult(data.streak);
+        setShowCelebration(true);
+        // Update streak status
+        setStreakStatus((prev) => prev ? {
+          ...prev,
+          currentStreak: data.streak.currentStreak,
+          freezeDays: data.streak.freezeDays,
+        } : null);
+      }
+
       setState('results');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to submit quiz');
@@ -117,39 +156,70 @@ export default function QuizPage() {
 
   if (state === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading quiz...</p>
+          <div className="relative w-16 h-16 mx-auto">
+            <div className="absolute inset-0 rounded-full border-4 border-purple-500/30"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-purple-500 animate-spin"></div>
+          </div>
+          <p className="mt-6 text-white/60 font-medium">Loading quiz...</p>
         </div>
       </div>
     );
   }
 
   if (state === 'results' && results) {
-    return <ResultsView results={results} onRetry={handleRetry} onLogout={handleLogout} />;
+    return (
+      <>
+        {showCelebration && streakResult && (
+          <StreakCelebration
+            streak={streakResult.currentStreak}
+            freezeEarned={streakResult.freezeEarned}
+            onClose={() => setShowCelebration(false)}
+          />
+        )}
+        <ResultsView
+          results={results}
+          onRetry={handleRetry}
+          onLogout={handleLogout}
+          streakResult={streakResult}
+          streakStatus={streakStatus}
+        />
+      </>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-8 px-4">
       <div className="max-w-3xl mx-auto">
-        <header className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Daily Quiz</h1>
-            <p className="text-sm text-gray-500">
-              {quiz?.quizVersion && `Version ${quiz.quizVersion}`}
-            </p>
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-white">Daily Quiz</h1>
+              <p className="text-sm text-white/40">
+                {quiz?.quizVersion && `Version ${quiz.quizVersion}`}
+              </p>
+            </div>
+            {streakStatus && (
+              <StreakDisplay
+                currentStreak={streakStatus.currentStreak}
+                freezeDays={streakStatus.freezeDays}
+                maxFreezes={streakStatus.maxFreezes}
+                showFreezeButton={false}
+                compact
+              />
+            )}
           </div>
           <div className="flex items-center gap-4">
             <Link
               href="/progress"
-              className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+              className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/20 hover:text-white text-sm font-medium transition-all"
             >
-              View Progress
+              Progress
             </Link>
             <button
               onClick={handleLogout}
-              className="text-gray-500 hover:text-gray-700 text-sm"
+              className="text-white/40 hover:text-white/80 text-sm transition-colors"
             >
               Logout
             </button>
@@ -157,36 +227,48 @@ export default function QuizPage() {
         </header>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="mb-6 p-4 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-xl text-red-200">
             {error}
           </div>
         )}
 
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-medium text-gray-600">
-              Answered: {answers.size}/5
+        {/* Progress Bar */}
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 mb-6">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm font-medium text-white/60">
+              Answered: {answers.size}/{quiz?.questions.length || 6}
             </span>
-            <div className="flex gap-1">
+            <div className="flex gap-1.5">
               {quiz?.questions.map((q, i) => (
                 <div
                   key={q.id}
-                  className={`w-3 h-3 rounded-full ${
-                    answers.has(q.id) ? 'bg-indigo-600' : 'bg-gray-200'
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    answers.has(q.id)
+                      ? q.isBonus
+                        ? 'bg-gradient-to-r from-amber-400 to-orange-500 shadow-lg shadow-amber-500/50'
+                        : 'bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/50'
+                      : q.isBonus
+                      ? 'bg-amber-500/20'
+                      : 'bg-white/10'
                   }`}
-                  title={`Question ${i + 1}`}
+                  title={q.isBonus ? 'Bonus Question' : `Question ${i + 1}`}
                 />
               ))}
             </div>
           </div>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-indigo-600 transition-all duration-300"
-              style={{ width: `${(answers.size / 5) * 100}%` }}
+              className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 transition-all duration-500"
+              style={{
+                width: `${(answers.size / (quiz?.questions.length || 6)) * 100}%`,
+                backgroundSize: '200% 100%',
+                animation: 'shimmer 2s linear infinite',
+              }}
             />
           </div>
         </div>
 
+        {/* Questions */}
         <div className="space-y-6">
           {quiz?.questions.map((question, index) => (
             <QuestionCard
@@ -200,24 +282,46 @@ export default function QuizPage() {
           ))}
         </div>
 
+        {/* Submit Button */}
         <div className="mt-8 flex justify-center">
           <button
             onClick={handleSubmit}
-            disabled={answers.size !== 5 || state === 'submitting'}
-            className="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={answers.size !== (quiz?.questions.length || 6) || state === 'submitting'}
+            className="relative px-10 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-2xl hover:from-purple-500 hover:to-pink-500 focus:ring-4 focus:ring-purple-500/50 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:from-purple-600 disabled:hover:to-pink-600 shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105 active:scale-95"
           >
-            {state === 'submitting' ? 'Submitting...' : 'Submit Quiz'}
+            {state === 'submitting' ? (
+              <span className="flex items-center gap-2">
+                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Submitting...
+              </span>
+            ) : (
+              'Submit Quiz'
+            )}
           </button>
         </div>
 
-        {answers.size !== 5 && (
-          <p className="mt-4 text-center text-sm text-gray-500">
-            Please answer all 5 questions to submit
+        {answers.size !== (quiz?.questions.length || 6) && (
+          <p className="mt-4 text-center text-sm text-white/40">
+            Answer all questions to submit (including the bonus!)
           </p>
         )}
       </div>
+
+      {/* Shimmer animation */}
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
     </div>
   );
+}
+
+function formatTopic(topic: string): string {
+  return topic
+    .replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2');
 }
 
 function QuestionCard({
@@ -233,20 +337,66 @@ function QuestionCard({
   onSelect: (index: number) => void;
   disabled: boolean;
 }) {
+  const [showNotes, setShowNotes] = useState(false);
+  const notes = studyNotes[question.topic];
+  const isBonus = question.isBonus;
+
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">
-        <span className="text-indigo-600 mr-2">Q{index + 1}.</span>
-        {question.stem}
-      </h2>
+    <div className={`rounded-2xl p-6 backdrop-blur-xl border transition-all ${
+      isBonus
+        ? 'bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/30 shadow-lg shadow-amber-500/10'
+        : 'bg-white/5 border-white/10 hover:border-white/20'
+    }`}>
+      {isBonus && (
+        <div className="flex items-center gap-2 mb-4">
+          <span className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full uppercase tracking-wider">
+            Bonus
+          </span>
+          <span className="text-sm text-amber-400 font-medium">
+            Challenge Question
+          </span>
+        </div>
+      )}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-5">
+        <h2 className="text-lg font-semibold text-white leading-relaxed">
+          <span className={`mr-2 ${isBonus ? 'text-amber-400' : 'text-purple-400'}`}>
+            {isBonus ? 'B.' : `Q${index + 1}.`}
+          </span>
+          {question.stem}
+        </h2>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+            isBonus
+              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+              : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+          }`}>
+            {formatTopic(question.topic)}
+          </span>
+          {notes && (
+            <button
+              onClick={() => setShowNotes(!showNotes)}
+              className="px-3 py-1 text-xs font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full hover:bg-cyan-500/30 transition-colors"
+            >
+              {showNotes ? 'Hide' : 'Notes'}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {showNotes && notes && (
+        <StudyNotesPanel notes={notes} onClose={() => setShowNotes(false)} />
+      )}
+
       <div className="space-y-3">
         {question.options.map((option, optionIndex) => (
           <label
             key={optionIndex}
-            className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
+            className={`flex items-center p-4 rounded-xl cursor-pointer transition-all duration-200 ${
               selectedIndex === optionIndex
-                ? 'border-indigo-600 bg-indigo-50'
-                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                ? isBonus
+                  ? 'bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-2 border-amber-500 shadow-lg shadow-amber-500/20'
+                  : 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-2 border-purple-500 shadow-lg shadow-purple-500/20'
+                : 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20'
             } ${disabled ? 'cursor-not-allowed opacity-50' : ''}`}
           >
             <input
@@ -255,10 +405,54 @@ function QuestionCard({
               checked={selectedIndex === optionIndex}
               onChange={() => onSelect(optionIndex)}
               disabled={disabled}
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+              className="sr-only"
             />
-            <span className="ml-3 text-gray-700">{option}</span>
+            <div className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center transition-all ${
+              selectedIndex === optionIndex
+                ? isBonus
+                  ? 'border-amber-500 bg-amber-500'
+                  : 'border-purple-500 bg-purple-500'
+                : 'border-white/30'
+            }`}>
+              {selectedIndex === optionIndex && (
+                <div className="w-2 h-2 bg-white rounded-full" />
+              )}
+            </div>
+            <span className="text-white/80">{option}</span>
           </label>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StudyNotesPanel({ notes, onClose }: { notes: StudyNote; onClose: () => void }) {
+  return (
+    <div className="mb-5 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl backdrop-blur-sm">
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="font-semibold text-cyan-300">{notes.title}</h3>
+        <button
+          onClick={onClose}
+          className="text-cyan-400 hover:text-cyan-300 transition-colors p-1"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div className="space-y-4 max-h-80 overflow-y-auto text-sm">
+        {notes.sections.map((section, i) => (
+          <div key={i}>
+            <h4 className="font-medium text-cyan-200 mb-1">{section.heading}</h4>
+            <p className="text-white/60 mb-2">{section.content}</p>
+            {section.bullets && (
+              <ul className="list-disc list-inside space-y-1 text-white/50">
+                {section.bullets.map((bullet, j) => (
+                  <li key={j}>{bullet}</li>
+                ))}
+              </ul>
+            )}
+          </div>
         ))}
       </div>
     </div>
@@ -269,76 +463,99 @@ function ResultsView({
   results,
   onRetry,
   onLogout,
+  streakResult,
+  streakStatus,
 }: {
   results: SubmitResponse;
   onRetry: () => void;
   onLogout: () => void;
+  streakResult: StreakResult | null;
+  streakStatus: StreakStatus | null;
 }) {
-  const scorePercentage = (results.score / 5) * 100;
-  let scoreColor = 'text-red-600';
-  let scoreBg = 'bg-red-100';
+  const totalQuestions = results.feedback.length;
+  const scorePercentage = (results.score / totalQuestions) * 100;
+
+  let scoreGradient = 'from-red-500 to-orange-500';
+  let scoreShadow = 'shadow-red-500/30';
+  let scoreMessage = 'Keep practicing!';
 
   if (scorePercentage >= 80) {
-    scoreColor = 'text-green-600';
-    scoreBg = 'bg-green-100';
+    scoreGradient = 'from-green-400 to-emerald-500';
+    scoreShadow = 'shadow-green-500/30';
+    scoreMessage = scorePercentage === 100 ? 'Perfect!' : 'Excellent!';
   } else if (scorePercentage >= 60) {
-    scoreColor = 'text-yellow-600';
-    scoreBg = 'bg-yellow-100';
+    scoreGradient = 'from-yellow-400 to-orange-500';
+    scoreShadow = 'shadow-yellow-500/30';
+    scoreMessage = 'Great job!';
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-8 px-4">
       <div className="max-w-3xl mx-auto">
-        <header className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Quiz Results</h1>
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <h1 className="text-2xl font-bold text-white">Quiz Results</h1>
+            {streakResult && (
+              <StreakDisplay
+                currentStreak={streakResult.currentStreak}
+                freezeDays={streakResult.freezeDays}
+                maxFreezes={streakStatus?.maxFreezes || 2}
+                showFreezeButton={false}
+                compact
+              />
+            )}
+          </div>
           <div className="flex items-center gap-4">
             <Link
               href="/progress"
-              className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+              className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/20 hover:text-white text-sm font-medium transition-all"
             >
-              View Progress
+              Progress
             </Link>
             <button
               onClick={onLogout}
-              className="text-gray-500 hover:text-gray-700 text-sm"
+              className="text-white/40 hover:text-white/80 text-sm transition-colors"
             >
               Logout
             </button>
           </div>
         </header>
 
-        <div className={`${scoreBg} rounded-xl p-8 text-center mb-8`}>
-          <p className="text-sm font-medium text-gray-600 mb-2">Your Score</p>
-          <p className={`text-5xl font-bold ${scoreColor}`}>
-            {results.score}/5
-          </p>
-          <p className="mt-2 text-gray-600">
-            {scorePercentage === 100
-              ? 'Perfect score!'
-              : scorePercentage >= 80
-              ? 'Great job!'
-              : scorePercentage >= 60
-              ? 'Good effort!'
-              : 'Keep practicing!'}
-          </p>
+        {/* Score Card */}
+        <div className={`relative overflow-hidden rounded-3xl p-8 text-center mb-8 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 shadow-2xl ${scoreShadow}`}>
+          {/* Background glow */}
+          <div className={`absolute inset-0 bg-gradient-to-r ${scoreGradient} opacity-10 blur-3xl`} />
+
+          <div className="relative z-10">
+            <p className="text-sm font-medium text-white/40 uppercase tracking-wider mb-3">Your Score</p>
+            <p className={`text-7xl font-black bg-gradient-to-r ${scoreGradient} bg-clip-text text-transparent`}>
+              {results.score}/{totalQuestions}
+            </p>
+            <p className="mt-1 text-xs text-white/30">(5 questions + 1 bonus)</p>
+            <p className={`mt-4 text-xl font-bold bg-gradient-to-r ${scoreGradient} bg-clip-text text-transparent`}>
+              {scoreMessage}
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-6 mb-8">
+        {/* Feedback Cards */}
+        <div className="space-y-4 mb-8">
           {results.feedback.map((item, index) => (
             <FeedbackCard key={item.questionId} feedback={item} index={index} />
           ))}
         </div>
 
-        <div className="flex justify-center gap-4">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
           <button
             onClick={onRetry}
-            className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-2xl hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105 active:scale-95"
           >
-            Try Again (New Questions)
+            Try Again
           </button>
           <Link
             href="/progress"
-            className="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
+            className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-2xl hover:bg-white/20 transition-all text-center"
           >
             View Progress
           </Link>
@@ -355,52 +572,95 @@ function FeedbackCard({
   feedback: QuestionFeedback;
   index: number;
 }) {
+  const [showNotes, setShowNotes] = useState(false);
+  const [expanded, setExpanded] = useState(!feedback.isCorrect);
+  const notes = studyNotes[feedback.topic];
+
   return (
     <div
-      className={`rounded-xl p-6 ${
-        feedback.isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+      className={`rounded-2xl overflow-hidden backdrop-blur-xl border transition-all ${
+        feedback.isCorrect
+          ? 'bg-green-500/10 border-green-500/30'
+          : 'bg-red-500/10 border-red-500/30'
       }`}
     >
-      <div className="flex items-start gap-3">
+      {/* Header - always visible */}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full p-4 flex items-center gap-3 text-left"
+      >
         <span
-          className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white text-sm font-medium ${
-            feedback.isCorrect ? 'bg-green-500' : 'bg-red-500'
+          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
+            feedback.isCorrect
+              ? 'bg-gradient-to-br from-green-400 to-emerald-500'
+              : 'bg-gradient-to-br from-red-400 to-rose-500'
           }`}
         >
           {feedback.isCorrect ? '✓' : '✗'}
         </span>
-        <div className="flex-1">
-          <h3 className="font-semibold text-gray-900 mb-3">
-            Q{index + 1}. {feedback.stem}
+        <span className="flex-1 font-medium text-white/90 line-clamp-1">
+          Q{index + 1}. {feedback.stem}
+        </span>
+        <svg
+          className={`w-5 h-5 text-white/40 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* Expandable content */}
+      {expanded && (
+        <div className="px-4 pb-4">
+          <h3 className="font-semibold text-white/80 mb-4 pl-11">
+            {feedback.stem}
           </h3>
-          <div className="space-y-2 mb-4">
+          <div className="space-y-2 mb-4 pl-11">
             {feedback.options.map((option, i) => (
               <div
                 key={i}
-                className={`p-3 rounded-lg text-sm ${
+                className={`p-3 rounded-xl text-sm transition-all ${
                   i === feedback.correctIndex
-                    ? 'bg-green-100 border border-green-300 text-green-800'
+                    ? 'bg-green-500/20 border border-green-500/40 text-green-300'
                     : i === feedback.selectedIndex && !feedback.isCorrect
-                    ? 'bg-red-100 border border-red-300 text-red-800'
-                    : 'bg-white border border-gray-200 text-gray-600'
+                    ? 'bg-red-500/20 border border-red-500/40 text-red-300'
+                    : 'bg-white/5 border border-white/10 text-white/50'
                 }`}
               >
-                {i === feedback.correctIndex && '✓ '}
-                {i === feedback.selectedIndex && i !== feedback.correctIndex && '✗ '}
+                <span className="font-medium mr-2">
+                  {i === feedback.correctIndex ? '✓' : i === feedback.selectedIndex && !feedback.isCorrect ? '✗' : ''}
+                </span>
                 {option}
               </div>
             ))}
           </div>
-          <div className="bg-white rounded-lg p-4 border border-gray-200">
-            <p className="text-sm text-gray-600">
-              <span className="font-medium">Explanation:</span> {feedback.explanation}
+          <div className="bg-white/5 rounded-xl p-4 border border-white/10 ml-11">
+            <p className="text-sm text-white/60">
+              <span className="font-medium text-white/80">Explanation:</span> {feedback.explanation}
             </p>
           </div>
-          <p className="mt-2 text-xs text-gray-500">
-            Topic: {feedback.topic.replace(/_/g, ' ')}
-          </p>
+          <div className="mt-3 flex items-center gap-2 pl-11">
+            <span className="text-xs text-white/30 px-2 py-1 bg-white/5 rounded-full">
+              {feedback.topic.replace(/_/g, ' ')}
+            </span>
+            {notes && (
+              <button
+                onClick={() => setShowNotes(!showNotes)}
+                className="text-xs px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full hover:bg-cyan-500/30 transition-colors"
+              >
+                {showNotes ? 'Hide Notes' : 'Review Notes'}
+              </button>
+            )}
+          </div>
+          {showNotes && notes && (
+            <div className="mt-3 ml-11">
+              <StudyNotesPanel notes={notes} onClose={() => setShowNotes(false)} />
+            </div>
+          )}
         </div>
-      </div>
+      )}
     </div>
   );
 }

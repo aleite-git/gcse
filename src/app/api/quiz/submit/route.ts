@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { submitQuizAttempt } from '@/lib/quiz';
+import { recordActivity, getStreakStatus } from '@/lib/streak';
 import { SubmitRequest, SubmitResponse, QuestionFeedback } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -25,9 +26,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (answers.length !== 5) {
+    if (answers.length !== 6) {
       return NextResponse.json(
-        { error: 'Must answer all 5 questions' },
+        { error: 'Must answer all 6 questions' },
         { status: 400 }
       );
     }
@@ -76,11 +77,27 @@ export async function POST(request: NextRequest) {
       };
     });
 
-    const response: SubmitResponse = {
+    // Record streak activity
+    const timezone = request.headers.get('x-timezone') || 'Europe/Lisbon';
+    const { streak: updatedStreak, freezeEarned } = await recordActivity(
+      session.label,
+      'quiz_submit',
+      timezone
+    );
+    const streakStatus = await getStreakStatus(session.label, timezone);
+
+    const response: SubmitResponse & {
+      streak: { currentStreak: number; freezeDays: number; freezeEarned: boolean };
+    } = {
       attemptId: attempt.id,
       score: attempt.score,
       feedback,
       topicBreakdown: attempt.topicBreakdown,
+      streak: {
+        currentStreak: updatedStreak.currentStreak,
+        freezeDays: updatedStreak.freezeDays,
+        freezeEarned,
+      },
     };
 
     return NextResponse.json(response);

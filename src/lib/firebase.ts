@@ -63,4 +63,7 @@ export const COLLECTIONS = {
   QUESTIONS: 'questions',
   DAILY_ASSIGNMENTS: 'dailyAssignments',
   ATTEMPTS: 'attempts',
+  QUESTION_STATS: 'questionStats',
+  USER_STREAKS: 'userStreaks',
+  STREAK_ACTIVITIES: 'streakActivities',
 } as const;

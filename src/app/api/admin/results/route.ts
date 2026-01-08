@@ -34,6 +34,33 @@ export async function GET(request: NextRequest) {
       byDate.set(attempt.date, dateAttempts);
     }
 
+    // Group by user for user-based analysis
+    const byUser = new Map<string, typeof attempts>();
+    for (const attempt of attempts) {
+      const userLabel = attempt.userLabel || 'Unknown';
+      const userAttempts = byUser.get(userLabel) || [];
+      userAttempts.push(attempt);
+      byUser.set(userLabel, userAttempts);
+    }
+
+    // Calculate per-user statistics
+    const userStats = Array.from(byUser.entries()).map(([userLabel, userAttempts]) => {
+      const totalScore = userAttempts.reduce((sum, a) => sum + a.score, 0);
+      const avgScore = userAttempts.length > 0 ? totalScore / userAttempts.length : 0;
+      const bestScore = userAttempts.length > 0 ? Math.max(...userAttempts.map(a => a.score)) : 0;
+      return {
+        userLabel,
+        totalAttempts: userAttempts.length,
+        avgScore: Math.round(avgScore * 100) / 100,
+        bestScore,
+        lastAttempt: userAttempts.length > 0
+          ? userAttempts.sort((a, b) =>
+              new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+            )[0].submittedAt
+          : null,
+      };
+    }).sort((a, b) => b.totalAttempts - a.totalAttempts);
+
     // Calculate topic statistics
     const topicStats = new Map<string, { correct: number; total: number }>();
     for (const attempt of attempts) {
@@ -59,7 +86,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       attempts,
       byDate: Object.fromEntries(byDate),
+      byUser: Object.fromEntries(byUser),
       topicStats: weakTopics,
+      userStats,
       totalAttempts: attempts.length,
     });
   } catch (error) {

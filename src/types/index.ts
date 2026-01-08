@@ -92,6 +92,8 @@ export interface QuizQuestion {
   id: string;
   stem: string;
   options: [string, string, string, string];
+  topic: Topic;
+  isBonus?: boolean;
 }
 
 export interface QuizResponse {
@@ -137,4 +139,43 @@ export interface ProgressSummary {
     correctRate: number;
     totalQuestions: number;
   }[];
+}
+
+export interface QuestionStats {
+  questionId: string;
+  userLabel: string;
+  attempts: number;
+  correct: number;
+  lastAttemptedAt: Date;
+}
+
+// Streak system types
+export interface UserStreak {
+  userLabel: string;
+  currentStreak: number;
+  longestStreak: number;
+  lastActivityDate: string; // YYYY-MM-DD in user's timezone
+  freezeDays: number; // earned freeze days available
+  freezeDaysUsed: number; // total freeze days used historically
+  timezone: string; // e.g., "Europe/Lisbon"
+  streakStartDate: string; // when current streak began
+  lastFreezeEarnedAt: number; // streak day when last freeze was earned (to track 5-day intervals)
+  updatedAt: Date;
+}
+
+export interface StreakActivity {
+  userLabel: string;
+  date: string; // YYYY-MM-DD
+  activityType: 'quiz_submit' | 'login';
+  createdAt: Date;
+}
+
+export interface StreakStatus {
+  currentStreak: number;
+  freezeDays: number;
+  maxFreezes: number;
+  streakActive: boolean;
+  lastActivityDate: string | null;
+  daysUntilStreakLoss: number; // 0 = at risk today, 1 = safe for today
+  frozeToday: boolean; // whether a freeze was auto-applied today
 }

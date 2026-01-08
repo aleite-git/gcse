@@ -111,7 +111,8 @@ export async function getRecentlyUsedQuestionIds(days: number): Promise<Set<stri
 }
 
 /**
- * Select 5 questions for a quiz with topic balancing and repeat avoidance
+ * Select 5 regular questions + 1 bonus hard question for a quiz
+ * with topic balancing and repeat avoidance
  */
 export async function selectQuizQuestions(
   excludeIds: Set<string> = new Set()
@@ -126,9 +127,13 @@ export async function selectQuizQuestions(
   const freshQuestions = allQuestions.filter((q) => !allExclusions.has(q.id));
   const usedQuestions = allQuestions.filter((q) => allExclusions.has(q.id));
 
-  // Get all available topics from fresh questions
+  // Filter out hard questions for bonus selection later
+  const regularFreshQuestions = freshQuestions.filter((q) => q.difficulty !== 3);
+  const hardFreshQuestions = freshQuestions.filter((q) => q.difficulty === 3);
+
+  // Get all available topics from fresh regular questions
   const topicCounts = new Map<Topic, Question[]>();
-  for (const q of freshQuestions) {
+  for (const q of regularFreshQuestions) {
     const list = topicCounts.get(q.topic) || [];
     list.push(q);
     topicCounts.set(q.topic, list);
@@ -156,9 +161,9 @@ export async function selectQuizQuestions(
     }
   }
 
-  // Second pass: fill remaining slots from any topic
+  // Second pass: fill remaining slots from any topic (non-hard questions)
   if (selected.length < 5) {
-    const remaining = freshQuestions.filter((q) => !selected.includes(q));
+    const remaining = regularFreshQuestions.filter((q) => !selected.includes(q));
     shuffleArray(remaining);
 
     for (const q of remaining) {
@@ -167,10 +172,10 @@ export async function selectQuizQuestions(
     }
   }
 
-  // If still not enough, use previously used questions
+  // If still not enough, use previously used non-hard questions
   if (selected.length < 5) {
     const selectedIds = new Set(selected.map((q) => q.id));
-    const fallback = usedQuestions.filter((q) => !selectedIds.has(q.id));
+    const fallback = usedQuestions.filter((q) => !selectedIds.has(q.id) && q.difficulty !== 3);
     shuffleArray(fallback);
 
     for (const q of fallback) {
@@ -179,10 +184,10 @@ export async function selectQuizQuestions(
     }
   }
 
-  // Final fallback: if we still don't have 5, use any questions
+  // Final fallback: if we still don't have 5, use any non-hard questions
   if (selected.length < 5) {
     const selectedIds = new Set(selected.map((q) => q.id));
-    const anyQuestions = allQuestions.filter((q) => !selectedIds.has(q.id));
+    const anyQuestions = allQuestions.filter((q) => !selectedIds.has(q.id) && q.difficulty !== 3);
     shuffleArray(anyQuestions);
 
     for (const q of anyQuestions) {
@@ -191,10 +196,39 @@ export async function selectQuizQuestions(
     }
   }
 
-  // Shuffle the final selection
+  // Shuffle the 5 regular questions
   shuffleArray(selected);
 
-  return selected.slice(0, 5);
+  // Now select 1 bonus hard question (difficulty 3)
+  const selectedIds = new Set(selected.map((q) => q.id));
+  let bonusQuestion: Question | null = null;
+
+  // Try fresh hard questions first
+  if (hardFreshQuestions.length > 0) {
+    shuffleArray(hardFreshQuestions);
+    bonusQuestion = hardFreshQuestions[0];
+  } else {
+    // Fallback to used hard questions
+    const usedHardQuestions = usedQuestions.filter((q) => q.difficulty === 3 && !selectedIds.has(q.id));
+    if (usedHardQuestions.length > 0) {
+      shuffleArray(usedHardQuestions);
+      bonusQuestion = usedHardQuestions[0];
+    } else {
+      // Final fallback: any hard question
+      const anyHardQuestions = allQuestions.filter((q) => q.difficulty === 3 && !selectedIds.has(q.id));
+      if (anyHardQuestions.length > 0) {
+        shuffleArray(anyHardQuestions);
+        bonusQuestion = anyHardQuestions[0];
+      }
+    }
+  }
+
+  // Add bonus question at the end if found
+  if (bonusQuestion) {
+    selected.push(bonusQuestion);
+  }
+
+  return selected.slice(0, 6);
 }
 
 /**

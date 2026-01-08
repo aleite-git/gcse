@@ -7,10 +7,13 @@ export async function GET() {
     const { quizVersion, questions } = await getTodayQuiz();
 
     // Return questions without correct answers
-    const safeQuestions: QuizQuestion[] = questions.map((q) => ({
+    // Mark the last question (index 5) as bonus if it's a hard question (difficulty 3)
+    const safeQuestions: QuizQuestion[] = questions.map((q, index) => ({
       id: q.id,
       stem: q.stem,
       options: q.options,
+      topic: q.topic,
+      isBonus: index === 5 && q.difficulty === 3,
     }));
 
     const response: QuizResponse = {

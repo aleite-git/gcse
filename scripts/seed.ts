@@ -59,6 +59,8 @@ async function seedAccessCodes(db: FirebaseFirestore.Firestore) {
   // Default access codes (change these in production!)
   const codes = [
     { code: 'student2024', label: 'Student', isAdmin: false },
+    { code: 'teststudent', label: 'TestStudent', isAdmin: false },
+    { code: 'pimpolho2009', label: 'Pimpolho', isAdmin: false },
     { code: 'admin2024', label: 'Admin', isAdmin: true },
   ];
 

@@ -5,23 +5,75 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Attempt, Topic } from '@/types';
 
+interface UserStat {
+  userLabel: string;
+  totalAttempts: number;
+  avgScore: number;
+  bestScore: number;
+  lastAttempt: string | null;
+}
+
+interface PreviewQuestion {
+  id: string;
+  stem: string;
+  options: string[];
+  topic: string;
+  correctIndex: number;
+  explanation: string;
+  difficulty: number;
+  isBonus?: boolean;
+}
+
+interface PreviewData {
+  date: string;
+  questions: PreviewQuestion[];
+}
+
 interface ResultsData {
   attempts: Attempt[];
   byDate: Record<string, Attempt[]>;
+  byUser: Record<string, Attempt[]>;
   topicStats: Array<{
     topic: string;
     correctRate: number;
     totalQuestions: number;
     correct: number;
   }>;
+  userStats: UserStat[];
   totalAttempts: number;
 }
+
+interface QuestionWithStats {
+  id: string;
+  stem: string;
+  topic: string;
+  difficulty: number;
+  totalAttempts: number;
+  totalCorrect: number;
+  successRate: number;
+  userBreakdown: {
+    userLabel: string;
+    attempts: number;
+    correct: number;
+    successRate: number;
+  }[];
+}
+
+type ViewMode = 'date' | 'user' | 'stats';
 
 export default function AdminResultsPage() {
   const [data, setData] = useState<ResultsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [viewMode, setViewMode] = useState<ViewMode>('user');
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [preview, setPreview] = useState<PreviewData | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [questionStats, setQuestionStats] = useState<QuestionWithStats[]>([]);
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const router = useRouter();
 
   const fetchResults = useCallback(async () => {
@@ -49,6 +101,43 @@ export default function AdminResultsPage() {
   useEffect(() => {
     fetchResults();
   }, [fetchResults]);
+
+  const fetchPreview = async () => {
+    setPreviewLoading(true);
+    try {
+      const response = await fetch('/api/admin/preview');
+      if (response.ok) {
+        const data = await response.json();
+        setPreview(data);
+        setShowPreview(true);
+      }
+    } catch {
+      console.error('Failed to load preview');
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
+  const fetchQuestionStats = useCallback(async () => {
+    setStatsLoading(true);
+    try {
+      const response = await fetch('/api/admin/stats');
+      if (response.ok) {
+        const data = await response.json();
+        setQuestionStats(data.questions || []);
+      }
+    } catch {
+      console.error('Failed to load question stats');
+    } finally {
+      setStatsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (viewMode === 'stats' && questionStats.length === 0 && !statsLoading) {
+      fetchQuestionStats();
+    }
+  }, [viewMode, questionStats.length, statsLoading, fetchQuestionStats]);
 
   const handleLogout = async () => {
     await fetch('/api/logout', { method: 'POST' });
@@ -116,6 +205,75 @@ export default function AdminResultsPage() {
           </div>
         </header>
 
+        {/* Tomorrow's Quiz Preview */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Tomorrow&apos;s Quiz Preview</h2>
+            <button
+              onClick={() => {
+                if (showPreview) {
+                  setShowPreview(false);
+                } else {
+                  fetchPreview();
+                }
+              }}
+              disabled={previewLoading}
+              className="px-4 py-2 text-sm font-medium bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors disabled:opacity-50"
+            >
+              {previewLoading ? 'Loading...' : showPreview ? 'Hide Preview' : 'Show Preview'}
+            </button>
+          </div>
+          {showPreview && preview && (
+            <div className="space-y-4">
+              <p className="text-sm text-gray-500 mb-4">
+                Preview for {formatDate(preview.date)} - These questions may change if regenerated.
+              </p>
+              {preview.questions.map((q, index) => (
+                <div key={q.id} className={`p-4 rounded-lg ${q.isBonus ? 'bg-amber-50 border-2 border-amber-300' : 'bg-gray-50'}`}>
+                  <div className="flex items-start gap-3 mb-3">
+                    <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium ${q.isBonus ? 'bg-amber-500 text-white' : 'bg-indigo-100 text-indigo-700'}`}>
+                      {q.isBonus ? 'B' : index + 1}
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        {q.isBonus && (
+                          <span className="px-2 py-0.5 text-xs font-bold bg-amber-500 text-white rounded">BONUS</span>
+                        )}
+                        <span className="text-xs text-gray-500">Difficulty: {q.difficulty}</span>
+                      </div>
+                      <p className="font-medium text-gray-900 mb-3">{q.stem}</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3">
+                        {q.options.map((opt, i) => (
+                          <div
+                            key={i}
+                            className={`p-2 rounded border text-sm ${
+                              i === q.correctIndex
+                                ? 'bg-green-100 border-green-400 text-green-800 font-medium'
+                                : 'bg-white border-gray-200 text-gray-700'
+                            }`}
+                          >
+                            {i === q.correctIndex && <span className="mr-1">✓</span>}
+                            {String.fromCharCode(65 + i)}. {opt}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="p-3 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+                        <span className="font-medium">Explanation: </span>{q.explanation}
+                      </div>
+                    </div>
+                    <span className={`flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full ${q.isBonus ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                      {q.topic.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {!showPreview && !previewLoading && (
+            <p className="text-gray-500 text-sm">Click &quot;Show Preview&quot; to see tomorrow&apos;s quiz questions.</p>
+          )}
+        </div>
+
         {/* Topic Performance */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Topic Performance</h2>
@@ -150,117 +308,292 @@ export default function AdminResultsPage() {
           )}
         </div>
 
-        {/* Attempts by Date */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Date List */}
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Attempts by Date</h2>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {dates.map((date) => {
-                const attempts = data?.byDate[date] || [];
-                const bestScore = Math.max(...attempts.map((a) => a.score));
-                return (
-                  <button
-                    key={date}
-                    onClick={() => setSelectedDate(selectedDate === date ? null : date)}
-                    className={`w-full p-3 rounded-lg text-left transition-colors ${
-                      selectedDate === date
-                        ? 'bg-indigo-100 border border-indigo-300'
-                        : 'bg-gray-50 hover:bg-gray-100'
-                    }`}
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium text-gray-900">{formatDate(date)}</span>
-                      <span
-                        className={`text-sm font-semibold ${getScoreColor(bestScore)}`}
-                      >
-                        Best: {bestScore}/5
-                      </span>
+        {/* View Mode Tabs */}
+        <div className="bg-white rounded-xl shadow-sm p-2 mb-6">
+          <div className="flex gap-2">
+            <button
+              onClick={() => { setViewMode('user'); setSelectedDate(null); setSelectedQuestion(null); }}
+              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                viewMode === 'user'
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              By User
+            </button>
+            <button
+              onClick={() => { setViewMode('date'); setSelectedUser(null); setSelectedQuestion(null); }}
+              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                viewMode === 'date'
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              By Date
+            </button>
+            <button
+              onClick={() => { setViewMode('stats'); setSelectedUser(null); setSelectedDate(null); }}
+              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                viewMode === 'stats'
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Question Stats
+            </button>
+          </div>
+        </div>
+
+        {/* Content Grid */}
+        {viewMode === 'stats' ? (
+          /* Question Stats View */
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Questions List */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Questions</h2>
+              {statsLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+                  <p className="mt-2 text-sm text-gray-500">Loading stats...</p>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {questionStats.map((q) => (
+                    <button
+                      key={q.id}
+                      onClick={() => setSelectedQuestion(selectedQuestion === q.id ? null : q.id)}
+                      className={`w-full p-3 rounded-lg text-left transition-colors ${
+                        selectedQuestion === q.id
+                          ? 'bg-indigo-100 border border-indigo-300'
+                          : 'bg-gray-50 hover:bg-gray-100'
+                      }`}
+                    >
+                      <p className="font-medium text-gray-900 text-sm line-clamp-2 mb-2">
+                        {q.stem}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500">
+                          {q.totalAttempts} attempt{q.totalAttempts !== 1 ? 's' : ''}
+                        </span>
+                        <span className={`text-sm font-semibold ${
+                          q.successRate >= 0.7 ? 'text-green-600' :
+                          q.successRate >= 0.5 ? 'text-yellow-600' : 'text-red-600'
+                        }`}>
+                          {(q.successRate * 100).toFixed(0)}% correct
+                        </span>
+                      </div>
+                      <div className="flex gap-2 mt-1">
+                        <span className="px-1.5 py-0.5 text-xs rounded bg-indigo-100 text-indigo-700">
+                          {q.topic.replace(/_/g, ' ')}
+                        </span>
+                        <span className="px-1.5 py-0.5 text-xs rounded bg-gray-200 text-gray-600">
+                          Diff: {q.difficulty}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
+                  {questionStats.length === 0 && !statsLoading && (
+                    <p className="text-gray-500 text-center py-4">No question stats yet</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Question Details */}
+            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                {selectedQuestion ? 'Question Details' : 'Select a question'}
+              </h2>
+              {selectedQuestion ? (
+                (() => {
+                  const q = questionStats.find((qs) => qs.id === selectedQuestion);
+                  if (!q) return null;
+                  return (
+                    <div className="space-y-4">
+                      <div className="p-4 bg-gray-50 rounded-lg">
+                        <p className="font-medium text-gray-900 mb-3">{q.stem}</p>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          <span className="px-2 py-1 text-xs rounded bg-indigo-100 text-indigo-700">
+                            {q.topic.replace(/_/g, ' ')}
+                          </span>
+                          <span className="px-2 py-1 text-xs rounded bg-gray-200 text-gray-600">
+                            Difficulty: {q.difficulty}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                          <div className="p-3 bg-white rounded-lg border">
+                            <p className="text-2xl font-bold text-gray-900">{q.totalAttempts}</p>
+                            <p className="text-xs text-gray-500">Total Attempts</p>
+                          </div>
+                          <div className="p-3 bg-white rounded-lg border">
+                            <p className="text-2xl font-bold text-green-600">{q.totalCorrect}</p>
+                            <p className="text-xs text-gray-500">Correct</p>
+                          </div>
+                          <div className="p-3 bg-white rounded-lg border">
+                            <p className={`text-2xl font-bold ${
+                              q.successRate >= 0.7 ? 'text-green-600' :
+                              q.successRate >= 0.5 ? 'text-yellow-600' : 'text-red-600'
+                            }`}>
+                              {(q.successRate * 100).toFixed(0)}%
+                            </p>
+                            <p className="text-xs text-gray-500">Success Rate</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* User Breakdown */}
+                      <div>
+                        <h3 className="font-medium text-gray-900 mb-3">By User</h3>
+                        <div className="space-y-2">
+                          {q.userBreakdown.map((user) => (
+                            <div key={user.userLabel} className="p-3 bg-gray-50 rounded-lg flex justify-between items-center">
+                              <div>
+                                <span className="font-medium text-gray-900">{user.userLabel}</span>
+                                <p className="text-xs text-gray-500">
+                                  {user.attempts} attempt{user.attempts !== 1 ? 's' : ''}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <span className={`text-lg font-bold ${
+                                  user.successRate >= 0.7 ? 'text-green-600' :
+                                  user.successRate >= 0.5 ? 'text-yellow-600' : 'text-red-600'
+                                }`}>
+                                  {user.correct}/{user.attempts}
+                                </span>
+                                <p className="text-xs text-gray-500">
+                                  {(user.successRate * 100).toFixed(0)}% correct
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                          {q.userBreakdown.length === 0 && (
+                            <p className="text-gray-500 text-center py-4">No user data</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {attempts.length} attempt{attempts.length !== 1 ? 's' : ''}
-                    </p>
-                  </button>
-                );
-              })}
-              {dates.length === 0 && (
-                <p className="text-gray-500 text-center py-4">No attempts yet</p>
+                  );
+                })()
+              ) : (
+                <p className="text-gray-500 text-center py-8">
+                  Select a question from the list to view detailed stats
+                </p>
               )}
             </div>
           </div>
-
-          {/* Attempt Details */}
-          <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              {selectedDate ? `Attempts on ${formatDate(selectedDate)}` : 'Select a date'}
-            </h2>
-            {selectedDate && data?.byDate[selectedDate] ? (
-              <div className="space-y-4">
-                {data.byDate[selectedDate].map((attempt) => (
-                  <div
-                    key={attempt.id}
-                    className="p-4 bg-gray-50 rounded-lg"
-                  >
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <span className="font-medium text-gray-900">
-                          Attempt #{attempt.attemptNumber}
-                        </span>
-                        <span className="text-sm text-gray-500 ml-2">
-                          (Version {attempt.quizVersion})
-                        </span>
-                      </div>
-                      <span
-                        className={`text-lg font-bold ${getScoreColor(attempt.score)}`}
+        ) : (
+          /* User/Date View */
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* User/Date List */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                {viewMode === 'user' ? 'Users' : 'Attempts by Date'}
+              </h2>
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {viewMode === 'user' ? (
+                  <>
+                    {data?.userStats?.map((userStat) => (
+                      <button
+                        key={userStat.userLabel}
+                        onClick={() => setSelectedUser(selectedUser === userStat.userLabel ? null : userStat.userLabel)}
+                        className={`w-full p-3 rounded-lg text-left transition-colors ${
+                          selectedUser === userStat.userLabel
+                            ? 'bg-indigo-100 border border-indigo-300'
+                            : 'bg-gray-50 hover:bg-gray-100'
+                        }`}
                       >
-                        {attempt.score}/5
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">Duration:</span>{' '}
-                        <span className="text-gray-900">
-                          {formatDuration(attempt.durationSeconds)}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Submitted:</span>{' '}
-                        <span className="text-gray-900">
-                          {formatTime(attempt.submittedAt)}
-                        </span>
-                      </div>
-                    </div>
-                    {attempt.topicBreakdown && (
-                      <div className="mt-3 pt-3 border-t border-gray-200">
-                        <p className="text-xs text-gray-500 mb-2">Topic breakdown:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {Object.entries(attempt.topicBreakdown).map(([topic, stats]) => (
-                            <span
-                              key={topic}
-                              className={`px-2 py-1 rounded text-xs ${
-                                stats.correct === stats.total
-                                  ? 'bg-green-100 text-green-800'
-                                  : stats.correct > 0
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : 'bg-red-100 text-red-800'
-                              }`}
-                            >
-                              {topic.replace(/_/g, ' ')}: {stats.correct}/{stats.total}
-                            </span>
-                          ))}
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium text-gray-900">{userStat.userLabel}</span>
+                          <span className={`text-sm font-semibold ${getScoreColor(userStat.bestScore)}`}>
+                            Best: {userStat.bestScore}/5
+                          </span>
                         </div>
-                      </div>
+                        <div className="flex justify-between mt-1">
+                          <p className="text-xs text-gray-500">
+                            {userStat.totalAttempts} attempt{userStat.totalAttempts !== 1 ? 's' : ''}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Avg: {userStat.avgScore.toFixed(1)}/5
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                    {(!data?.userStats || data.userStats.length === 0) && (
+                      <p className="text-gray-500 text-center py-4">No users yet</p>
                     )}
-                  </div>
-                ))}
+                  </>
+                ) : (
+                  <>
+                    {dates.map((date) => {
+                      const attempts = data?.byDate[date] || [];
+                      const bestScore = Math.max(...attempts.map((a) => a.score));
+                      return (
+                        <button
+                          key={date}
+                          onClick={() => setSelectedDate(selectedDate === date ? null : date)}
+                          className={`w-full p-3 rounded-lg text-left transition-colors ${
+                            selectedDate === date
+                              ? 'bg-indigo-100 border border-indigo-300'
+                              : 'bg-gray-50 hover:bg-gray-100'
+                          }`}
+                        >
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium text-gray-900">{formatDate(date)}</span>
+                            <span className={`text-sm font-semibold ${getScoreColor(bestScore)}`}>
+                              Best: {bestScore}/5
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {attempts.length} attempt{attempts.length !== 1 ? 's' : ''}
+                          </p>
+                        </button>
+                      );
+                    })}
+                    {dates.length === 0 && (
+                      <p className="text-gray-500 text-center py-4">No attempts yet</p>
+                    )}
+                  </>
+                )}
               </div>
-            ) : (
-              <p className="text-gray-500 text-center py-8">
-                Select a date from the list to view attempt details
-              </p>
-            )}
+            </div>
+
+            {/* Attempt Details */}
+            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                {viewMode === 'user'
+                  ? (selectedUser ? `Attempts by ${selectedUser}` : 'Select a user')
+                  : (selectedDate ? `Attempts on ${formatDate(selectedDate)}` : 'Select a date')}
+              </h2>
+              {viewMode === 'user' ? (
+                selectedUser && data?.byUser[selectedUser] ? (
+                  <div className="space-y-4">
+                    {data.byUser[selectedUser]
+                      .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
+                      .map((attempt) => (
+                      <AttemptCard key={attempt.id} attempt={attempt} showDate />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-8">
+                    Select a user from the list to view their attempts
+                  </p>
+                )
+              ) : (
+                selectedDate && data?.byDate[selectedDate] ? (
+                  <div className="space-y-4">
+                    {data.byDate[selectedDate].map((attempt) => (
+                      <AttemptCard key={attempt.id} attempt={attempt} showUser />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-8">
+                    Select a date from the list to view attempt details
+                  </p>
+                )
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -319,4 +652,70 @@ function getPerformanceColor(rate: number): string {
   if (rate >= 70) return 'bg-green-500';
   if (rate >= 50) return 'bg-yellow-500';
   return 'bg-red-500';
+}
+
+function AttemptCard({
+  attempt,
+  showDate = false,
+  showUser = false,
+}: {
+  attempt: Attempt;
+  showDate?: boolean;
+  showUser?: boolean;
+}) {
+  return (
+    <div className="p-4 bg-gray-50 rounded-lg">
+      <div className="flex justify-between items-start mb-3">
+        <div>
+          <span className="font-medium text-gray-900">
+            Attempt #{attempt.attemptNumber}
+          </span>
+          <span className="text-sm text-gray-500 ml-2">
+            (Version {attempt.quizVersion})
+          </span>
+          {showUser && attempt.userLabel && (
+            <span className="ml-2 px-2 py-0.5 text-xs bg-indigo-100 text-indigo-700 rounded">
+              {attempt.userLabel}
+            </span>
+          )}
+        </div>
+        <span className={`text-lg font-bold ${getScoreColor(attempt.score)}`}>
+          {attempt.score}/5
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span className="text-gray-500">Duration:</span>{' '}
+          <span className="text-gray-900">{formatDuration(attempt.durationSeconds)}</span>
+        </div>
+        <div>
+          <span className="text-gray-500">{showDate ? 'Date:' : 'Submitted:'}</span>{' '}
+          <span className="text-gray-900">
+            {showDate ? formatDate(attempt.date) + ' ' : ''}{formatTime(attempt.submittedAt)}
+          </span>
+        </div>
+      </div>
+      {attempt.topicBreakdown && (
+        <div className="mt-3 pt-3 border-t border-gray-200">
+          <p className="text-xs text-gray-500 mb-2">Topic breakdown:</p>
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(attempt.topicBreakdown).map(([topic, stats]) => (
+              <span
+                key={topic}
+                className={`px-2 py-1 rounded text-xs ${
+                  stats.correct === stats.total
+                    ? 'bg-green-100 text-green-800'
+                    : stats.correct > 0
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-red-100 text-red-800'
+                }`}
+              >
+                {topic.replace(/_/g, ' ')}: {stats.correct}/{stats.total}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

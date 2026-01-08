@@ -2,6 +2,7 @@ import { getDb, COLLECTIONS } from './firebase';
 import { DailyAssignment, Attempt, Answer, TopicBreakdown, Question } from '@/types';
 import { getTodayLisbon } from './date';
 import { selectQuizQuestions, getQuestionsByIds } from './questions';
+import { recordQuestionAttempts } from './questionStats';
 import crypto from 'crypto';
 
 /**
@@ -168,9 +169,9 @@ export async function submitQuizAttempt(
   const today = getTodayLisbon();
   const assignment = await getOrCreateDailyAssignment();
 
-  // Validate answers
-  if (answers.length !== 5) {
-    throw new Error('Must answer all 5 questions');
+  // Validate answers (5 regular + 1 bonus = 6 questions)
+  if (answers.length !== 6) {
+    throw new Error('Must answer all 6 questions');
   }
 
   const assignedIds = new Set(assignment.questionIds);
@@ -226,6 +227,18 @@ export async function submitQuizAttempt(
   };
 
   const docRef = await db.collection(COLLECTIONS.ATTEMPTS).add(attemptData);
+
+  // Record question-level stats for each answered question
+  const questionStatsData = questions.map((question) => {
+    const answer = answers.find((a) => a.questionId === question.id);
+    const isCorrect = answer?.selectedIndex === question.correctIndex;
+    return {
+      questionId: question.id,
+      userLabel,
+      isCorrect,
+    };
+  });
+  await recordQuestionAttempts(questionStatsData);
 
   return {
     attempt: {
@@ -292,6 +305,66 @@ function hashIp(ip: string): string {
 export async function hasAttemptedToday(userLabel: string): Promise<boolean> {
   const attempts = await getTodayAttempts(userLabel);
   return attempts.length > 0;
+}
+
+/**
+ * Generate and save tomorrow's quiz assignment
+ * First call creates the assignment, subsequent calls return the same questions
+ * If no admin previews, the quiz is created on-the-fly via getOrCreateDailyAssignment
+ */
+export async function generateTomorrowPreview(): Promise<{
+  date: string;
+  questions: Question[];
+}> {
+  // Get tomorrow's date
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+  // Check if tomorrow's assignment already exists
+  const db = getDb();
+  const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(tomorrowStr);
+  const doc = await docRef.get();
+
+  if (doc.exists) {
+    // Tomorrow's quiz is already generated
+    const data = doc.data()!;
+    const questions = await getQuestionsByIds(data.questionIds);
+    return {
+      date: tomorrowStr,
+      questions,
+    };
+  }
+
+  // Get today's questions to exclude from tomorrow's selection
+  const today = getTodayLisbon();
+  const todayDoc = await db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(today).get();
+  const todayQuestionIds = new Set<string>();
+
+  if (todayDoc.exists) {
+    const data = todayDoc.data()!;
+    for (const id of data.questionIds || []) {
+      todayQuestionIds.add(id);
+    }
+  }
+
+  // Select questions for tomorrow (excluding today's questions)
+  const questions = await selectQuizQuestions(todayQuestionIds);
+
+  // Save tomorrow's assignment so subsequent previews return the same questions
+  const assignment: Omit<DailyAssignment, 'id'> = {
+    date: tomorrowStr,
+    quizVersion: 1,
+    generatedAt: new Date(),
+    questionIds: questions.map((q) => q.id),
+  };
+
+  await docRef.set(assignment);
+
+  return {
+    date: tomorrowStr,
+    questions,
+  };
 }
 
 /**
