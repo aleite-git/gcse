@@ -30,9 +30,6 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-
 # vercel
 .vercel
 
@@ -40,13 +37,83 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# service account keys
-*.json
+# compiled scripts
+/dist
+
+# ===================
+# SENSITIVE FILES
+# ===================
+
+# Environment files (secrets, API keys, database URLs)
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.test
+!.env.example
+
+# Service account keys and credentials
+*-service-account.json
+*-credentials.json
+*-key.json
+serviceAccount.json
+service-account.json
+firebase-adminsdk*.json
+gcse-cs-*.json
+credentials.json
+
+# Private keys and certificates
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+
+# Google Cloud
+.gcloud/
+application_default_credentials.json
+gcloud-service-key.json
+
+# Firebase
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebase/
+
+# IDE and editor secrets
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.vscode/settings.json
+.vscode/launch.json
+
+# Local config overrides
+*.local.json
+*.local.ts
+*.local.js
+config.local.*
+secrets.*
+
+# Backup files that might contain secrets
+*.bak
+*.backup
+*.old
+*.orig
+
+# Log files that might contain sensitive data
+*.log
+logs/
+
+# ===================
+# ALLOWED JSON FILES
+# ===================
 !package.json
 !package-lock.json
 !tsconfig*.json
 !seed/questions.json
 !jest.config.js
-
-# compiled scripts
-/dist
+!cloudbuild.yaml
