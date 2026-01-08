@@ -108,6 +108,12 @@ secrets.*
 *.log
 logs/
 
+# Temporary question bank files
+gcse_cs_daily5_questions*.json
+
+# Service account key file
+key.json
+
 # ===================
 # ALLOWED JSON FILES
 # ===================
