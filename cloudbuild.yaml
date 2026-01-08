@@ -1,5 +1,4 @@
 # Cloud Build configuration for deploying to Cloud Run
-# Project: gcse-cs-1
 
 steps:
   # Build the Docker image

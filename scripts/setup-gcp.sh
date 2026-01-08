@@ -1,11 +1,18 @@
 #!/bin/bash
 # GCP Setup Script for Daily 5 GCSE CS Quiz
-# Project ID: gcse-cs-1
 
 set -e
 
-PROJECT_ID="gcse-cs-1"
-REGION="europe-west1"
+# Get project ID from argument or environment
+PROJECT_ID="${1:-$GOOGLE_CLOUD_PROJECT}"
+REGION="${2:-europe-west1}"
+
+if [ -z "$PROJECT_ID" ]; then
+  echo "Error: Project ID required"
+  echo "Usage: $0 <project-id> [region]"
+  echo "   or: GOOGLE_CLOUD_PROJECT=your-project $0"
+  exit 1
+fi
 
 echo "=== Setting up GCP project: $PROJECT_ID ==="
 

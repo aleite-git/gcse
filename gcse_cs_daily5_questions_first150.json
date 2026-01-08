@@ -1,0 +1,2955 @@
+{
+  "version": "1.0-150",
+  "generatedAt": "2026-01-06T19:55:14.433238Z",
+  "timezone": "Europe/Lisbon",
+  "notes": "First 150 questions for GCSE Computer Science (UK) — Computer Systems & Theory. Fields align with Firestore seed requirements.",
+  "topics": [
+    "CPU",
+    "DataRepresentation",
+    "Embedded",
+    "Ethics_Law_Env",
+    "Hardware",
+    "NetworksBasics",
+    "OS",
+    "Performance",
+    "Protocols",
+    "RAM_ROM",
+    "Security",
+    "Software",
+    "Storage"
+  ],
+  "questions": [
+    {
+      "id": "q_d84bb7747e46",
+      "type": "recall",
+      "topic": "Hardware",
+      "difficulty": 1,
+      "stem": "What is hardware?",
+      "options": [
+        "Physical components of a computer system",
+        "Programs and data stored on a computer",
+        "A set of network rules",
+        "A type of file compression"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hardware means the physical parts you can touch (e.g., CPU, RAM, keyboard).",
+      "tags": [
+        "hardware",
+        "basics"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_251c2a82d41a",
+      "type": "recall",
+      "topic": "Hardware",
+      "difficulty": 1,
+      "stem": "Which of these is an input device?",
+      "options": [
+        "Printer",
+        "Monitor",
+        "Keyboard",
+        "Projector"
+      ],
+      "correctIndex": 2,
+      "explanation": "Input devices send data into the computer.",
+      "tags": [
+        "hardware",
+        "io"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_2a593b53ad37",
+      "type": "recall",
+      "topic": "Hardware",
+      "difficulty": 1,
+      "stem": "Which of these is an output device?",
+      "options": [
+        "Scanner",
+        "Microphone",
+        "Monitor",
+        "Webcam"
+      ],
+      "correctIndex": 2,
+      "explanation": "Output devices present information to the user.",
+      "tags": [
+        "hardware",
+        "io"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_df7e25293ecc",
+      "type": "recall",
+      "topic": "Hardware",
+      "difficulty": 1,
+      "stem": "A scanner is best described as…",
+      "options": [
+        "Output device",
+        "Input device",
+        "Storage device",
+        "Processing device"
+      ],
+      "correctIndex": 1,
+      "explanation": "A scanner captures physical documents/photos and inputs them as data.",
+      "tags": [
+        "hardware",
+        "io"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_56de758fecdc",
+      "type": "application",
+      "topic": "Hardware",
+      "difficulty": 2,
+      "stem": "A musician wants to record vocals on a computer. Which device is needed?",
+      "options": [
+        "Microphone",
+        "Speakers",
+        "Monitor",
+        "Printer"
+      ],
+      "correctIndex": 0,
+      "explanation": "A microphone captures sound and inputs it into the computer.",
+      "tags": [
+        "hardware",
+        "io",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_bc3babc65e35",
+      "type": "understanding",
+      "topic": "Hardware",
+      "difficulty": 2,
+      "stem": "Why is a GPU useful for graphics-heavy tasks?",
+      "options": [
+        "It stores files permanently",
+        "It is designed for many parallel calculations used in graphics",
+        "It replaces the OS",
+        "It converts domain names to IP addresses"
+      ],
+      "correctIndex": 1,
+      "explanation": "GPUs are built for parallel processing, which helps with rendering and some compute workloads.",
+      "tags": [
+        "hardware",
+        "gpu"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_95dab8bc6723",
+      "type": "recall",
+      "topic": "Software",
+      "difficulty": 1,
+      "stem": "Which of these is application software?",
+      "options": [
+        "Operating system",
+        "Device driver",
+        "Word processor",
+        "Firmware"
+      ],
+      "correctIndex": 2,
+      "explanation": "Application software helps users perform tasks (e.g., word processing).",
+      "tags": [
+        "software"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_04fc47354565",
+      "type": "recall",
+      "topic": "Software",
+      "difficulty": 1,
+      "stem": "Which of these is system software?",
+      "options": [
+        "Spreadsheet",
+        "Web browser",
+        "Operating system",
+        "Photo editor"
+      ],
+      "correctIndex": 2,
+      "explanation": "System software manages hardware and provides services for applications.",
+      "tags": [
+        "software"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_f40bd259637e",
+      "type": "recall",
+      "topic": "Software",
+      "difficulty": 1,
+      "stem": "Utility software is mainly used to…",
+      "options": [
+        "Play games",
+        "Maintain, protect, or manage a computer system",
+        "Increase screen resolution only",
+        "Route internet traffic only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Utilities support the system (e.g., antivirus, backup tools).",
+      "tags": [
+        "software",
+        "utilities"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_f056c717ed34",
+      "type": "recall",
+      "topic": "Software",
+      "difficulty": 1,
+      "stem": "Which is a utility program?",
+      "options": [
+        "Antivirus",
+        "Word processor",
+        "Spreadsheet",
+        "Web browser"
+      ],
+      "correctIndex": 0,
+      "explanation": "Antivirus is a utility that helps protect and maintain the system.",
+      "tags": [
+        "software",
+        "utilities"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_a0fa389b99cc",
+      "type": "recall",
+      "topic": "Software",
+      "difficulty": 2,
+      "stem": "A device driver is best described as…",
+      "options": [
+        "Application software for office work",
+        "System software that lets the OS communicate with hardware",
+        "A storage device",
+        "A network protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "Drivers translate OS requests into device-specific commands.",
+      "tags": [
+        "software",
+        "drivers"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_0b5c7037cfec",
+      "type": "recall",
+      "topic": "Software",
+      "difficulty": 2,
+      "stem": "Firmware is usually stored in…",
+      "options": [
+        "RAM",
+        "ROM/flash memory",
+        "CPU cache",
+        "Virtual memory"
+      ],
+      "correctIndex": 1,
+      "explanation": "Firmware must persist without power, so it is stored in non-volatile memory.",
+      "tags": [
+        "software",
+        "firmware"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_37cf761a81b5",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 1,
+      "stem": "What does CPU stand for?",
+      "options": [
+        "Central Processing Unit",
+        "Computer Processing Utility",
+        "Control Program Unit",
+        "Central Program Utility"
+      ],
+      "correctIndex": 0,
+      "explanation": "CPU stands for Central Processing Unit.",
+      "tags": [
+        "cpu"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_5cf73d00ef48",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 1,
+      "stem": "Which CPU component carries out arithmetic and logic operations?",
+      "options": [
+        "Control Unit (CU)",
+        "Cache",
+        "Arithmetic Logic Unit (ALU)",
+        "RAM"
+      ],
+      "correctIndex": 2,
+      "explanation": "The ALU performs arithmetic and logic operations.",
+      "tags": [
+        "cpu",
+        "alu"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_8451ced467ce",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 1,
+      "stem": "Which CPU component coordinates the activities of the CPU?",
+      "options": [
+        "Hard drive",
+        "Control Unit (CU)",
+        "ALU",
+        "GPU"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Control Unit manages control signals and timing.",
+      "tags": [
+        "cpu",
+        "cu"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_e12fab324e76",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "Registers are…",
+      "options": [
+        "Large permanent storage",
+        "Small, very fast storage inside the CPU",
+        "A type of optical storage",
+        "A network protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "Registers are tiny ultra-fast storage locations inside the CPU.",
+      "tags": [
+        "cpu",
+        "registers"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_7f03a7356620",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "Cache memory is mainly used to…",
+      "options": [
+        "Store files permanently",
+        "Hold frequently used data/instructions close to the CPU",
+        "Convert domain names to IP addresses",
+        "Power the CPU"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cache reduces CPU waiting time by storing frequently used data/instructions.",
+      "tags": [
+        "cpu",
+        "cache"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_c64b6e3cc5f0",
+      "type": "understanding",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "Why are registers faster than RAM?",
+      "options": [
+        "They are stored on the hard drive",
+        "They are located inside the CPU and accessed directly",
+        "They use wireless signals",
+        "They store data in denary"
+      ],
+      "correctIndex": 1,
+      "explanation": "Registers are inside the CPU, so access is extremely fast.",
+      "tags": [
+        "cpu",
+        "registers"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b19c74c2f4e7",
+      "type": "understanding",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "Which is generally fastest for CPU access?",
+      "options": [
+        "Secondary storage",
+        "RAM",
+        "Cache",
+        "Optical disk"
+      ],
+      "correctIndex": 2,
+      "explanation": "Cache is designed to be very fast and sits close to the CPU.",
+      "tags": [
+        "cpu",
+        "cache"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_e2615a3313dc",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 1,
+      "stem": "In the fetch-decode-execute cycle, what happens during FETCH?",
+      "options": [
+        "The instruction is carried out",
+        "The instruction is translated into signals",
+        "The next instruction is retrieved from memory",
+        "The output is displayed"
+      ],
+      "correctIndex": 2,
+      "explanation": "Fetch retrieves the next instruction from memory (usually RAM).",
+      "tags": [
+        "cpu",
+        "fde"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_3819e09cfb0c",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 1,
+      "stem": "In the fetch-decode-execute cycle, what happens during DECODE?",
+      "options": [
+        "The instruction is interpreted into control signals",
+        "Data is saved permanently",
+        "The computer shuts down",
+        "A virus is detected"
+      ],
+      "correctIndex": 0,
+      "explanation": "Decode interprets the instruction so the CPU knows what to do.",
+      "tags": [
+        "cpu",
+        "fde"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_a0eac580421a",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 1,
+      "stem": "In the fetch-decode-execute cycle, what happens during EXECUTE?",
+      "options": [
+        "The instruction is carried out",
+        "The instruction is fetched again",
+        "The instruction is compressed",
+        "The instruction is encrypted"
+      ],
+      "correctIndex": 0,
+      "explanation": "Execute performs the instruction (ALU operation, read/write, etc.).",
+      "tags": [
+        "cpu",
+        "fde"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_9f04292e6752",
+      "type": "recall",
+      "topic": "Performance",
+      "difficulty": 1,
+      "stem": "Clock speed is measured in…",
+      "options": [
+        "GB",
+        "GHz",
+        "dpi",
+        "bps"
+      ],
+      "correctIndex": 1,
+      "explanation": "Clock speed is cycles per second, commonly in GHz.",
+      "tags": [
+        "performance"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_d99213949a61",
+      "type": "understanding",
+      "topic": "Performance",
+      "difficulty": 2,
+      "stem": "Which is the best reason a higher clock speed can improve performance?",
+      "options": [
+        "More pixels are displayed",
+        "More CPU cycles can occur per second",
+        "More storage becomes available",
+        "The OS uses less RAM"
+      ],
+      "correctIndex": 1,
+      "explanation": "Higher clock speed can allow more operations per second.",
+      "tags": [
+        "performance"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_0c0f29739677",
+      "type": "understanding",
+      "topic": "Performance",
+      "difficulty": 2,
+      "stem": "Why doesn't doubling clock speed always double performance?",
+      "options": [
+        "Programs stop working",
+        "Other bottlenecks (memory, storage, software) can limit gains",
+        "It halves RAM",
+        "It increases colour depth"
+      ],
+      "correctIndex": 1,
+      "explanation": "Performance depends on the whole system and how software uses it.",
+      "tags": [
+        "performance"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_29587a2d3e31",
+      "type": "recall",
+      "topic": "Performance",
+      "difficulty": 1,
+      "stem": "Which factor can improve multitasking the most?",
+      "options": [
+        "More CPU cores",
+        "Lower clock speed",
+        "Smaller cache",
+        "Less RAM"
+      ],
+      "correctIndex": 0,
+      "explanation": "More cores help with parallel workloads and multitasking.",
+      "tags": [
+        "performance",
+        "cores"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_4eb893bb5cc0",
+      "type": "application",
+      "topic": "Performance",
+      "difficulty": 3,
+      "stem": "Two CPUs have the same clock speed. CPU A has 8 cores and CPU B has 4 cores. Which workload benefits most from CPU A?",
+      "options": [
+        "Single simple calculator app",
+        "Running many apps and background tasks at once",
+        "Printing one document",
+        "Playing a mono audio file"
+      ],
+      "correctIndex": 1,
+      "explanation": "More cores help when many tasks can run in parallel.",
+      "tags": [
+        "performance",
+        "cores",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_6616d95dd471",
+      "type": "application",
+      "topic": "Performance",
+      "difficulty": 3,
+      "stem": "A PC is slow when opening files and loading apps, but fine once open. Most likely upgrade?",
+      "options": [
+        "More RAM",
+        "Faster storage (SSD)",
+        "More CPU cores",
+        "Higher colour depth"
+      ],
+      "correctIndex": 1,
+      "explanation": "Loading times are often limited by storage performance.",
+      "tags": [
+        "performance",
+        "storage",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_a2e6496acfa7",
+      "type": "recall",
+      "topic": "RAM_ROM",
+      "difficulty": 1,
+      "stem": "RAM stands for…",
+      "options": [
+        "Read Access Memory",
+        "Random Access Memory",
+        "Rapid Application Memory",
+        "Real Address Memory"
+      ],
+      "correctIndex": 1,
+      "explanation": "RAM is Random Access Memory.",
+      "tags": [
+        "memory"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b3c972601aef",
+      "type": "recall",
+      "topic": "RAM_ROM",
+      "difficulty": 1,
+      "stem": "RAM is best described as…",
+      "options": [
+        "Permanent storage for files",
+        "Main working memory used by running programs",
+        "A network device",
+        "A type of optical disk"
+      ],
+      "correctIndex": 1,
+      "explanation": "RAM holds data/instructions currently being used.",
+      "tags": [
+        "memory"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_2493dd28638e",
+      "type": "recall",
+      "topic": "RAM_ROM",
+      "difficulty": 1,
+      "stem": "RAM is…",
+      "options": [
+        "Volatile",
+        "Non-volatile",
+        "Optical",
+        "Magnetic only"
+      ],
+      "correctIndex": 0,
+      "explanation": "Volatile memory loses its contents when power is removed.",
+      "tags": [
+        "memory"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_aa6b3fee4261",
+      "type": "recall",
+      "topic": "RAM_ROM",
+      "difficulty": 1,
+      "stem": "ROM is…",
+      "options": [
+        "Volatile",
+        "Non-volatile memory storing firmware/boot instructions",
+        "A type of cache",
+        "A network protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "ROM stores firmware and does not lose data when power is off.",
+      "tags": [
+        "memory"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_9ef15bcc6f8b",
+      "type": "understanding",
+      "topic": "RAM_ROM",
+      "difficulty": 2,
+      "stem": "Why is ROM suitable for storing boot instructions?",
+      "options": [
+        "It is volatile",
+        "It keeps data when power is off",
+        "It is faster than registers",
+        "It changes often"
+      ],
+      "correctIndex": 1,
+      "explanation": "Boot instructions must be available at startup even without power.",
+      "tags": [
+        "memory",
+        "rom"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_7cc7c8df6ec4",
+      "type": "recall",
+      "topic": "RAM_ROM",
+      "difficulty": 2,
+      "stem": "What is virtual memory?",
+      "options": [
+        "Extra cache inside the CPU",
+        "Using secondary storage as an extension of RAM",
+        "A wireless network",
+        "A compression method"
+      ],
+      "correctIndex": 1,
+      "explanation": "Virtual memory uses part of storage as extra memory when RAM is full.",
+      "tags": [
+        "memory",
+        "virtual-memory"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_fe35dc3e4919",
+      "type": "understanding",
+      "topic": "RAM_ROM",
+      "difficulty": 2,
+      "stem": "Why does a computer slow down when it runs out of RAM?",
+      "options": [
+        "It stops using the CPU",
+        "It starts using virtual memory on storage, which is slower",
+        "It deletes programs automatically",
+        "It increases clock speed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Using storage as virtual memory is much slower than RAM.",
+      "tags": [
+        "memory",
+        "virtual-memory"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b429f489e4d7",
+      "type": "application",
+      "topic": "RAM_ROM",
+      "difficulty": 3,
+      "stem": "A laptop loses unsaved work when the battery dies. Which component caused this loss?",
+      "options": [
+        "ROM",
+        "RAM",
+        "SSD",
+        "Optical disk"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unsaved work is in volatile RAM and is lost without power.",
+      "tags": [
+        "memory",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_fcd352177067",
+      "type": "recall",
+      "topic": "Storage",
+      "difficulty": 1,
+      "stem": "Which storage device usually has no moving parts?",
+      "options": [
+        "HDD",
+        "SSD",
+        "DVD drive",
+        "Magnetic tape"
+      ],
+      "correctIndex": 1,
+      "explanation": "SSDs use flash memory and have no moving parts.",
+      "tags": [
+        "storage"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_3f7016b42be5",
+      "type": "recall",
+      "topic": "Storage",
+      "difficulty": 1,
+      "stem": "Which is typically cheaper per GB?",
+      "options": [
+        "SSD",
+        "HDD",
+        "RAM",
+        "Cache"
+      ],
+      "correctIndex": 1,
+      "explanation": "HDDs are usually cheaper per GB than SSDs.",
+      "tags": [
+        "storage"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_05e07178173a",
+      "type": "recall",
+      "topic": "Storage",
+      "difficulty": 1,
+      "stem": "Which storage type uses magnetic platters?",
+      "options": [
+        "SSD",
+        "HDD",
+        "Blu-ray",
+        "USB stick"
+      ],
+      "correctIndex": 1,
+      "explanation": "HDDs store data magnetically on spinning platters.",
+      "tags": [
+        "storage"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_1cff2db57d07",
+      "type": "recall",
+      "topic": "Storage",
+      "difficulty": 1,
+      "stem": "Which is an example of optical storage?",
+      "options": [
+        "SD card",
+        "Blu-ray disk",
+        "SSD",
+        "HDD"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blu-ray is optical storage read using lasers.",
+      "tags": [
+        "storage"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_503c924fd553",
+      "type": "recall",
+      "topic": "Storage",
+      "difficulty": 1,
+      "stem": "Which is an example of flash storage?",
+      "options": [
+        "USB stick",
+        "CD",
+        "DVD",
+        "Magnetic tape"
+      ],
+      "correctIndex": 0,
+      "explanation": "USB sticks are flash storage.",
+      "tags": [
+        "storage"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_2556f9556a98",
+      "type": "application",
+      "topic": "Storage",
+      "difficulty": 2,
+      "stem": "A school replaces HDDs with SSDs. Which improvement is most likely?",
+      "options": [
+        "Faster boot and load times",
+        "Better screen resolution",
+        "Higher internet speed automatically",
+        "Better sound sampling rate"
+      ],
+      "correctIndex": 0,
+      "explanation": "SSDs have faster access times than HDDs.",
+      "tags": [
+        "storage",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_345cdcfa883b",
+      "type": "application",
+      "topic": "Storage",
+      "difficulty": 3,
+      "stem": "A laptop is dropped often. Best storage choice to reduce damage risk?",
+      "options": [
+        "HDD",
+        "SSD",
+        "DVD",
+        "Magnetic tape"
+      ],
+      "correctIndex": 1,
+      "explanation": "SSDs are more shock-resistant because they have no moving parts.",
+      "tags": [
+        "storage",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_9ce51c6ab949",
+      "type": "recall",
+      "topic": "Storage",
+      "difficulty": 2,
+      "stem": "Secondary storage is mainly used for…",
+      "options": [
+        "Temporary working memory",
+        "Long-term storage of files and programs",
+        "Controlling the CPU cycle",
+        "Routing network packets"
+      ],
+      "correctIndex": 1,
+      "explanation": "Secondary storage is non-volatile and stores data long term.",
+      "tags": [
+        "storage"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_41a9646f1c15",
+      "type": "recall",
+      "topic": "Embedded",
+      "difficulty": 1,
+      "stem": "An embedded system is…",
+      "options": [
+        "A general-purpose desktop computer",
+        "A computer system built into another device for a specific function",
+        "A type of LAN",
+        "A cloud database"
+      ],
+      "correctIndex": 1,
+      "explanation": "Embedded systems are designed for a dedicated purpose inside a larger product.",
+      "tags": [
+        "embedded"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_4806e80152fb",
+      "type": "application",
+      "topic": "Embedded",
+      "difficulty": 2,
+      "stem": "Which is MOST likely an embedded system?",
+      "options": [
+        "Gaming PC",
+        "Smart microwave",
+        "Laptop",
+        "Workstation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Smart appliances commonly use embedded systems.",
+      "tags": [
+        "embedded",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_9393928bd25f",
+      "type": "understanding",
+      "topic": "Embedded",
+      "difficulty": 2,
+      "stem": "Why are embedded systems often power-efficient?",
+      "options": [
+        "They run many apps at once",
+        "They are optimised for one task with limited resources",
+        "They always use optical disks",
+        "They store everything in RAM"
+      ],
+      "correctIndex": 1,
+      "explanation": "Embedded systems are designed for low power, cost, and specific functions.",
+      "tags": [
+        "embedded"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_d846d7adec9e",
+      "type": "recall",
+      "topic": "OS",
+      "difficulty": 1,
+      "stem": "An operating system is…",
+      "options": [
+        "A type of input device",
+        "System software that manages hardware and provides services for applications",
+        "A programming language",
+        "A network topology"
+      ],
+      "correctIndex": 1,
+      "explanation": "The OS manages hardware and allows applications to run.",
+      "tags": [
+        "os"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_20e22b202b6a",
+      "type": "recall",
+      "topic": "OS",
+      "difficulty": 1,
+      "stem": "Which OS function organises files on storage?",
+      "options": [
+        "File management",
+        "Packet switching",
+        "Sampling",
+        "Clock speed"
+      ],
+      "correctIndex": 0,
+      "explanation": "File management handles folders, saving, naming, and permissions.",
+      "tags": [
+        "os"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_d0569d3e15d9",
+      "type": "recall",
+      "topic": "OS",
+      "difficulty": 1,
+      "stem": "Which OS function controls hardware devices like printers and keyboards?",
+      "options": [
+        "Device management",
+        "Data representation",
+        "Sorting",
+        "Overclocking"
+      ],
+      "correctIndex": 0,
+      "explanation": "Device management uses drivers to communicate with hardware.",
+      "tags": [
+        "os"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_2a73f8743932",
+      "type": "understanding",
+      "topic": "OS",
+      "difficulty": 2,
+      "stem": "How does an OS create the illusion that many programs run at once on a single-core CPU?",
+      "options": [
+        "By increasing screen resolution",
+        "By time slicing (rapidly switching CPU time between processes)",
+        "By using ROM only",
+        "By disabling interrupts"
+      ],
+      "correctIndex": 1,
+      "explanation": "Time slicing gives each process a short time slot so it appears simultaneous.",
+      "tags": [
+        "os",
+        "multitasking"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_cd2c12b446bb",
+      "type": "recall",
+      "topic": "OS",
+      "difficulty": 1,
+      "stem": "GUI stands for…",
+      "options": [
+        "General Utility Interface",
+        "Graphical User Interface",
+        "Grouped User Internet",
+        "Graph Unit Index"
+      ],
+      "correctIndex": 1,
+      "explanation": "GUI uses windows, icons and menus.",
+      "tags": [
+        "os",
+        "ui"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_400b62333066",
+      "type": "recall",
+      "topic": "OS",
+      "difficulty": 1,
+      "stem": "CLI stands for…",
+      "options": [
+        "Command Line Interface",
+        "Computer Link Internet",
+        "Control Logic Input",
+        "Command List Interpreter"
+      ],
+      "correctIndex": 0,
+      "explanation": "CLI is text-based interaction using typed commands.",
+      "tags": [
+        "os",
+        "ui"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_31798bc94d52",
+      "type": "understanding",
+      "topic": "OS",
+      "difficulty": 2,
+      "stem": "Why might an expert prefer a CLI?",
+      "options": [
+        "It always uses more RAM",
+        "It can be faster and more automatable with commands and scripts",
+        "It cannot be automated",
+        "It is required for all computers"
+      ],
+      "correctIndex": 1,
+      "explanation": "CLI can be efficient and scriptable for experienced users.",
+      "tags": [
+        "os",
+        "ui"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_eb43e36b3528",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 1,
+      "stem": "LAN stands for…",
+      "options": [
+        "Large Area Network",
+        "Local Area Network",
+        "Logical Access Network",
+        "Linked Application Network"
+      ],
+      "correctIndex": 1,
+      "explanation": "A LAN covers a small area like a home or school.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_ba321476f49e",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 1,
+      "stem": "WAN stands for…",
+      "options": [
+        "Wide Area Network",
+        "Wireless Area Network",
+        "Wired Access Network",
+        "World Application Network"
+      ],
+      "correctIndex": 0,
+      "explanation": "A WAN covers a large area; the internet is a WAN.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_13e985942a3d",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 1,
+      "stem": "Which device connects multiple networks together?",
+      "options": [
+        "Switch",
+        "Router",
+        "Keyboard",
+        "Printer"
+      ],
+      "correctIndex": 1,
+      "explanation": "Routers connect networks and route packets between them.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_56c94e72ae5a",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 1,
+      "stem": "Which device connects devices within a LAN and forwards frames efficiently?",
+      "options": [
+        "Router",
+        "Switch",
+        "Monitor",
+        "CPU"
+      ],
+      "correctIndex": 1,
+      "explanation": "Switches connect devices in a LAN and forward data to the correct device.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_88020a21b0d7",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "Bandwidth is best described as…",
+      "options": [
+        "Delay before data starts",
+        "Maximum data transfer rate of a connection",
+        "The number of routers",
+        "A type of malware"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bandwidth is capacity/rate, often measured in bits per second.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_72a79d5d2438",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "Latency is best described as…",
+      "options": [
+        "Maximum data rate",
+        "Delay in data transmission (time taken to travel)",
+        "File size",
+        "Colour depth"
+      ],
+      "correctIndex": 1,
+      "explanation": "Latency is delay, often experienced as lag.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_e3db22f7faf6",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "In a client-server model, the server…",
+      "options": [
+        "Requests services from clients",
+        "Provides services/resources to clients",
+        "Is always a laptop",
+        "Cannot be secured"
+      ],
+      "correctIndex": 1,
+      "explanation": "Servers provide resources (files, websites, printers) to clients.",
+      "tags": [
+        "networks",
+        "models"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b8448997e4f5",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "Peer-to-peer networks are characterised by…",
+      "options": [
+        "A central dedicated server for all resources",
+        "Devices sharing resources directly without a central server",
+        "Only wireless connections",
+        "Only one computer"
+      ],
+      "correctIndex": 1,
+      "explanation": "In P2P, devices can share resources directly and act as both client and server.",
+      "tags": [
+        "networks",
+        "models"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_8a8b3f85a666",
+      "type": "understanding",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "In a star topology, what happens if one cable to a PC fails?",
+      "options": [
+        "The whole network fails",
+        "Only that PC loses connection",
+        "All PCs lose connection",
+        "The router becomes an access point"
+      ],
+      "correctIndex": 1,
+      "explanation": "In a star, each device has its own link; one link failure affects only that device.",
+      "tags": [
+        "networks",
+        "topology"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_aaf3c31daef5",
+      "type": "understanding",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "In a star topology, what happens if the central switch fails?",
+      "options": [
+        "Only one device disconnects",
+        "The entire network stops working",
+        "The internet becomes faster",
+        "Nothing happens"
+      ],
+      "correctIndex": 1,
+      "explanation": "The central device is a single point of failure in star topology.",
+      "tags": [
+        "networks",
+        "topology"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_5d9ac7838467",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "Packet switching means…",
+      "options": [
+        "Data is sent as one continuous stream with a reserved path",
+        "Data is split into packets that may take different routes",
+        "Data is stored only on ROM",
+        "Data is encrypted automatically"
+      ],
+      "correctIndex": 1,
+      "explanation": "Data is split into packets which can take different routes and be reassembled at the destination.",
+      "tags": [
+        "internet"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_9630a83e0953",
+      "type": "understanding",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "One advantage of packet switching is…",
+      "options": [
+        "It always reserves bandwidth",
+        "If a route fails, packets can be rerouted",
+        "It prevents phishing",
+        "It increases colour depth"
+      ],
+      "correctIndex": 1,
+      "explanation": "Packets can be routed around failures or congestion.",
+      "tags": [
+        "internet"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_4a9afe407d2a",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "An IP address is…",
+      "options": [
+        "A unique device address on a network",
+        "A password",
+        "A type of storage",
+        "A programming language"
+      ],
+      "correctIndex": 0,
+      "explanation": "IP addresses identify devices for routing across networks.",
+      "tags": [
+        "internet"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_06485d0a3112",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "A MAC address is…",
+      "options": [
+        "A device’s hardware address for its network interface",
+        "A website name",
+        "A type of packet",
+        "A cloud region"
+      ],
+      "correctIndex": 0,
+      "explanation": "MAC addresses identify network interfaces (hardware-level) on a LAN.",
+      "tags": [
+        "internet"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_725f3c3fbe8b",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "DNS is used to…",
+      "options": [
+        "Encrypt emails",
+        "Convert domain names to IP addresses",
+        "Store files permanently",
+        "Control the CPU"
+      ],
+      "correctIndex": 1,
+      "explanation": "DNS translates domain names (like example.com) to IP addresses.",
+      "tags": [
+        "internet"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_87a447c810ba",
+      "type": "recall",
+      "topic": "Protocols",
+      "difficulty": 1,
+      "stem": "A protocol is…",
+      "options": [
+        "A type of storage device",
+        "A set of rules for communication between devices",
+        "A CPU component",
+        "An embedded system"
+      ],
+      "correctIndex": 1,
+      "explanation": "Protocols define how data is formatted and transmitted.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_e3200359ac42",
+      "type": "recall",
+      "topic": "Protocols",
+      "difficulty": 1,
+      "stem": "Which protocol is used to view web pages?",
+      "options": [
+        "SMTP",
+        "HTTP/HTTPS",
+        "FTP",
+        "IMAP"
+      ],
+      "correctIndex": 1,
+      "explanation": "HTTP/HTTPS is used for web browsing.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_295bafdea76c",
+      "type": "understanding",
+      "topic": "Protocols",
+      "difficulty": 2,
+      "stem": "What does HTTPS add compared to HTTP?",
+      "options": [
+        "Faster clocks",
+        "Encryption and authentication",
+        "More pixels",
+        "More RAM"
+      ],
+      "correctIndex": 1,
+      "explanation": "HTTPS uses TLS to encrypt traffic and protect against interception/tampering.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_6f9d2c23df9a",
+      "type": "recall",
+      "topic": "Protocols",
+      "difficulty": 1,
+      "stem": "Which protocol is commonly used to send email between servers?",
+      "options": [
+        "SMTP",
+        "HTTP",
+        "FTP",
+        "DNS"
+      ],
+      "correctIndex": 0,
+      "explanation": "SMTP is used to send email between mail servers.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_7d4ab38b4388",
+      "type": "recall",
+      "topic": "Protocols",
+      "difficulty": 1,
+      "stem": "Which protocol is commonly used to transfer files?",
+      "options": [
+        "FTP",
+        "UDP only",
+        "ASCII",
+        "ROM"
+      ],
+      "correctIndex": 0,
+      "explanation": "FTP is used for file transfer.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_2035082aa4ea",
+      "type": "recall",
+      "topic": "Protocols",
+      "difficulty": 2,
+      "stem": "TCP is responsible for…",
+      "options": [
+        "Sending web pages only",
+        "Reliable transmission with error checking and retransmission",
+        "Storing passwords",
+        "Controlling hardware drivers"
+      ],
+      "correctIndex": 1,
+      "explanation": "TCP provides reliable delivery, ordering, and error checking.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_3c9da4cc56eb",
+      "type": "recall",
+      "topic": "Protocols",
+      "difficulty": 2,
+      "stem": "IP is responsible for…",
+      "options": [
+        "Routing packets to the correct destination across networks",
+        "Encrypting emails",
+        "Scanning for viruses",
+        "Allocating RAM"
+      ],
+      "correctIndex": 0,
+      "explanation": "IP handles addressing and routing between networks.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_6f433d005cae",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 1,
+      "stem": "Malware is…",
+      "options": [
+        "A type of hardware",
+        "Malicious software designed to harm systems or steal data",
+        "A network topology",
+        "A programming language"
+      ],
+      "correctIndex": 1,
+      "explanation": "Malware includes viruses, worms, trojans, spyware and more.",
+      "tags": [
+        "security",
+        "threats"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_066b544f58b2",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 1,
+      "stem": "A virus typically…",
+      "options": [
+        "Replicates by attaching to a host file/program",
+        "Only spreads via DNS",
+        "Is always harmless",
+        "Only affects hardware"
+      ],
+      "correctIndex": 0,
+      "explanation": "Viruses attach to a host and usually need to be executed to spread.",
+      "tags": [
+        "security",
+        "threats"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_471a23f189a8",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 1,
+      "stem": "A worm typically…",
+      "options": [
+        "Needs a host file to spread",
+        "Spreads on its own over networks",
+        "Is a strong password",
+        "Is a firewall rule"
+      ],
+      "correctIndex": 1,
+      "explanation": "Worms self-replicate across networks without a host file.",
+      "tags": [
+        "security",
+        "threats"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_ede2f2c175aa",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 1,
+      "stem": "A trojan is…",
+      "options": [
+        "Malware disguised as legitimate software",
+        "A type of backup",
+        "A secure protocol",
+        "A CPU register"
+      ],
+      "correctIndex": 0,
+      "explanation": "Trojans trick users into installing them by looking legitimate.",
+      "tags": [
+        "security",
+        "threats"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_688be04a586c",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 1,
+      "stem": "Phishing is…",
+      "options": [
+        "Compressing files",
+        "Tricking users into revealing sensitive information",
+        "Encrypting data",
+        "Blocking network packets"
+      ],
+      "correctIndex": 1,
+      "explanation": "Phishing uses fake messages/websites to steal credentials.",
+      "tags": [
+        "security",
+        "threats"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_c0522703cf43",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 1,
+      "stem": "A DoS attack aims to…",
+      "options": [
+        "Improve performance",
+        "Prevent access to a service by overwhelming it",
+        "Increase storage capacity",
+        "Convert names to IPs"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Denial of Service attack overloads a system so legitimate users cannot access it.",
+      "tags": [
+        "security",
+        "threats"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_92345b28ccc7",
+      "type": "understanding",
+      "topic": "Security",
+      "difficulty": 2,
+      "stem": "A firewall helps by…",
+      "options": [
+        "Increasing clock speed",
+        "Monitoring and controlling incoming/outgoing network traffic",
+        "Converting domain names",
+        "Sampling audio"
+      ],
+      "correctIndex": 1,
+      "explanation": "Firewalls filter traffic based on rules to block unauthorised access.",
+      "tags": [
+        "security",
+        "protection"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_464b1915f49d",
+      "type": "understanding",
+      "topic": "Security",
+      "difficulty": 2,
+      "stem": "Encryption helps by…",
+      "options": [
+        "Making files larger only",
+        "Scrambling data so only authorised parties can read it",
+        "Stopping all malware",
+        "Speeding up HDDs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Encryption makes data unreadable without the key.",
+      "tags": [
+        "security",
+        "protection"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_5b89eb68916a",
+      "type": "understanding",
+      "topic": "Security",
+      "difficulty": 2,
+      "stem": "Why are software updates important for security?",
+      "options": [
+        "They reduce screen size",
+        "They fix known vulnerabilities (patches)",
+        "They delete user files",
+        "They disable encryption"
+      ],
+      "correctIndex": 1,
+      "explanation": "Updates often patch security holes that attackers exploit.",
+      "tags": [
+        "security",
+        "protection"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_774a3928c673",
+      "type": "application",
+      "topic": "Security",
+      "difficulty": 3,
+      "stem": "A user gets an email 'from IT' asking to reset their password via a link. Best action?",
+      "options": [
+        "Click the link quickly",
+        "Reply with your password",
+        "Verify via official IT channel and check sender/domain",
+        "Forward to everyone"
+      ],
+      "correctIndex": 2,
+      "explanation": "This is typical phishing—verify independently rather than using the provided link.",
+      "tags": [
+        "security",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_931b006f30ba",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 2,
+      "stem": "Two-factor authentication (2FA) means…",
+      "options": [
+        "Using two passwords",
+        "Using two different types of evidence to verify identity",
+        "Logging in twice",
+        "Sharing passwords with a friend"
+      ],
+      "correctIndex": 1,
+      "explanation": "2FA combines factors (e.g., password + one-time code/biometric).",
+      "tags": [
+        "security",
+        "authentication"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_1dde8730e181",
+      "type": "recall",
+      "topic": "Ethics_Law_Env",
+      "difficulty": 2,
+      "stem": "In the UK, laws about personal data are mainly covered by…",
+      "options": [
+        "Road Traffic Act",
+        "UK GDPR / Data Protection Act 2018",
+        "Copyright only",
+        "TCP/IP rules"
+      ],
+      "correctIndex": 1,
+      "explanation": "UK GDPR and the Data Protection Act govern how organisations process personal data.",
+      "tags": [
+        "law",
+        "data-protection"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_170a47641e67",
+      "type": "recall",
+      "topic": "Ethics_Law_Env",
+      "difficulty": 2,
+      "stem": "Personal data is…",
+      "options": [
+        "Any file stored on a computer",
+        "Information that can identify a person",
+        "Only passwords",
+        "Only photos"
+      ],
+      "correctIndex": 1,
+      "explanation": "Personal data relates to an identifiable individual (e.g., name, email).",
+      "tags": [
+        "law",
+        "data-protection"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_2e47057a210f",
+      "type": "recall",
+      "topic": "Ethics_Law_Env",
+      "difficulty": 2,
+      "stem": "Software piracy is…",
+      "options": [
+        "Using open-source software",
+        "Copying/distributing software illegally",
+        "Encrypting files",
+        "Backing up data"
+      ],
+      "correctIndex": 1,
+      "explanation": "Piracy violates copyright/licensing terms.",
+      "tags": [
+        "law",
+        "copyright"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_7ddf4bf9eccb",
+      "type": "recall",
+      "topic": "Ethics_Law_Env",
+      "difficulty": 2,
+      "stem": "An ethical issue is…",
+      "options": [
+        "Always illegal",
+        "A moral concern about right and wrong behaviour",
+        "A CPU fault",
+        "A network protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ethics concerns what should be done, not only what is legal.",
+      "tags": [
+        "ethics"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_fffb5c3a33fd",
+      "type": "recall",
+      "topic": "Ethics_Law_Env",
+      "difficulty": 2,
+      "stem": "E-waste refers to…",
+      "options": [
+        "Old electronic devices discarded",
+        "Encrypted web traffic",
+        "A kind of malware",
+        "Virtual memory"
+      ],
+      "correctIndex": 0,
+      "explanation": "E-waste is discarded electronics; it may contain toxic materials.",
+      "tags": [
+        "environment"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_0de60f1a7f69",
+      "type": "understanding",
+      "topic": "Ethics_Law_Env",
+      "difficulty": 2,
+      "stem": "Why is recycling electronics beneficial?",
+      "options": [
+        "It increases RAM",
+        "It reduces landfill and recovers valuable materials",
+        "It speeds up CPUs",
+        "It prevents phishing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Recycling reduces environmental harm and conserves resources.",
+      "tags": [
+        "environment"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_3f15275bb60c",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 1,
+      "stem": "Binary is a base…",
+      "options": [
+        "2",
+        "8",
+        "10",
+        "16"
+      ],
+      "correctIndex": 0,
+      "explanation": "Binary uses base 2 with digits 0 and 1.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_ba0e2b3e4f26",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 1,
+      "stem": "Denary (decimal) is a base…",
+      "options": [
+        "2",
+        "8",
+        "10",
+        "16"
+      ],
+      "correctIndex": 2,
+      "explanation": "Denary is base 10.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_01b6e6819291",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 1,
+      "stem": "Hexadecimal is a base…",
+      "options": [
+        "2",
+        "8",
+        "10",
+        "16"
+      ],
+      "correctIndex": 3,
+      "explanation": "Hexadecimal uses base 16 (0–9, A–F).",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_e47a6009e979",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 1,
+      "stem": "ASCII is used to represent…",
+      "options": [
+        "Images",
+        "Characters",
+        "Sound waves",
+        "CPU cycles"
+      ],
+      "correctIndex": 1,
+      "explanation": "ASCII assigns numbers to characters.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_99553e1efd28",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 1,
+      "stem": "Unicode is important because it…",
+      "options": [
+        "Stores only English letters",
+        "Supports many more characters and languages than ASCII",
+        "Is a compression algorithm",
+        "Is a network protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unicode supports a wider range of characters for different languages and symbols.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_91706b5e7a84",
+      "type": "understanding",
+      "topic": "DataRepresentation",
+      "difficulty": 2,
+      "stem": "A 10×10 image with colour depth 3 bits. Minimum size (bits)?",
+      "options": [
+        "100 bits",
+        "300 bits",
+        "1000 bits",
+        "30 bits"
+      ],
+      "correctIndex": 1,
+      "explanation": "10×10=100 pixels. 100×3 bits=300 bits (ignoring headers/compression).",
+      "tags": [
+        "data-rep",
+        "calculation"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_80e51dd33d56",
+      "type": "understanding",
+      "topic": "DataRepresentation",
+      "difficulty": 2,
+      "stem": "If an image uses 12 colours, minimum bits per pixel needed?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "Need at least 12 codes. 4 bits gives 16 possible values (2^4).",
+      "tags": [
+        "data-rep",
+        "calculation"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b178c691d77c",
+      "type": "understanding",
+      "topic": "DataRepresentation",
+      "difficulty": 2,
+      "stem": "Sound sampled at 8,000 Hz, 8-bit depth, 1 channel, duration 2 s. Size (bytes)?",
+      "options": [
+        "16,000 bytes",
+        "128,000 bytes",
+        "8,000 bytes",
+        "2,000 bytes"
+      ],
+      "correctIndex": 0,
+      "explanation": "Samples=8000×2=16000. 8-bit=1 byte. 1 channel → 16000 bytes.",
+      "tags": [
+        "data-rep",
+        "calculation"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_bb3d56ab8df2",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 2,
+      "stem": "What is lossy compression?",
+      "options": [
+        "Compression that keeps all original data",
+        "Compression that removes some data permanently to reduce size",
+        "Encryption",
+        "A network topology"
+      ],
+      "correctIndex": 1,
+      "explanation": "Lossy compression discards some information (e.g., JPEG, MP3).",
+      "tags": [
+        "data-rep",
+        "compression"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_3d8ddc3b9c03",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 2,
+      "stem": "What is lossless compression?",
+      "options": [
+        "Removes data permanently",
+        "Keeps all information so the original can be perfectly restored",
+        "Only works for audio",
+        "Only works for images"
+      ],
+      "correctIndex": 1,
+      "explanation": "Lossless compression allows perfect reconstruction (e.g., PNG, ZIP).",
+      "tags": [
+        "data-rep",
+        "compression"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_1c4284875d16",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "Which register holds the address of the next instruction to be fetched?",
+      "options": [
+        "Program Counter (PC)",
+        "Memory Address Register (MAR)",
+        "Memory Data Register (MDR)",
+        "Accumulator"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Program Counter stores the address of the next instruction.",
+      "tags": [
+        "cpu",
+        "registers"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_35153ab828a9",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "The MAR is used to…",
+      "options": [
+        "Store data being processed by the ALU",
+        "Store the address in memory that the CPU wants to access",
+        "Store the next instruction permanently",
+        "Convert binary to denary"
+      ],
+      "correctIndex": 1,
+      "explanation": "The MAR holds the address of the memory location to read/write.",
+      "tags": [
+        "cpu",
+        "registers"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_f71959d34aaa",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "The MDR is used to…",
+      "options": [
+        "Store data/instructions being transferred to or from memory",
+        "Store IP addresses",
+        "Store files permanently",
+        "Control input devices"
+      ],
+      "correctIndex": 0,
+      "explanation": "The MDR holds data read from memory or to be written to memory.",
+      "tags": [
+        "cpu",
+        "registers"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_2f90558e6fff",
+      "type": "understanding",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "Why does increasing cache size sometimes improve performance?",
+      "options": [
+        "It increases screen resolution",
+        "More frequently used data fits close to the CPU, reducing slow RAM access",
+        "It increases network speed",
+        "It reduces file size automatically"
+      ],
+      "correctIndex": 1,
+      "explanation": "More cache can increase cache hits and reduce time waiting for RAM.",
+      "tags": [
+        "cpu",
+        "cache"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_21aecd97a598",
+      "type": "understanding",
+      "topic": "OS",
+      "difficulty": 2,
+      "stem": "What is 'interrupt handling' in an operating system?",
+      "options": [
+        "Changing wallpaper",
+        "Responding to signals/events that require CPU attention (e.g., keyboard input)",
+        "Converting domain names",
+        "Compressing files"
+      ],
+      "correctIndex": 1,
+      "explanation": "Interrupts let hardware/software request immediate attention from the CPU.",
+      "tags": [
+        "os"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_3a750871422c",
+      "type": "application",
+      "topic": "OS",
+      "difficulty": 3,
+      "stem": "A computer freezes when one app crashes. What OS feature helps prevent this?",
+      "options": [
+        "Process isolation / memory protection",
+        "Lower sampling rate",
+        "Optical storage",
+        "Packet switching"
+      ],
+      "correctIndex": 0,
+      "explanation": "Memory protection isolates processes so one crash is less likely to affect others.",
+      "tags": [
+        "os",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_1d0fa37bb60f",
+      "type": "understanding",
+      "topic": "OS",
+      "difficulty": 2,
+      "stem": "What is the purpose of a scheduler in an OS?",
+      "options": [
+        "Choose wallpaper",
+        "Decide which process runs next and for how long",
+        "Encrypt packets",
+        "Increase RAM"
+      ],
+      "correctIndex": 1,
+      "explanation": "Scheduling allocates CPU time fairly and handles priorities.",
+      "tags": [
+        "os"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_f070c50a91ca",
+      "type": "understanding",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "Why are switches more efficient than hubs on a LAN?",
+      "options": [
+        "Switches broadcast to all devices",
+        "Switches forward data only to the intended device using MAC addresses",
+        "Switches remove the need for NICs",
+        "Switches are required for WANs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Switches reduce unnecessary traffic by sending frames to the correct port/device.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_92be5a87e231",
+      "type": "understanding",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "Why is Wi‑Fi often less reliable than Ethernet?",
+      "options": [
+        "Wi‑Fi uses packets",
+        "Wi‑Fi is affected by interference and signal strength",
+        "Ethernet uses ROM",
+        "Ethernet is always slower"
+      ],
+      "correctIndex": 1,
+      "explanation": "Wireless signals can be disrupted by distance, walls, and interference.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_c4171d83f474",
+      "type": "recall",
+      "topic": "Protocols",
+      "difficulty": 2,
+      "stem": "UDP is often described as…",
+      "options": [
+        "Always encrypted",
+        "Faster but less reliable than TCP (no guaranteed delivery)",
+        "Only for emails",
+        "Used to store files"
+      ],
+      "correctIndex": 1,
+      "explanation": "UDP has low overhead; some packets may be lost.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_d7d3a611c954",
+      "type": "application",
+      "topic": "Protocols",
+      "difficulty": 3,
+      "stem": "A live video call prefers low latency over perfect reliability. Which transport is commonly used?",
+      "options": [
+        "TCP",
+        "UDP",
+        "DNS",
+        "ROM"
+      ],
+      "correctIndex": 1,
+      "explanation": "Real-time media often uses UDP to reduce delay; some loss is acceptable.",
+      "tags": [
+        "protocols",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_9cd30b85f4fe",
+      "type": "understanding",
+      "topic": "Security",
+      "difficulty": 2,
+      "stem": "Why are long passphrases stronger than short complex passwords?",
+      "options": [
+        "They are easier to brute force",
+        "They greatly increase the number of possible combinations",
+        "They disable malware",
+        "They increase download speed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Brute force becomes much harder as length increases.",
+      "tags": [
+        "security"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_c28c319f6161",
+      "type": "understanding",
+      "topic": "Security",
+      "difficulty": 2,
+      "stem": "Which measure BEST reduces damage from ransomware?",
+      "options": [
+        "Disable the firewall",
+        "Regular offline backups",
+        "Use weaker passwords",
+        "Increase colour depth"
+      ],
+      "correctIndex": 1,
+      "explanation": "Backups allow recovery without paying attackers.",
+      "tags": [
+        "security"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_0bc905a76bdb",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 2,
+      "stem": "Brute force attack means…",
+      "options": [
+        "Guessing many password combinations until one works",
+        "Deleting files to free space",
+        "Sending packets via DNS",
+        "Sampling audio"
+      ],
+      "correctIndex": 0,
+      "explanation": "Brute force tries many combinations; longer passwords are harder to crack.",
+      "tags": [
+        "security"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_96da4455233d",
+      "type": "understanding",
+      "topic": "DataRepresentation",
+      "difficulty": 2,
+      "stem": "How many different values can 5 bits represent?",
+      "options": [
+        "5",
+        "10",
+        "16",
+        "32"
+      ],
+      "correctIndex": 3,
+      "explanation": "With n bits you can represent 2^n values. 2^5=32.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_e41a0354a0fd",
+      "type": "understanding",
+      "topic": "DataRepresentation",
+      "difficulty": 2,
+      "stem": "How many colours can be represented with a colour depth of 8 bits?",
+      "options": [
+        "8",
+        "16",
+        "256",
+        "1024"
+      ],
+      "correctIndex": 2,
+      "explanation": "8 bits → 2^8 = 256 colours.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_763c99695ef0",
+      "type": "application",
+      "topic": "DataRepresentation",
+      "difficulty": 3,
+      "stem": "An image is 100×50 pixels, colour depth 4 bits. Minimum size (bytes)?",
+      "options": [
+        "2,500 bytes",
+        "25,000 bytes",
+        "5,000 bytes",
+        "10,000 bytes"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pixels=5,000. Bits=5,000×4=20,000. Bytes=20,000÷8=2,500 bytes.",
+      "tags": [
+        "data-rep",
+        "calculation"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_4eeb97508ad4",
+      "type": "application",
+      "topic": "DataRepresentation",
+      "difficulty": 3,
+      "stem": "Audio: 44,100 Hz, 16-bit, stereo (2 channels), duration 3 s. Approx size (bytes)?",
+      "options": [
+        "264,600",
+        "529,200",
+        "2,646,000",
+        "4,410,000"
+      ],
+      "correctIndex": 1,
+      "explanation": "Samples=44,100×3=132,300. Bits/sample=16×2=32 bits=4 bytes. 132,300×4=529,200 bytes.",
+      "tags": [
+        "data-rep",
+        "calculation"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_f4efa706c310",
+      "type": "understanding",
+      "topic": "DataRepresentation",
+      "difficulty": 2,
+      "stem": "Why does increasing colour depth increase file size?",
+      "options": [
+        "More pixels are added automatically",
+        "More bits are stored per pixel",
+        "Compression stops working",
+        "The OS changes"
+      ],
+      "correctIndex": 1,
+      "explanation": "More bits per pixel means more data stored overall.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_65b492923c36",
+      "type": "application",
+      "topic": "DataRepresentation",
+      "difficulty": 3,
+      "stem": "Which scenario is MOST suitable for lossless compression?",
+      "options": [
+        "Streaming music at low bandwidth",
+        "Archiving important text documents",
+        "Sharing a blurry thumbnail",
+        "Broadcasting live video"
+      ],
+      "correctIndex": 1,
+      "explanation": "Text and important documents usually need exact recovery.",
+      "tags": [
+        "data-rep",
+        "compression"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_62e746dfc0b3",
+      "type": "application",
+      "topic": "DataRepresentation",
+      "difficulty": 3,
+      "stem": "Which scenario is MOST suitable for lossy compression?",
+      "options": [
+        "Backing up legal contracts",
+        "Compressing a photo for a website",
+        "Storing source code",
+        "Encrypting a password database"
+      ],
+      "correctIndex": 1,
+      "explanation": "Web photos often use lossy compression (JPEG) to reduce size.",
+      "tags": [
+        "data-rep",
+        "compression"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_bc689cd68b64",
+      "type": "understanding",
+      "topic": "Ethics_Law_Env",
+      "difficulty": 2,
+      "stem": "Why is 'data minimisation' good practice?",
+      "options": [
+        "Collect as much as possible",
+        "Collect only the data needed for a specific purpose",
+        "Store data forever",
+        "Share data publicly"
+      ],
+      "correctIndex": 1,
+      "explanation": "Collecting less data reduces risk and improves privacy compliance.",
+      "tags": [
+        "law"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b1d7070774ea",
+      "type": "application",
+      "topic": "Ethics_Law_Env",
+      "difficulty": 3,
+      "stem": "A company sells customer emails to advertisers without telling customers. This is mainly a…",
+      "options": [
+        "Hardware fault",
+        "Data protection/privacy issue",
+        "Compression issue",
+        "CPU cycle issue"
+      ],
+      "correctIndex": 1,
+      "explanation": "Using personal data beyond agreed purposes breaches privacy/data protection principles.",
+      "tags": [
+        "law",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_8d9e566a38a7",
+      "type": "application",
+      "topic": "Storage",
+      "difficulty": 3,
+      "stem": "A photographer needs portable storage that is durable and small. Best choice?",
+      "options": [
+        "Optical disk",
+        "SD card",
+        "Magnetic tape",
+        "ROM chip on motherboard"
+      ],
+      "correctIndex": 1,
+      "explanation": "SD cards are small portable flash storage.",
+      "tags": [
+        "storage",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_49cb927e31f5",
+      "type": "understanding",
+      "topic": "Storage",
+      "difficulty": 2,
+      "stem": "Why is an SSD generally faster than an HDD?",
+      "options": [
+        "SSDs are optical",
+        "SSDs have no moving parts and use fast flash memory",
+        "SSDs store data in denary",
+        "SSDs use packet switching"
+      ],
+      "correctIndex": 1,
+      "explanation": "No moving head/platters reduces latency and improves access speed.",
+      "tags": [
+        "storage"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_51a92d540122",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 1,
+      "stem": "Which part of the CPU decodes instructions and controls data flow?",
+      "options": [
+        "ALU",
+        "Control Unit",
+        "RAM",
+        "SSD"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Control Unit interprets instructions and directs operations.",
+      "tags": [
+        "cpu"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b87943354afa",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 1,
+      "stem": "Which is smallest and fastest storage?",
+      "options": [
+        "RAM",
+        "Cache",
+        "Registers",
+        "HDD"
+      ],
+      "correctIndex": 2,
+      "explanation": "Registers are the smallest and fastest storage locations.",
+      "tags": [
+        "cpu",
+        "memory"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_5edf66cc407a",
+      "type": "recall",
+      "topic": "RAM_ROM",
+      "difficulty": 1,
+      "stem": "Which is non-volatile?",
+      "options": [
+        "RAM",
+        "Cache",
+        "ROM",
+        "Registers"
+      ],
+      "correctIndex": 2,
+      "explanation": "ROM is non-volatile; it keeps contents without power.",
+      "tags": [
+        "memory"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_5f273ddb8b06",
+      "type": "recall",
+      "topic": "OS",
+      "difficulty": 1,
+      "stem": "Which is a function of an operating system?",
+      "options": [
+        "Run the ALU",
+        "Manage memory and processes",
+        "Convert hex to binary",
+        "Print photos automatically"
+      ],
+      "correctIndex": 1,
+      "explanation": "The OS manages memory, processes, devices and files.",
+      "tags": [
+        "os"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_0ea9ff420b94",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 1,
+      "stem": "Which best describes a router?",
+      "options": [
+        "Connects devices in a room only",
+        "Connects networks and routes packets",
+        "Stores web pages",
+        "Protects against all malware"
+      ],
+      "correctIndex": 1,
+      "explanation": "Routers connect networks and route packets between them.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_bcfe9227fdf7",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 1,
+      "stem": "Which is an example of malware?",
+      "options": [
+        "Firewall",
+        "Virus",
+        "Router",
+        "Operating system"
+      ],
+      "correctIndex": 1,
+      "explanation": "A virus is malicious software.",
+      "tags": [
+        "security"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_7c64996eb95e",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 1,
+      "stem": "How many values can 3 bits represent?",
+      "options": [
+        "3",
+        "6",
+        "8",
+        "9"
+      ],
+      "correctIndex": 2,
+      "explanation": "2^3 = 8 possible values.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b3f56a48f037",
+      "type": "recall",
+      "topic": "Protocols",
+      "difficulty": 1,
+      "stem": "Which protocol is used for email sending?",
+      "options": [
+        "SMTP",
+        "HTTP",
+        "FTP",
+        "DNS"
+      ],
+      "correctIndex": 0,
+      "explanation": "SMTP is used to send emails between servers.",
+      "tags": [
+        "protocols"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_492a8b137880",
+      "type": "recall",
+      "topic": "Storage",
+      "difficulty": 1,
+      "stem": "Which storage is fastest for long-term file storage?",
+      "options": [
+        "SSD",
+        "DVD",
+        "Magnetic tape",
+        "RAM"
+      ],
+      "correctIndex": 0,
+      "explanation": "SSDs are fast non-volatile storage for files.",
+      "tags": [
+        "storage"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_5433a6a4e1b0",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 1,
+      "stem": "What is a network?",
+      "options": [
+        "A single computer",
+        "Connected devices that can share resources",
+        "A type of ROM",
+        "A file format"
+      ],
+      "correctIndex": 1,
+      "explanation": "A network is a set of connected devices that can share data and resources.",
+      "tags": [
+        "networks",
+        "basics"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_9b9a3fc0e5eb",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 1,
+      "stem": "What is authentication?",
+      "options": [
+        "Deleting files",
+        "Verifying identity",
+        "Routing packets",
+        "Changing resolution"
+      ],
+      "correctIndex": 1,
+      "explanation": "Authentication checks who you are (e.g., password, fingerprint).",
+      "tags": [
+        "security",
+        "auth"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_1cd55eb83d83",
+      "type": "recall",
+      "topic": "Storage",
+      "difficulty": 1,
+      "stem": "What is secondary storage?",
+      "options": [
+        "Temporary working memory",
+        "Long-term non-volatile storage",
+        "A CPU component",
+        "A network protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "Secondary storage stores data long-term and is non-volatile.",
+      "tags": [
+        "storage",
+        "basics"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_1412b7a6f4d7",
+      "type": "recall",
+      "topic": "DataRepresentation",
+      "difficulty": 1,
+      "stem": "What does 'bit depth' relate to in audio?",
+      "options": [
+        "Number of samples per second",
+        "Number of bits per sample (precision)",
+        "Number of speakers",
+        "Number of routers"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bit depth is the number of bits used to represent each sample amplitude.",
+      "tags": [
+        "data-rep"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_3d7e30fb1320",
+      "type": "recall",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "Which statement best describes the role of the Program Counter (PC)?",
+      "options": [
+        "Stores the data currently being processed",
+        "Stores the address of the next instruction to fetch",
+        "Stores the instruction currently being decoded",
+        "Stores files permanently"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Program Counter holds the memory address of the next instruction in the fetch-decode-execute cycle.",
+      "tags": [
+        "cpu",
+        "registers"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_b54075286b75",
+      "type": "understanding",
+      "topic": "CPU",
+      "difficulty": 2,
+      "stem": "Why can a CPU 'bottleneck' a system even with lots of RAM and a fast SSD?",
+      "options": [
+        "Because RAM becomes volatile",
+        "Because the CPU may not process instructions fast enough to keep up",
+        "Because SSDs only work with GUI",
+        "Because the OS stops multitasking"
+      ],
+      "correctIndex": 1,
+      "explanation": "If the CPU cannot execute instructions quickly enough, it limits overall system performance.",
+      "tags": [
+        "performance",
+        "cpu"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_7b8ff1da2034",
+      "type": "recall",
+      "topic": "OS",
+      "difficulty": 2,
+      "stem": "Which OS function deals with allocating CPU time and managing processes?",
+      "options": [
+        "File management",
+        "Process management",
+        "Defragmentation",
+        "DNS"
+      ],
+      "correctIndex": 1,
+      "explanation": "Process management includes scheduling and controlling running programs.",
+      "tags": [
+        "os",
+        "multitasking"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_0a9caf43a7e2",
+      "type": "application",
+      "topic": "OS",
+      "difficulty": 3,
+      "stem": "A student opens a large game and their music stutters. Which OS-managed resource is most likely under pressure?",
+      "options": [
+        "CPU time/process scheduling",
+        "Optical storage laser",
+        "DNS cache only",
+        "Unicode table"
+      ],
+      "correctIndex": 0,
+      "explanation": "Heavy apps can use lots of CPU time; the OS scheduler shares CPU time between processes.",
+      "tags": [
+        "os",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_9eaf80bf46ec",
+      "type": "recall",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "Which is most likely to provide a fixed, high-bandwidth connection in a school computer lab?",
+      "options": [
+        "Wi‑Fi",
+        "Ethernet (wired)",
+        "Bluetooth",
+        "Infrared"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ethernet is wired and typically offers higher, more stable bandwidth than Wi‑Fi in busy environments.",
+      "tags": [
+        "networks"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_cfc6a6770157",
+      "type": "understanding",
+      "topic": "NetworksBasics",
+      "difficulty": 2,
+      "stem": "Why do switches use MAC addresses?",
+      "options": [
+        "To identify countries on the internet",
+        "To decide which LAN port should receive a frame",
+        "To encrypt web pages",
+        "To increase clock speed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Switches learn which MAC addresses are on which ports and forward frames only where needed.",
+      "tags": [
+        "networks",
+        "switch"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_71977432f05a",
+      "type": "recall",
+      "topic": "Security",
+      "difficulty": 2,
+      "stem": "Which is the best description of 'social engineering'?",
+      "options": [
+        "Breaking encryption with maths",
+        "Tricking people into revealing information or performing actions",
+        "A type of optical storage",
+        "A CPU scheduling method"
+      ],
+      "correctIndex": 1,
+      "explanation": "Social engineering targets human behaviour rather than technical weaknesses.",
+      "tags": [
+        "security"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_398769f02d48",
+      "type": "application",
+      "topic": "Security",
+      "difficulty": 3,
+      "stem": "A website database is leaked. Attackers try the leaked email/password pairs on other sites. This is called…",
+      "options": [
+        "Packet switching",
+        "Credential stuffing",
+        "Defragmentation",
+        "Sampling"
+      ],
+      "correctIndex": 1,
+      "explanation": "Credential stuffing is when attackers reuse leaked login details across multiple sites.",
+      "tags": [
+        "security",
+        "scenario"
+      ],
+      "active": true
+    },
+    {
+      "id": "q_65f524884f03",
+      "type": "application",
+      "topic": "DataRepresentation",
+      "difficulty": 3,
+      "stem": "A 20×30 image uses 8-bit colour depth. Minimum uncompressed file size (bytes)?",
+      "options": [
+        "600 bytes",
+        "4,800 bytes",
+        "24,000 bytes",
+        "48,000 bytes"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pixels=20×30=600. Bits=600×8=4,800 bits. Bytes=4,800÷8=600 bytes (ignoring headers/compression).",
+      "tags": [
+        "data-rep",
+        "calculation"
+      ],
+      "active": true
+    }
+  ]
+}
