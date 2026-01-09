@@ -1058,6 +1058,257 @@ export const studyNotes: Record<string, StudyNote> = {
       },
     ],
   },
+
+  // Chemistry Study Notes
+  'Atomic structure and the periodic table': {
+    topic: 'Atomic structure and the periodic table',
+    title: 'Atomic Structure and the Periodic Table',
+    sections: [
+      {
+        heading: 'Atomic Structure',
+        content: 'All substances are made of atoms. Atoms consist of a nucleus surrounded by electrons.',
+        bullets: [
+          'Protons have a positive charge and define the atomic number',
+          'Neutrons have no charge and add to mass',
+          'Electrons have a negative charge and occupy energy levels',
+        ],
+      },
+      {
+        heading: 'The Periodic Table',
+        content: 'Elements are arranged by atomic number, showing repeating patterns.',
+        bullets: [
+          'Groups have similar properties',
+          'Periods show number of electron shells',
+          'Metals are on the left, non-metals on the right',
+        ],
+      },
+    ],
+  },
+
+  'Bonding, structure and the properties of matter': {
+    topic: 'Bonding, structure and the properties of matter',
+    title: 'Bonding and Structure',
+    sections: [
+      {
+        heading: 'Types of Bonding',
+        content: 'Atoms bond to achieve a stable electron configuration.',
+        bullets: [
+          'Ionic bonding: transfer of electrons',
+          'Covalent bonding: sharing of electrons',
+          'Metallic bonding: positive ions in a sea of electrons',
+        ],
+      },
+      {
+        heading: 'Structure and Properties',
+        content: 'Bonding determines physical properties.',
+        bullets: [
+          'Ionic compounds have high melting points',
+          'Simple molecules have low melting points',
+          'Giant covalent structures are very strong',
+        ],
+      },
+    ],
+  },
+
+  'Quantitative chemistry': {
+    topic: 'Quantitative chemistry',
+    title: 'Quantitative Chemistry',
+    sections: [
+      {
+        heading: 'Relative Masses',
+        content: 'Chemical calculations use relative atomic and formula masses.',
+        bullets: [
+          'Ar from periodic table',
+          'Mr = sum of Ar values',
+          'Used to compare amounts',
+        ],
+      },
+      {
+        heading: 'Moles and Equations',
+        content: 'The mole links mass to number of particles.',
+        bullets: [
+          'Moles = mass ÷ Mr',
+          'Balanced equations show ratios',
+          'Concentration = moles ÷ volume',
+        ],
+      },
+    ],
+  },
+
+  'Chemical changes': {
+    topic: 'Chemical changes',
+    title: 'Chemical Changes',
+    sections: [
+      {
+        heading: 'Reactivity Series',
+        content: 'Metals vary in reactivity.',
+        bullets: [
+          'More reactive metals displace less reactive ones',
+          'Used to predict reactions',
+          'Affects extraction methods',
+        ],
+      },
+      {
+        heading: 'Acids and Electrolysis',
+        content: 'Acids react with metals, bases, and carbonates.',
+        bullets: [
+          'Acids + metals → salt + hydrogen',
+          'Electrolysis uses electricity to decompose compounds',
+          'Occurs in molten or aqueous solutions',
+        ],
+      },
+    ],
+  },
+
+  'Energy changes': {
+    topic: 'Energy changes',
+    title: 'Energy Changes',
+    sections: [
+      {
+        heading: 'Exothermic and Endothermic',
+        content: 'Reactions involve energy transfer.',
+        bullets: [
+          'Exothermic reactions release energy',
+          'Endothermic reactions absorb energy',
+          'Shown on reaction profile diagrams',
+        ],
+      },
+      {
+        heading: 'Bond Energies',
+        content: 'Energy is needed to break bonds and released when bonds form.',
+        bullets: [
+          'Breaking bonds requires energy',
+          'Forming bonds releases energy',
+          'Overall change determines reaction type',
+        ],
+      },
+    ],
+  },
+
+  'The rate and extent of chemical change': {
+    topic: 'The rate and extent of chemical change',
+    title: 'Rates and Equilibrium',
+    sections: [
+      {
+        heading: 'Reaction Rates',
+        content: 'Rate describes how fast a reaction occurs.',
+        bullets: [
+          'Increased temperature increases rate',
+          'Higher concentration increases collisions',
+          'Catalysts lower activation energy',
+        ],
+      },
+      {
+        heading: 'Reversible Reactions',
+        content: 'Some reactions can go forwards and backwards.',
+        bullets: [
+          'Equilibrium occurs in closed systems',
+          'Position of equilibrium can change',
+          'Changes described qualitatively',
+        ],
+      },
+    ],
+  },
+
+  'Organic chemistry': {
+    topic: 'Organic chemistry',
+    title: 'Organic Chemistry',
+    sections: [
+      {
+        heading: 'Hydrocarbons',
+        content: 'Organic compounds mainly contain carbon and hydrogen.',
+        bullets: [
+          'Alkanes are saturated',
+          'Alkenes are unsaturated',
+          'Cracking breaks long chains into shorter ones',
+        ],
+      },
+      {
+        heading: 'Uses and Properties',
+        content: 'Different hydrocarbons have different uses.',
+        bullets: [
+          'Short chains are fuels',
+          'Long chains are viscous',
+          'Alkenes used to make polymers',
+        ],
+      },
+    ],
+  },
+
+  'Chemical analysis': {
+    topic: 'Chemical analysis',
+    title: 'Chemical Analysis',
+    sections: [
+      {
+        heading: 'Gas and Ion Tests',
+        content: 'Chemical tests identify substances.',
+        bullets: [
+          'CO₂ turns limewater cloudy',
+          'Oxygen relights a glowing splint',
+          'Hydrogen makes a squeaky pop',
+        ],
+      },
+      {
+        heading: 'Chromatography',
+        content: 'Chromatography separates mixtures.',
+        bullets: [
+          'Substances move at different speeds',
+          'Rf values identify substances',
+          'Used to check purity',
+        ],
+      },
+    ],
+  },
+
+  'Chemistry of the atmosphere': {
+    topic: 'Chemistry of the atmosphere',
+    title: 'Chemistry of the Atmosphere',
+    sections: [
+      {
+        heading: 'Atmospheric Gases',
+        content: "Earth's atmosphere has changed over time.",
+        bullets: [
+          'Early atmosphere had high CO₂',
+          'Oxygen increased due to photosynthesis',
+          'Nitrogen is now most abundant',
+        ],
+      },
+      {
+        heading: 'Climate Change',
+        content: 'Human activity affects atmospheric composition.',
+        bullets: [
+          'Greenhouse gases trap heat',
+          'Carbon dioxide from burning fuels',
+          'Effects include global warming',
+        ],
+      },
+    ],
+  },
+
+  'Using resources': {
+    topic: 'Using resources',
+    title: 'Using Resources',
+    sections: [
+      {
+        heading: 'Resources and Sustainability',
+        content: 'Resources can be finite or renewable.',
+        bullets: [
+          'Fossil fuels are finite',
+          'Renewable resources can be replaced',
+          'Sustainability meets present and future needs',
+        ],
+      },
+      {
+        heading: 'Recycling',
+        content: 'Recycling conserves resources.',
+        bullets: [
+          'Reduces energy use',
+          'Decreases landfill',
+          'Life cycle assessments compare impact',
+        ],
+      },
+    ],
+  },
 };
 
 export function getStudyNotes(topic: string): StudyNote | undefined {
