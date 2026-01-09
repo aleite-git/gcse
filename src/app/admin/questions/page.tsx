@@ -282,6 +282,7 @@ function QuestionForm({
     correctIndex: question?.correctIndex || 0,
     explanation: question?.explanation || '',
     topic: question?.topic || 'CPU',
+    subject: question?.subject || 'computer-science',
     difficulty: question?.difficulty || 2,
     tags: question?.tags || [],
     active: question?.active ?? true,

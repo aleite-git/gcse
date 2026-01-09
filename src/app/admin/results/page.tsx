@@ -600,7 +600,8 @@ export default function AdminResultsPage() {
 }
 
 function formatTopic(topic: Topic): string {
-  const topicNames: Record<Topic, string> = {
+  const topicNames: Record<string, string> = {
+    // Computer Science topics
     CPU: 'CPU',
     RAM_ROM: 'RAM & ROM',
     Storage: 'Storage',
@@ -611,8 +612,27 @@ function formatTopic(topic: Topic): string {
     Security: 'Security',
     Ethics_Law_Env: 'Ethics & Law',
     Performance: 'Performance',
+    // Biology topics
+    CellBiology: 'Cell Biology',
+    Organisation: 'Organisation',
+    Infection: 'Infection & Response',
+    Bioenergetics: 'Bioenergetics',
+    Homeostasis: 'Homeostasis & Response',
+    Inheritance: 'Inheritance',
+    Variation: 'Variation & Evolution',
+    Ecology: 'Ecology',
+    // Chemistry topics
+    AtomicStructure: 'Atomic Structure',
+    BondingStructure: 'Bonding & Structure',
+    QuantitativeChemistry: 'Quantitative Chemistry',
+    ChemicalChanges: 'Chemical Changes',
+    EnergyChanges: 'Energy Changes',
+    RatesReactions: 'Rates of Reactions',
+    OrganicChemistry: 'Organic Chemistry',
+    ChemicalAnalysis: 'Chemical Analysis',
+    AtmosphereResources: 'Atmosphere & Resources',
   };
-  return topicNames[topic] || topic;
+  return topicNames[topic] || topic.replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2');
 }
 
 function formatDate(dateStr: string): string {

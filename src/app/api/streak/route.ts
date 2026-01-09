@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { getStreakStatus, recordActivity, useFreeze, updateTimezone } from '@/lib/streak';
+import { Subject, SUBJECTS } from '@/types';
 
-// GET /api/streak - Get current streak status
+// GET /api/streak - Get current streak status for a subject or all subjects
 export async function GET(request: NextRequest) {
   try {
     const session = await getSessionFromRequest(request);
@@ -14,16 +15,39 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get timezone from query params or default
+    // Get timezone and subject from query params
     const { searchParams } = new URL(request.url);
     const timezone = searchParams.get('timezone') || 'Europe/Lisbon';
+    const subject = searchParams.get('subject') as Subject | null;
 
-    // Record login activity (this updates streak if needed)
-    await recordActivity(session.label, 'login', timezone);
+    // If subject is specified, return streak for that subject
+    if (subject) {
+      if (!SUBJECTS[subject]) {
+        return NextResponse.json(
+          { error: 'Invalid subject' },
+          { status: 400 }
+        );
+      }
 
-    const status = await getStreakStatus(session.label, timezone);
+      // Record login activity for this subject
+      await recordActivity(session.label, subject, 'login', timezone);
+      const status = await getStreakStatus(session.label, subject, timezone);
 
-    return NextResponse.json(status);
+      return NextResponse.json(status);
+    }
+
+    // If no subject specified, return streaks for all subjects
+    const allSubjects = Object.keys(SUBJECTS) as Subject[];
+    const streaks: Record<Subject, Awaited<ReturnType<typeof getStreakStatus>>> = {} as Record<
+      Subject,
+      Awaited<ReturnType<typeof getStreakStatus>>
+    >;
+
+    for (const subj of allSubjects) {
+      streaks[subj] = await getStreakStatus(session.label, subj, timezone);
+    }
+
+    return NextResponse.json({ streaks });
   } catch (error) {
     console.error('Error getting streak status:', error);
     return NextResponse.json(
@@ -46,11 +70,21 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { action, timezone } = body;
+    const { action, subject, timezone } = body;
+
+    // Validate subject for actions that require it
+    if (action === 'use_freeze' || action === 'update_timezone') {
+      if (!subject || !SUBJECTS[subject as Subject]) {
+        return NextResponse.json(
+          { error: 'Valid subject is required' },
+          { status: 400 }
+        );
+      }
+    }
 
     switch (action) {
       case 'use_freeze': {
-        const result = await useFreeze(session.label, timezone || 'Europe/Lisbon');
+        const result = await useFreeze(session.label, subject, timezone || 'Europe/Lisbon');
         return NextResponse.json({
           success: result.success,
           message: result.message,
@@ -68,8 +102,8 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
         }
-        await updateTimezone(session.label, timezone);
-        const status = await getStreakStatus(session.label, timezone);
+        await updateTimezone(session.label, subject, timezone);
+        const status = await getStreakStatus(session.label, subject, timezone);
         return NextResponse.json({ success: true, status });
       }
 

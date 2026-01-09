@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { generateTomorrowPreview } from '@/lib/quiz';
+import { Subject, SUBJECTS } from '@/types';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +14,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const preview = await generateTomorrowPreview();
+    const { searchParams } = new URL(request.url);
+    const subject = searchParams.get('subject') as Subject | null;
+
+    // Validate subject parameter
+    if (!subject || !SUBJECTS[subject]) {
+      return NextResponse.json(
+        { error: 'Valid subject parameter is required (computer-science, biology, or chemistry)' },
+        { status: 400 }
+      );
+    }
+
+    const preview = await generateTomorrowPreview(subject);
 
     // Include all details for admin preview (including correct answer and explanation)
     const adminQuestions = preview.questions.map((q, index) => ({
@@ -29,6 +41,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       date: preview.date,
+      subject: preview.subject,
       questions: adminQuestions,
     });
   } catch (error) {

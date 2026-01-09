@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { QuizResponse, QuizQuestion, Answer, SubmitResponse, QuestionFeedback, StreakStatus } from '@/types';
+import { QuizResponse, QuizQuestion, Answer, SubmitResponse, QuestionFeedback, StreakStatus, Subject, SUBJECTS } from '@/types';
 import { studyNotes, StudyNote } from '@/lib/studyNotes';
 import { StreakDisplay, StreakCelebration } from '@/components/StreakDisplay';
 
-type QuizState = 'loading' | 'quiz' | 'submitting' | 'results';
+type QuizState = 'loading' | 'quiz' | 'submitting' | 'results' | 'no-subject';
 
 interface StreakResult {
   currentStreak: number;
@@ -16,6 +16,32 @@ interface StreakResult {
 }
 
 export default function QuizPage() {
+  return (
+    <Suspense fallback={<QuizLoading />}>
+      <QuizContent />
+    </Suspense>
+  );
+}
+
+function QuizLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="text-center">
+        <div className="relative w-16 h-16 mx-auto">
+          <div className="absolute inset-0 rounded-full border-4 border-purple-500/30"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-purple-500 animate-spin"></div>
+        </div>
+        <p className="mt-6 text-white/60 font-medium">Loading quiz...</p>
+      </div>
+    </div>
+  );
+}
+
+function QuizContent() {
+  const searchParams = useSearchParams();
+  const subject = searchParams.get('subject') as Subject | null;
+  const subjectInfo = subject ? SUBJECTS[subject] : null;
+
   const [state, setState] = useState<QuizState>('loading');
   const [quiz, setQuiz] = useState<QuizResponse | null>(null);
   const [answers, setAnswers] = useState<Map<string, number>>(new Map());
@@ -29,9 +55,15 @@ export default function QuizPage() {
   const router = useRouter();
 
   const loadQuiz = useCallback(async () => {
+    // Validate subject
+    if (!subject || !SUBJECTS[subject]) {
+      setState('no-subject');
+      return;
+    }
+
     try {
       setState('loading');
-      const response = await fetch('/api/quiz/today');
+      const response = await fetch(`/api/quiz/today?subject=${subject}`);
 
       if (response.status === 401) {
         router.push('/');
@@ -47,9 +79,9 @@ export default function QuizPage() {
       setAnswers(new Map());
       setState('quiz');
 
-      // Fetch streak status
+      // Fetch streak status for this subject
       try {
-        const streakResponse = await fetch(`/api/streak?timezone=${encodeURIComponent(timezone)}`);
+        const streakResponse = await fetch(`/api/streak?subject=${subject}&timezone=${encodeURIComponent(timezone)}`);
         if (streakResponse.ok) {
           const streakData = await streakResponse.json();
           setStreakStatus(streakData);
@@ -61,7 +93,7 @@ export default function QuizPage() {
       setError('Failed to load quiz. Please try again.');
       setState('quiz');
     }
-  }, [router, timezone]);
+  }, [router, timezone, subject]);
 
   useEffect(() => {
     loadQuiz();
@@ -76,7 +108,7 @@ export default function QuizPage() {
   };
 
   const handleSubmit = async () => {
-    if (!quiz || answers.size !== quiz.questions.length) return;
+    if (!quiz || !subject || answers.size !== quiz.questions.length) return;
 
     setState('submitting');
     setError('');
@@ -95,7 +127,7 @@ export default function QuizPage() {
           'Content-Type': 'application/json',
           'x-timezone': timezone,
         },
-        body: JSON.stringify({ answers: answerArray, durationSeconds }),
+        body: JSON.stringify({ subject, answers: answerArray, durationSeconds }),
       });
 
       if (!response.ok) {
@@ -126,12 +158,18 @@ export default function QuizPage() {
   };
 
   const handleRetry = async () => {
+    if (!subject) return;
+
     setState('loading');
     setError('');
 
     try {
       const response = await fetch('/api/quiz/retry', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ subject }),
       });
 
       if (!response.ok) {
@@ -154,6 +192,24 @@ export default function QuizPage() {
     router.push('/');
   };
 
+  if (state === 'no-subject') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="text-6xl mb-4">📚</div>
+          <h1 className="text-2xl font-bold text-white mb-2">No Subject Selected</h1>
+          <p className="text-white/60 mb-6">Please select a subject to start your quiz.</p>
+          <Link
+            href="/quiz/subjects"
+            className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all"
+          >
+            Choose Subject
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (state === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -162,7 +218,7 @@ export default function QuizPage() {
             <div className="absolute inset-0 rounded-full border-4 border-purple-500/30"></div>
             <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-purple-500 animate-spin"></div>
           </div>
-          <p className="mt-6 text-white/60 font-medium">Loading quiz...</p>
+          <p className="mt-6 text-white/60 font-medium">Loading {subjectInfo?.name || 'quiz'}...</p>
         </div>
       </div>
     );
@@ -184,6 +240,8 @@ export default function QuizPage() {
           onLogout={handleLogout}
           streakResult={streakResult}
           streakStatus={streakStatus}
+          subject={subject}
+          subjectInfo={subjectInfo}
         />
       </>
     );
@@ -195,7 +253,10 @@ export default function QuizPage() {
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-white">Daily Quiz</h1>
+              <div className="flex items-center gap-3">
+                {subjectInfo && <span className="text-3xl">{subjectInfo.icon}</span>}
+                <h1 className="text-2xl font-bold text-white">{subjectInfo?.name || 'Daily Quiz'}</h1>
+              </div>
               <p className="text-sm text-white/40">
                 {quiz?.quizVersion && `Version ${quiz.quizVersion}`}
               </p>
@@ -212,7 +273,13 @@ export default function QuizPage() {
           </div>
           <div className="flex items-center gap-4">
             <Link
-              href="/progress"
+              href="/quiz/subjects"
+              className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/20 hover:text-white text-sm font-medium transition-all"
+            >
+              Subjects
+            </Link>
+            <Link
+              href={`/progress?subject=${subject}`}
               className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/20 hover:text-white text-sm font-medium transition-all"
             >
               Progress
@@ -465,12 +532,16 @@ function ResultsView({
   onLogout,
   streakResult,
   streakStatus,
+  subject,
+  subjectInfo,
 }: {
   results: SubmitResponse;
   onRetry: () => void;
   onLogout: () => void;
   streakResult: StreakResult | null;
   streakStatus: StreakStatus | null;
+  subject: Subject | null;
+  subjectInfo: { name: string; icon: string; color: string } | null;
 }) {
   const totalQuestions = results.feedback.length;
   const scorePercentage = (results.score / totalQuestions) * 100;
@@ -494,7 +565,10 @@ function ResultsView({
       <div className="max-w-3xl mx-auto">
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <h1 className="text-2xl font-bold text-white">Quiz Results</h1>
+            <div className="flex items-center gap-3">
+              {subjectInfo && <span className="text-3xl">{subjectInfo.icon}</span>}
+              <h1 className="text-2xl font-bold text-white">{subjectInfo?.name || 'Quiz'} Results</h1>
+            </div>
             {streakResult && (
               <StreakDisplay
                 currentStreak={streakResult.currentStreak}
@@ -507,7 +581,13 @@ function ResultsView({
           </div>
           <div className="flex items-center gap-4">
             <Link
-              href="/progress"
+              href="/quiz/subjects"
+              className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/20 hover:text-white text-sm font-medium transition-all"
+            >
+              Subjects
+            </Link>
+            <Link
+              href={`/progress?subject=${subject}`}
               className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/20 hover:text-white text-sm font-medium transition-all"
             >
               Progress
@@ -554,7 +634,13 @@ function ResultsView({
             Try Again
           </button>
           <Link
-            href="/progress"
+            href="/quiz/subjects"
+            className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-2xl hover:bg-white/20 transition-all text-center"
+          >
+            Other Subjects
+          </Link>
+          <Link
+            href={`/progress?subject=${subject}`}
             className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-2xl hover:bg-white/20 transition-all text-center"
           >
             View Progress

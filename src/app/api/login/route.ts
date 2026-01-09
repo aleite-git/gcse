@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       success: true,
       label: accessCode.label,
       isAdmin: accessCode.isAdmin,
-      redirectTo: accessCode.isAdmin ? '/admin/questions' : '/quiz/today',
+      redirectTo: accessCode.isAdmin ? '/admin/questions' : '/quiz/subjects',
     });
   } catch (error) {
     console.error('Login error:', error);

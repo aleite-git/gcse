@@ -1,16 +1,19 @@
 import { getDb, COLLECTIONS } from './firebase';
-import { Question, QuestionInput, Topic } from '@/types';
+import { Question, QuestionInput, Topic, Subject } from '@/types';
 import { getTodayLisbon, getLastNDaysLisbon } from './date';
 
 /**
- * Get all active questions
+ * Get all active questions, optionally filtered by subject
  */
-export async function getActiveQuestions(): Promise<Question[]> {
+export async function getActiveQuestions(subject?: Subject): Promise<Question[]> {
   const db = getDb();
-  const snapshot = await db
-    .collection(COLLECTIONS.QUESTIONS)
-    .where('active', '==', true)
-    .get();
+  let query = db.collection(COLLECTIONS.QUESTIONS).where('active', '==', true);
+
+  if (subject) {
+    query = query.where('subject', '==', subject);
+  }
+
+  const snapshot = await query.get();
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,
@@ -72,15 +75,17 @@ export async function getQuestionsByIds(ids: string[]): Promise<Question[]> {
 }
 
 /**
- * Get question IDs used in the last N days
+ * Get question IDs used in the last N days for a specific subject
  */
-export async function getRecentlyUsedQuestionIds(days: number): Promise<Set<string>> {
+export async function getRecentlyUsedQuestionIds(days: number, subject: Subject): Promise<Set<string>> {
   const db = getDb();
   const recentDates = getLastNDaysLisbon(days);
   const usedIds = new Set<string>();
 
   for (const date of recentDates) {
-    const doc = await db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(date).get();
+    // New key pattern: YYYY-MM-DD-{subject}
+    const docId = `${date}-${subject}`;
+    const doc = await db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId).get();
     if (doc.exists) {
       const data = doc.data()!;
       // Get all question IDs from all versions
@@ -92,10 +97,11 @@ export async function getRecentlyUsedQuestionIds(days: number): Promise<Set<stri
     }
   }
 
-  // Also check attempts for questions used today
+  // Also check attempts for questions used today for this subject
   const attemptsSnapshot = await db
     .collection(COLLECTIONS.ATTEMPTS)
     .where('date', '==', getTodayLisbon())
+    .where('subject', '==', subject)
     .get();
 
   for (const doc of attemptsSnapshot.docs) {
@@ -115,10 +121,11 @@ export async function getRecentlyUsedQuestionIds(days: number): Promise<Set<stri
  * with topic balancing and repeat avoidance
  */
 export async function selectQuizQuestions(
+  subject: Subject,
   excludeIds: Set<string> = new Set()
 ): Promise<Question[]> {
-  const allQuestions = await getActiveQuestions();
-  const recentlyUsed = await getRecentlyUsedQuestionIds(7);
+  const allQuestions = await getActiveQuestions(subject);
+  const recentlyUsed = await getRecentlyUsedQuestionIds(7, subject);
 
   // Combine exclusions
   const allExclusions = new Set([...excludeIds, ...recentlyUsed]);
@@ -264,14 +271,18 @@ export async function deleteQuestion(id: string): Promise<void> {
 }
 
 /**
- * Get all questions (including inactive) for admin
+ * Get all questions (including inactive) for admin, optionally filtered by subject
  */
-export async function getAllQuestions(): Promise<Question[]> {
+export async function getAllQuestions(subject?: Subject): Promise<Question[]> {
   const db = getDb();
-  const snapshot = await db
-    .collection(COLLECTIONS.QUESTIONS)
-    .orderBy('createdAt', 'desc')
-    .get();
+  let query: FirebaseFirestore.Query = db.collection(COLLECTIONS.QUESTIONS);
+
+  if (subject) {
+    query = query.where('subject', '==', subject);
+  }
+
+  query = query.orderBy('createdAt', 'desc');
+  const snapshot = await query.get();
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,

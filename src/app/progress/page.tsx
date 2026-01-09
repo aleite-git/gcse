@@ -1,12 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ProgressSummary, Topic, StreakStatus } from '@/types';
+import { ProgressSummary, Topic, StreakStatus, Subject, SUBJECTS } from '@/types';
 import { StreakDisplay } from '@/components/StreakDisplay';
 
 export default function ProgressPage() {
+  return (
+    <Suspense fallback={<ProgressLoading />}>
+      <ProgressContent />
+    </Suspense>
+  );
+}
+
+function ProgressLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="text-center">
+        <div className="relative w-16 h-16 mx-auto">
+          <div className="absolute inset-0 rounded-full border-4 border-purple-500/30"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-purple-500 animate-spin"></div>
+        </div>
+        <p className="mt-6 text-white/60 font-medium">Loading progress...</p>
+      </div>
+    </div>
+  );
+}
+
+function ProgressContent() {
+  const searchParams = useSearchParams();
+  const subject = searchParams.get('subject') as Subject | null;
+  const subjectInfo = subject ? SUBJECTS[subject] : null;
+
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [streakStatus, setStreakStatus] = useState<StreakStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -15,11 +41,16 @@ export default function ProgressPage() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!subject || !SUBJECTS[subject]) {
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       try {
         const [progressResponse, streakResponse] = await Promise.all([
-          fetch('/api/progress'),
-          fetch(`/api/streak?timezone=${encodeURIComponent(timezone)}`),
+          fetch(`/api/progress?subject=${subject}`),
+          fetch(`/api/streak?subject=${subject}&timezone=${encodeURIComponent(timezone)}`),
         ]);
 
         if (progressResponse.status === 401) {
@@ -46,12 +77,30 @@ export default function ProgressPage() {
     };
 
     fetchData();
-  }, [router, timezone]);
+  }, [router, timezone, subject]);
 
   const handleLogout = async () => {
     await fetch('/api/logout', { method: 'POST' });
     router.push('/');
   };
+
+  if (!subject || !SUBJECTS[subject]) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="text-6xl mb-4">📊</div>
+          <h1 className="text-2xl font-bold text-white mb-2">No Subject Selected</h1>
+          <p className="text-white/60 mb-6">Please select a subject to view your progress.</p>
+          <Link
+            href="/quiz/subjects"
+            className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all"
+          >
+            Choose Subject
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -61,7 +110,7 @@ export default function ProgressPage() {
             <div className="absolute inset-0 rounded-full border-4 border-purple-500/30"></div>
             <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-purple-500 animate-spin"></div>
           </div>
-          <p className="mt-6 text-white/60 font-medium">Loading progress...</p>
+          <p className="mt-6 text-white/60 font-medium">Loading {subjectInfo?.name} progress...</p>
         </div>
       </div>
     );
@@ -78,7 +127,7 @@ export default function ProgressPage() {
           </div>
           <p className="text-red-400 mb-4">{error}</p>
           <Link
-            href="/quiz/today"
+            href={`/quiz/today?subject=${subject}`}
             className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all"
           >
             Go to quiz
@@ -101,7 +150,10 @@ export default function ProgressPage() {
         {/* Header */}
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <h1 className="text-2xl font-bold text-white">Your Progress</h1>
+            <div className="flex items-center gap-3">
+              {subjectInfo && <span className="text-3xl">{subjectInfo.icon}</span>}
+              <h1 className="text-2xl font-bold text-white">{subjectInfo?.name} Progress</h1>
+            </div>
             {streakStatus && (
               <StreakDisplay
                 currentStreak={streakStatus.currentStreak}
@@ -114,10 +166,16 @@ export default function ProgressPage() {
           </div>
           <div className="flex items-center gap-4">
             <Link
-              href="/quiz/today"
+              href="/quiz/subjects"
+              className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-white/80 hover:bg-white/20 hover:text-white text-sm font-medium transition-all"
+            >
+              Subjects
+            </Link>
+            <Link
+              href={`/quiz/today?subject=${subject}`}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-medium hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg shadow-purple-500/30"
             >
-              Today's Quiz
+              Today&apos;s Quiz
             </Link>
             <button
               onClick={handleLogout}
@@ -159,12 +217,12 @@ export default function ProgressPage() {
         {/* Call to Action */}
         {!summary?.attemptedToday && (
           <Link
-            href="/quiz/today"
+            href={`/quiz/today?subject=${subject}`}
             className="block mb-6 p-6 rounded-2xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 backdrop-blur-xl hover:from-purple-600/30 hover:to-pink-600/30 transition-all group"
           >
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-white mb-1">Start Today's Quiz</h3>
+                <h3 className="text-lg font-bold text-white mb-1">Start Today&apos;s {subjectInfo?.name} Quiz</h3>
                 <p className="text-white/60 text-sm">Keep your streak going!</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -377,7 +435,8 @@ function getDayName(dateStr: string): string {
 }
 
 function formatTopic(topic: Topic): string {
-  const topicNames: Record<Topic, string> = {
+  const topicNames: Record<string, string> = {
+    // Computer Science topics
     CPU: 'CPU',
     RAM_ROM: 'RAM & ROM',
     Storage: 'Storage',
@@ -388,8 +447,27 @@ function formatTopic(topic: Topic): string {
     Security: 'Security',
     Ethics_Law_Env: 'Ethics, Law & Environment',
     Performance: 'Performance',
+    // Biology topics
+    CellBiology: 'Cell Biology',
+    Organisation: 'Organisation',
+    Infection: 'Infection & Response',
+    Bioenergetics: 'Bioenergetics',
+    Homeostasis: 'Homeostasis & Response',
+    Inheritance: 'Inheritance',
+    Variation: 'Variation & Evolution',
+    Ecology: 'Ecology',
+    // Chemistry topics
+    AtomicStructure: 'Atomic Structure',
+    BondingStructure: 'Bonding & Structure',
+    QuantitativeChemistry: 'Quantitative Chemistry',
+    ChemicalChanges: 'Chemical Changes',
+    EnergyChanges: 'Energy Changes',
+    RatesReactions: 'Rates of Reactions',
+    OrganicChemistry: 'Organic Chemistry',
+    ChemicalAnalysis: 'Chemical Analysis',
+    AtmosphereResources: 'Atmosphere & Resources',
   };
-  return topicNames[topic] || topic;
+  return topicNames[topic] || topic.replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2');
 }
 
 function getScoreGradient(score: number): string {

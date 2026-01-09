@@ -10,7 +10,8 @@
     "correctIndex": 1,
     "explanation": "The CPU (Central Processing Unit) is the brain of the computer that processes instructions from programs and performs calculations.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which component of the CPU temporarily holds data and instructions during processing?",
@@ -23,7 +24,8 @@
     "correctIndex": 2,
     "explanation": "Registers are small, fast storage locations within the CPU that temporarily hold data and instructions being processed.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does the ALU stand for and what is its purpose?",
@@ -36,7 +38,8 @@
     "correctIndex": 1,
     "explanation": "The ALU (Arithmetic Logic Unit) performs mathematical calculations (add, subtract) and logical operations (AND, OR, NOT) on data.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the role of the Control Unit in the CPU?",
@@ -49,7 +52,8 @@
     "correctIndex": 2,
     "explanation": "The Control Unit coordinates all CPU activities, directing the flow of data between the CPU and other components, and controlling the execution of instructions.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does clock speed measure?",
@@ -62,7 +66,8 @@
     "correctIndex": 1,
     "explanation": "Clock speed, measured in Hertz (Hz), indicates how many instruction cycles the CPU can complete per second. Higher clock speed generally means faster processing.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the fetch-decode-execute cycle?",
@@ -75,7 +80,8 @@
     "correctIndex": 1,
     "explanation": "The fetch-decode-execute cycle is the fundamental operation cycle where the CPU fetches an instruction from memory, decodes what action is needed, and executes it.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is CPU cache used for?",
@@ -88,7 +94,8 @@
     "correctIndex": 1,
     "explanation": "CPU cache is a small amount of high-speed memory located close to or within the CPU that stores frequently used data and instructions for faster access than main RAM.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "How does having multiple cores affect CPU performance?",
@@ -101,7 +108,8 @@
     "correctIndex": 1,
     "explanation": "Multiple cores allow the CPU to process multiple instructions or threads simultaneously, improving performance especially for multi-threaded applications.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the Program Counter (PC) register used for?",
@@ -114,7 +122,8 @@
     "correctIndex": 1,
     "explanation": "The Program Counter holds the memory address of the next instruction to be fetched and executed, ensuring instructions are processed in the correct order.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is pipelining in CPU architecture?",
@@ -127,7 +136,8 @@
     "correctIndex": 1,
     "explanation": "Pipelining is a technique where the CPU starts processing a new instruction before completing the previous one, allowing multiple instructions to be in different stages of the fetch-decode-execute cycle simultaneously.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the Memory Address Register (MAR) used for?",
@@ -140,7 +150,8 @@
     "correctIndex": 1,
     "explanation": "The MAR holds the memory address of data that needs to be read from or written to main memory during the fetch-decode-execute cycle.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the Memory Data Register (MDR) used for?",
@@ -153,7 +164,8 @@
     "correctIndex": 1,
     "explanation": "The MDR (also called MBR - Memory Buffer Register) temporarily holds data that has just been read from memory or data that is about to be written to memory.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is embedded system?",
@@ -166,7 +178,8 @@
     "correctIndex": 1,
     "explanation": "An embedded system is a computer system with a dedicated function within a larger mechanical or electronic system, like microcontrollers in washing machines, cars, or medical devices.",
     "topic": "Embedded",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which of the following is an example of an embedded system?",
@@ -179,7 +192,8 @@
     "correctIndex": 2,
     "explanation": "A traffic light controller is an embedded system because it's a dedicated computer designed for the specific task of controlling traffic lights within the traffic management system.",
     "topic": "Embedded",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What characteristic is typical of embedded systems?",
@@ -192,7 +206,8 @@
     "correctIndex": 2,
     "explanation": "Embedded systems are designed to perform specific, dedicated tasks rather than general-purpose computing, making them efficient for their intended function.",
     "topic": "Embedded",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why do embedded systems often use less power than desktop computers?",
@@ -205,7 +220,8 @@
     "correctIndex": 1,
     "explanation": "Embedded systems are optimized for specific tasks, requiring less processing power and components than general-purpose computers, resulting in lower power consumption.",
     "topic": "Embedded",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is RAM primarily used for?",
@@ -218,7 +234,8 @@
     "correctIndex": 1,
     "explanation": "RAM (Random Access Memory) temporarily stores data and programs that are currently being used by the CPU, allowing quick access. Data is lost when power is turned off.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What type of memory is RAM?",
@@ -231,7 +248,8 @@
     "correctIndex": 1,
     "explanation": "RAM is volatile memory, meaning it loses all stored data when the power is turned off. This is different from non-volatile storage like hard drives.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is ROM and what is stored in it?",
@@ -244,7 +262,8 @@
     "correctIndex": 1,
     "explanation": "ROM (Read-Only Memory) is non-volatile memory that stores firmware and boot instructions (like BIOS). Data is retained even when power is off.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is ROM described as 'read-only'?",
@@ -257,7 +276,8 @@
     "correctIndex": 1,
     "explanation": "ROM is called 'read-only' because its contents are typically set during manufacture and cannot be modified during normal operation, unlike RAM which can be freely read and written.",
     "topic": "RAM_ROM",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "How does increasing RAM affect computer performance?",
@@ -270,7 +290,8 @@
     "correctIndex": 1,
     "explanation": "More RAM allows the computer to hold more programs and data in memory simultaneously, reducing the need to swap data to slower storage, thus improving performance.",
     "topic": "RAM_ROM",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What happens to data in RAM when the computer is turned off?",
@@ -283,7 +304,8 @@
     "correctIndex": 2,
     "explanation": "Since RAM is volatile memory, all data stored in it is lost when power is removed. This is why you need to save your work to permanent storage.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is virtual memory?",
@@ -296,7 +318,8 @@
     "correctIndex": 1,
     "explanation": "Virtual memory is a memory management technique where a portion of the hard drive is used as an extension of RAM when physical RAM is full, allowing more programs to run.",
     "topic": "RAM_ROM",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is flash memory?",
@@ -309,7 +332,8 @@
     "correctIndex": 1,
     "explanation": "Flash memory is a type of non-volatile storage that can be electrically erased and reprogrammed, used in USB drives, SSDs, and memory cards.",
     "topic": "RAM_ROM",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a Hard Disk Drive (HDD)?",
@@ -322,7 +346,8 @@
     "correctIndex": 1,
     "explanation": "An HDD is a secondary storage device that uses magnetic platters that spin at high speeds, with a read/write head that moves across them to store and retrieve data.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the main advantage of SSD over HDD?",
@@ -335,7 +360,8 @@
     "correctIndex": 1,
     "explanation": "SSDs have no moving parts and use flash memory, providing much faster data access, quicker boot times, and better durability compared to HDDs with their mechanical components.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is secondary storage?",
@@ -348,7 +374,8 @@
     "correctIndex": 1,
     "explanation": "Secondary storage refers to non-volatile storage devices like HDDs, SSDs, and USB drives that retain data even when power is off, used for long-term data storage.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What technology do SSDs use to store data?",
@@ -361,7 +388,8 @@
     "correctIndex": 1,
     "explanation": "SSDs (Solid State Drives) use flash memory chips (NAND) to store data electronically without any moving mechanical parts.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which storage type is most suitable for frequently accessed data requiring fast read/write speeds?",
@@ -374,7 +402,8 @@
     "correctIndex": 2,
     "explanation": "SSDs provide the fastest read/write speeds among common storage types due to their lack of moving parts and direct electronic access to data.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is optical storage?",
@@ -387,7 +416,8 @@
     "correctIndex": 1,
     "explanation": "Optical storage uses lasers to read and write data on reflective discs like CDs, DVDs, and Blu-rays by creating or reading tiny pits on the disc surface.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is cloud storage?",
@@ -400,7 +430,8 @@
     "correctIndex": 1,
     "explanation": "Cloud storage involves storing data on remote servers managed by a provider and accessed via the internet, allowing access from anywhere with connectivity.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the main disadvantage of HDDs compared to SSDs?",
@@ -413,7 +444,8 @@
     "correctIndex": 1,
     "explanation": "HDDs have slower access speeds because they rely on mechanical parts (spinning platters and moving read/write heads), which creates physical limitations on speed.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is data redundancy in storage?",
@@ -426,7 +458,8 @@
     "correctIndex": 1,
     "explanation": "Data redundancy involves keeping multiple copies of data, often across different storage devices, to protect against data loss and ensure system reliability.",
     "topic": "Storage",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is RAID in computer storage?",
@@ -439,7 +472,8 @@
     "correctIndex": 1,
     "explanation": "RAID (Redundant Array of Independent Disks) combines multiple storage drives to improve performance, provide redundancy, or both, protecting against drive failures.",
     "topic": "Storage",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the main function of an operating system?",
@@ -452,7 +486,8 @@
     "correctIndex": 1,
     "explanation": "An operating system manages computer hardware resources (CPU, memory, storage) and provides common services for application programs to run.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is multitasking in an operating system?",
@@ -465,7 +500,8 @@
     "correctIndex": 1,
     "explanation": "Multitasking allows an OS to run multiple programs apparently at the same time by rapidly switching between them, sharing CPU time among processes.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What does the file management system in an OS do?",
@@ -478,7 +514,8 @@
     "correctIndex": 1,
     "explanation": "The file management system handles organizing files in directories, tracking file locations on storage devices, managing file permissions, and handling file operations.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is memory management in an operating system?",
@@ -491,7 +528,8 @@
     "correctIndex": 1,
     "explanation": "Memory management allocates RAM to programs, ensures programs don't interfere with each other's memory space, and handles virtual memory when physical RAM is full.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a device driver?",
@@ -504,7 +542,8 @@
     "correctIndex": 1,
     "explanation": "A device driver is software that enables communication between the operating system and hardware devices like printers, graphics cards, and keyboards.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the purpose of a user interface?",
@@ -517,7 +556,8 @@
     "correctIndex": 1,
     "explanation": "A user interface provides the means for users to interact with a computer system, whether through graphical elements (GUI) or command-line text (CLI).",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the difference between GUI and CLI?",
@@ -530,7 +570,8 @@
     "correctIndex": 0,
     "explanation": "A GUI (Graphical User Interface) uses visual elements like windows and icons for interaction, while a CLI (Command Line Interface) requires typing text commands.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is process scheduling?",
@@ -543,7 +584,8 @@
     "correctIndex": 1,
     "explanation": "Process scheduling is how the operating system determines which process should use the CPU at any given time, managing the order and duration of process execution.",
     "topic": "OS",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is peripheral management?",
@@ -556,7 +598,8 @@
     "correctIndex": 1,
     "explanation": "Peripheral management is how the OS handles communication with and control of peripheral devices like printers, mice, keyboards, and monitors.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is utility software?",
@@ -569,7 +612,8 @@
     "correctIndex": 1,
     "explanation": "Utility software includes tools that help maintain, analyze, configure, and optimize the computer, such as antivirus programs, disk cleanup tools, and backup utilities.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a LAN?",
@@ -582,7 +626,8 @@
     "correctIndex": 1,
     "explanation": "A LAN (Local Area Network) connects computers and devices in a limited geographical area like a home, office, or school building.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a WAN?",
@@ -595,7 +640,8 @@
     "correctIndex": 0,
     "explanation": "A WAN (Wide Area Network) spans large geographical areas, potentially worldwide, connecting multiple LANs together. The internet is the largest WAN.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What device connects multiple devices in a network and directs data packets?",
@@ -608,7 +654,8 @@
     "correctIndex": 1,
     "explanation": "A router connects multiple devices in a network and intelligently directs data packets to their correct destinations, often providing the gateway to the internet.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a switch in networking?",
@@ -621,7 +668,8 @@
     "correctIndex": 1,
     "explanation": "A network switch connects multiple devices on a LAN and uses MAC addresses to forward data frames only to the specific device they're intended for.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is bandwidth?",
@@ -634,7 +682,8 @@
     "correctIndex": 1,
     "explanation": "Bandwidth refers to the maximum amount of data that can be transmitted over a network connection in a given time, usually measured in bits per second (bps).",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the function of a Network Interface Card (NIC)?",
@@ -647,7 +696,8 @@
     "correctIndex": 1,
     "explanation": "A NIC provides the hardware interface between a computer and a network, enabling the device to send and receive data over the network.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a network topology?",
@@ -660,7 +710,8 @@
     "correctIndex": 1,
     "explanation": "Network topology describes how nodes (computers/devices) are arranged and connected in a network, such as star, bus, ring, or mesh configurations.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a star topology?",
@@ -673,7 +724,8 @@
     "correctIndex": 1,
     "explanation": "In a star topology, all network devices are connected to a central device (hub or switch), making it easy to add devices and isolate problems.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a client-server network?",
@@ -686,7 +738,8 @@
     "correctIndex": 1,
     "explanation": "In a client-server network, one or more powerful central servers provide resources, data, and services to client computers that request them.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a peer-to-peer network?",
@@ -699,7 +752,8 @@
     "correctIndex": 0,
     "explanation": "In a peer-to-peer network, all connected devices have equal status and can share resources directly with each other without a central server.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a MAC address?",
@@ -712,7 +766,8 @@
     "correctIndex": 1,
     "explanation": "A MAC (Media Access Control) address is a unique hardware identifier permanently assigned to a network interface card, used for identifying devices on a local network.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is an IP address?",
@@ -725,7 +780,8 @@
     "correctIndex": 1,
     "explanation": "An IP (Internet Protocol) address is a numerical label assigned to each device on a network, used for identifying and locating devices for communication.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What does TCP/IP stand for?",
@@ -738,7 +794,8 @@
     "correctIndex": 1,
     "explanation": "TCP/IP (Transmission Control Protocol/Internet Protocol) is the fundamental suite of protocols that enables internet communication, handling how data is packaged and routed.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the purpose of HTTP?",
@@ -751,7 +808,8 @@
     "correctIndex": 1,
     "explanation": "HTTP (HyperText Transfer Protocol) is the protocol used for transferring web pages and other resources between web servers and web browsers.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the difference between HTTP and HTTPS?",
@@ -764,7 +822,8 @@
     "correctIndex": 1,
     "explanation": "HTTPS (HTTP Secure) encrypts data using SSL/TLS, protecting sensitive information during transmission between browser and server, unlike unsecured HTTP.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does FTP stand for and what is it used for?",
@@ -777,7 +836,8 @@
     "correctIndex": 1,
     "explanation": "FTP (File Transfer Protocol) is a standard protocol used for transferring files between a client and server over a network.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the purpose of SMTP?",
@@ -790,7 +850,8 @@
     "correctIndex": 1,
     "explanation": "SMTP (Simple Mail Transfer Protocol) is used for sending emails from an email client to a mail server and between mail servers.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What protocol is used for retrieving emails from a server?",
@@ -803,7 +864,8 @@
     "correctIndex": 2,
     "explanation": "POP3 (Post Office Protocol 3) and IMAP (Internet Message Access Protocol) are used to retrieve emails from a mail server to an email client.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is DNS and what does it do?",
@@ -816,7 +878,8 @@
     "correctIndex": 1,
     "explanation": "DNS (Domain Name System) translates human-readable domain names (like google.com) into numerical IP addresses that computers use to identify each other.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What are the four layers of the TCP/IP model?",
@@ -829,7 +892,8 @@
     "correctIndex": 1,
     "explanation": "The TCP/IP model has four layers: Application (HTTP, FTP), Transport (TCP, UDP), Internet (IP), and Network Access (Ethernet, Wi-Fi).",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is packet switching?",
@@ -842,7 +906,8 @@
     "correctIndex": 1,
     "explanation": "Packet switching divides data into small packets that travel independently across the network, potentially via different routes, then reassemble at the destination.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What information is contained in a packet header?",
@@ -855,7 +920,8 @@
     "correctIndex": 1,
     "explanation": "A packet header contains source and destination IP addresses, packet sequence number, protocol information, and other data needed for routing and reassembly.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is malware?",
@@ -868,7 +934,8 @@
     "correctIndex": 1,
     "explanation": "Malware is any software intentionally designed to cause damage, disrupt operations, or gain unauthorized access to computer systems.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a computer virus?",
@@ -881,7 +948,8 @@
     "correctIndex": 1,
     "explanation": "A computer virus is malware that attaches itself to legitimate programs and spreads when the infected program is executed, often causing damage.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is phishing?",
@@ -894,7 +962,8 @@
     "correctIndex": 1,
     "explanation": "Phishing is a social engineering attack where attackers impersonate legitimate entities to trick users into revealing sensitive information like passwords or credit card numbers.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is encryption?",
@@ -907,7 +976,8 @@
     "correctIndex": 1,
     "explanation": "Encryption transforms readable data into an encoded format that can only be decoded with the correct key, protecting data confidentiality.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a firewall?",
@@ -920,7 +990,8 @@
     "correctIndex": 1,
     "explanation": "A firewall is a network security device or software that monitors incoming and outgoing traffic and decides whether to allow or block specific traffic based on security rules.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is two-factor authentication (2FA)?",
@@ -933,7 +1004,8 @@
     "correctIndex": 1,
     "explanation": "2FA adds an extra security layer by requiring two different types of verification, such as a password (something you know) and a code sent to your phone (something you have).",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a brute force attack?",
@@ -946,7 +1018,8 @@
     "correctIndex": 1,
     "explanation": "A brute force attack systematically tries all possible combinations of passwords or encryption keys until the correct one is found.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is social engineering in cybersecurity?",
@@ -959,7 +1032,8 @@
     "correctIndex": 1,
     "explanation": "Social engineering manipulates people psychologically to divulge confidential information or perform actions that compromise security, exploiting human nature rather than technical vulnerabilities.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is ransomware?",
@@ -972,7 +1046,8 @@
     "correctIndex": 1,
     "explanation": "Ransomware encrypts victims' files and demands a ransom payment, usually in cryptocurrency, in exchange for the decryption key.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a DDoS attack?",
@@ -985,7 +1060,8 @@
     "correctIndex": 1,
     "explanation": "A DDoS (Distributed Denial of Service) attack floods a target server with traffic from many sources simultaneously, making it unavailable to legitimate users.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is SQL injection?",
@@ -998,7 +1074,8 @@
     "correctIndex": 1,
     "explanation": "SQL injection inserts malicious SQL code into application queries through user input, potentially allowing attackers to access, modify, or delete database data.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is penetration testing?",
@@ -1011,7 +1088,8 @@
     "correctIndex": 1,
     "explanation": "Penetration testing involves authorized security experts attempting to exploit system vulnerabilities to identify weaknesses before malicious attackers do.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the Data Protection Act concerned with?",
@@ -1024,7 +1102,8 @@
     "correctIndex": 1,
     "explanation": "The Data Protection Act regulates how organizations collect, store, process, and share personal data, giving individuals rights over their data.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the Computer Misuse Act designed to prevent?",
@@ -1037,7 +1116,8 @@
     "correctIndex": 1,
     "explanation": "The Computer Misuse Act makes it illegal to access computer systems without authorization, modify data without permission, or use computers to commit crimes.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is software piracy?",
@@ -1050,7 +1130,8 @@
     "correctIndex": 1,
     "explanation": "Software piracy involves illegally copying, distributing, or using software without proper licensing or authorization from the copyright holder.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the environmental impact of e-waste?",
@@ -1063,7 +1144,8 @@
     "correctIndex": 1,
     "explanation": "E-waste contains toxic materials like lead, mercury, and cadmium that can contaminate soil and groundwater if improperly disposed, posing environmental and health risks.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is copyright in relation to digital content?",
@@ -1076,7 +1158,8 @@
     "correctIndex": 1,
     "explanation": "Copyright gives creators exclusive legal rights to reproduce, distribute, and display their creative works, including software, music, and digital content.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the digital divide?",
@@ -1089,7 +1172,8 @@
     "correctIndex": 1,
     "explanation": "The digital divide refers to the inequality in access to digital technology, internet connectivity, and the skills to use them effectively, often based on geographic, economic, or social factors.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is GDPR?",
@@ -1102,7 +1186,8 @@
     "correctIndex": 1,
     "explanation": "GDPR (General Data Protection Regulation) is an EU regulation that strengthens data protection and privacy for individuals, with strict rules on how organizations handle personal data.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What are cookies on websites used for?",
@@ -1115,7 +1200,8 @@
     "correctIndex": 1,
     "explanation": "Website cookies are small text files that store user preferences, login information, and can track browsing behavior for personalization or advertising purposes.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is open source software?",
@@ -1128,7 +1214,8 @@
     "correctIndex": 1,
     "explanation": "Open source software has its source code freely available for anyone to view, modify, and distribute, often developed collaboratively by communities.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is proprietary software?",
@@ -1141,7 +1228,8 @@
     "correctIndex": 1,
     "explanation": "Proprietary software is owned by an individual or company, with the source code kept secret and distribution controlled through licenses.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What factors affect CPU performance?",
@@ -1154,7 +1242,8 @@
     "correctIndex": 1,
     "explanation": "CPU performance is affected by clock speed (processing speed), number of cores (parallel processing capability), and cache size (fast memory for frequently used data).",
     "topic": "Performance",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "How does more RAM improve performance?",
@@ -1167,7 +1256,8 @@
     "correctIndex": 1,
     "explanation": "More RAM allows the computer to keep more programs and data in fast-access memory, reducing the need to swap data with slower storage and improving multitasking.",
     "topic": "Performance",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is an SSD faster than an HDD?",
@@ -1180,7 +1270,8 @@
     "correctIndex": 1,
     "explanation": "SSDs use flash memory chips for instant electronic data access, while HDDs rely on slower mechanical spinning platters and moving read/write heads.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the impact of insufficient RAM on performance?",
@@ -1193,7 +1284,8 @@
     "correctIndex": 1,
     "explanation": "Insufficient RAM forces the system to use virtual memory (hard drive space), which is much slower than RAM, significantly slowing down system performance.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the purpose of a GPU?",
@@ -1206,7 +1298,8 @@
     "correctIndex": 1,
     "explanation": "A GPU (Graphics Processing Unit) is specialized hardware designed to rapidly process graphics and visual data, essential for gaming, video editing, and visual applications.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "How does cache memory improve CPU performance?",
@@ -1219,7 +1312,8 @@
     "correctIndex": 1,
     "explanation": "Cache memory stores frequently accessed data and instructions very close to the CPU, allowing much faster access than main RAM and reducing processing delays.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the relationship between clock speed and power consumption?",
@@ -1232,7 +1326,8 @@
     "correctIndex": 1,
     "explanation": "Higher clock speeds generally require more electrical power and generate more heat, which is why mobile devices often use lower clock speeds than desktop computers.",
     "topic": "Performance",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is thermal throttling?",
@@ -1245,7 +1340,8 @@
     "correctIndex": 1,
     "explanation": "Thermal throttling is a protective mechanism where the CPU automatically reduces its clock speed when temperature exceeds safe limits, preventing hardware damage but reducing performance.",
     "topic": "Performance",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the difference between latency and bandwidth?",
@@ -1258,7 +1354,8 @@
     "correctIndex": 1,
     "explanation": "Latency measures the time delay for data to travel from source to destination, while bandwidth measures the maximum amount of data that can be transferred per second.",
     "topic": "Performance",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is compression used for in computing?",
@@ -1271,7 +1368,8 @@
     "correctIndex": 1,
     "explanation": "Compression reduces file sizes by encoding data more efficiently, saving storage space and reducing transmission time, especially useful for images, video, and file archives.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the difference between lossy and lossless compression?",
@@ -1284,7 +1382,8 @@
     "correctIndex": 1,
     "explanation": "Lossy compression (like JPEG) discards some data to achieve smaller sizes, while lossless compression (like PNG) preserves all original data but with less size reduction.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a buffer in computing?",
@@ -1297,7 +1396,8 @@
     "correctIndex": 1,
     "explanation": "A buffer is a temporary storage area that holds data while it's being transferred between devices or processes with different speeds, preventing data loss.",
     "topic": "Performance",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a worm in computing?",
@@ -1310,7 +1410,8 @@
     "correctIndex": 1,
     "explanation": "A worm is malware that self-replicates and spreads across networks automatically without requiring user interaction or attachment to other programs.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a trojan horse in computing?",
@@ -1323,7 +1424,8 @@
     "correctIndex": 1,
     "explanation": "A trojan horse is malware that disguises itself as legitimate software to trick users into installing it, then performs malicious actions.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is spyware?",
@@ -1336,7 +1438,8 @@
     "correctIndex": 1,
     "explanation": "Spyware is malware that covertly monitors user activities, collecting sensitive information like passwords, browsing habits, and personal data without consent.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does BIOS stand for?",
@@ -1349,7 +1452,8 @@
     "correctIndex": 0,
     "explanation": "BIOS (Basic Input Output System) is firmware stored in ROM that initializes hardware during boot and provides basic services between the OS and hardware.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is booting a computer?",
@@ -1362,7 +1466,8 @@
     "correctIndex": 1,
     "explanation": "Booting is the startup process where the computer initializes hardware, loads the BIOS/UEFI, then loads the operating system into memory.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is kernel in an operating system?",
@@ -1375,7 +1480,8 @@
     "correctIndex": 1,
     "explanation": "The kernel is the core of the operating system, managing memory, processes, device drivers, and system calls, serving as the bridge between hardware and software.",
     "topic": "OS",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is defragmentation?",
@@ -1388,7 +1494,8 @@
     "correctIndex": 1,
     "explanation": "Defragmentation reorganizes fragmented files on a hard drive so their parts are stored contiguously, reducing read times and improving performance (mainly for HDDs).",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the purpose of an interrupt in a CPU?",
@@ -1401,7 +1508,8 @@
     "correctIndex": 1,
     "explanation": "An interrupt signals the CPU to temporarily pause its current task to handle a more urgent event, like keyboard input or a hardware request.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the accumulator register?",
@@ -1414,7 +1522,8 @@
     "correctIndex": 1,
     "explanation": "The accumulator is a CPU register that stores intermediate arithmetic and logic results during processing, serving as a temporary workspace for the ALU.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is bus width in a computer?",
@@ -1427,7 +1536,8 @@
     "correctIndex": 1,
     "explanation": "Bus width refers to the number of bits that can be transmitted simultaneously over a bus. A wider bus can transfer more data at once, improving performance.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the address bus used for?",
@@ -1440,7 +1550,8 @@
     "correctIndex": 1,
     "explanation": "The address bus carries memory addresses from the CPU to main memory, specifying where data should be read from or written to.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the data bus used for?",
@@ -1453,7 +1564,8 @@
     "correctIndex": 1,
     "explanation": "The data bus transfers actual data between the CPU, memory, and other components. It's bidirectional, allowing data to flow in both directions.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is Wi-Fi?",
@@ -1466,7 +1578,8 @@
     "correctIndex": 1,
     "explanation": "Wi-Fi is wireless networking technology that uses radio waves to provide high-speed internet and network connections without physical cables.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is Bluetooth used for?",
@@ -1479,7 +1592,8 @@
     "correctIndex": 1,
     "explanation": "Bluetooth is a short-range wireless technology for exchanging data between devices like phones, headphones, and keyboards over distances typically up to 10 meters.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is an access point in networking?",
@@ -1492,7 +1606,8 @@
     "correctIndex": 1,
     "explanation": "A wireless access point creates a wireless local area network, allowing Wi-Fi devices to connect to a wired network and access network resources.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the purpose of a modem?",
@@ -1505,7 +1620,8 @@
     "correctIndex": 1,
     "explanation": "A modem (modulator-demodulator) converts digital data from computers into analog signals for transmission over phone lines or cable, and converts incoming analog signals back to digital.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a subnet mask?",
@@ -1518,7 +1634,8 @@
     "correctIndex": 1,
     "explanation": "A subnet mask is a 32-bit number that divides an IP address into network and host portions, used to determine whether a destination is on the local network or must be routed.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What port number does HTTP typically use?",
@@ -1531,7 +1648,8 @@
     "correctIndex": 1,
     "explanation": "HTTP typically uses port 80 for unencrypted web traffic. Port 443 is used for HTTPS (secure HTTP), port 21 for FTP, and port 25 for SMTP.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is UDP?",
@@ -1544,7 +1662,8 @@
     "correctIndex": 1,
     "explanation": "UDP (User Datagram Protocol) is a connectionless transport protocol that sends data without establishing a connection first, offering speed but no delivery guarantee.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the difference between TCP and UDP?",
@@ -1557,7 +1676,8 @@
     "correctIndex": 1,
     "explanation": "TCP establishes connections and guarantees ordered, error-checked delivery. UDP sends data without connection setup, offering speed for applications like streaming where some data loss is acceptable.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is biometric authentication?",
@@ -1570,7 +1690,8 @@
     "correctIndex": 1,
     "explanation": "Biometric authentication uses unique physical characteristics like fingerprints, facial features, or iris patterns to verify identity, providing strong security.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a hash function in security?",
@@ -1583,7 +1704,8 @@
     "correctIndex": 1,
     "explanation": "A hash function takes input data and produces a fixed-size string (hash value). It's one-way (can't be reversed) and used for password storage and data integrity verification.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the Creative Commons license?",
@@ -1596,7 +1718,8 @@
     "correctIndex": 1,
     "explanation": "Creative Commons provides copyright licenses that allow creators to grant the public permission to use their creative work under certain conditions.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is planned obsolescence?",
@@ -1609,7 +1732,8 @@
     "correctIndex": 1,
     "explanation": "Planned obsolescence is the deliberate design of products to have a limited useful life, encouraging consumers to purchase replacements sooner, contributing to e-waste.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is net neutrality?",
@@ -1622,7 +1746,8 @@
     "correctIndex": 1,
     "explanation": "Net neutrality is the principle that Internet Service Providers must treat all data on the internet equally, without blocking, throttling, or charging differently based on content.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a solid-state drive's main component?",
@@ -1635,7 +1760,8 @@
     "correctIndex": 1,
     "explanation": "SSDs use NAND flash memory chips to store data electronically, with no moving parts, providing faster access and better durability than mechanical drives.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the Accumulator in the FDE cycle?",
@@ -1648,7 +1774,8 @@
     "correctIndex": 1,
     "explanation": "The Accumulator is a register in the CPU that stores intermediate and final results of arithmetic and logic operations performed by the ALU during the fetch-decode-execute cycle.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the Current Instruction Register (CIR)?",
@@ -1661,7 +1788,8 @@
     "correctIndex": 1,
     "explanation": "The CIR holds the current instruction that has been fetched from memory and is being decoded and executed by the CPU.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is von Neumann architecture?",
@@ -1674,7 +1802,8 @@
     "correctIndex": 1,
     "explanation": "Von Neumann architecture is a computer design where both program instructions and data are stored in the same memory and share the same bus, creating the 'von Neumann bottleneck'.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is Harvard architecture?",
@@ -1687,7 +1816,8 @@
     "correctIndex": 1,
     "explanation": "Harvard architecture has separate storage and signal pathways for instructions and data, allowing simultaneous access to both and potentially faster processing.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is RISC?",
@@ -1700,7 +1830,8 @@
     "correctIndex": 1,
     "explanation": "RISC (Reduced Instruction Set Computer) is a CPU design philosophy using a smaller set of simpler instructions that execute quickly, often in one clock cycle.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is CISC?",
@@ -1713,7 +1844,8 @@
     "correctIndex": 1,
     "explanation": "CISC (Complex Instruction Set Computer) is a CPU design with many specialized instructions, some taking multiple clock cycles but potentially requiring fewer instructions per program.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is error checking in data transmission?",
@@ -1726,7 +1858,8 @@
     "correctIndex": 1,
     "explanation": "Error checking involves techniques like parity bits, checksums, and cyclic redundancy checks (CRC) to detect (and sometimes correct) errors that occur during data transmission.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a parity bit?",
@@ -1739,7 +1872,8 @@
     "correctIndex": 1,
     "explanation": "A parity bit is a single bit added to data that indicates whether the number of 1-bits is even or odd, used for simple error detection in data transmission.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a checksum?",
@@ -1752,7 +1886,8 @@
     "correctIndex": 1,
     "explanation": "A checksum is a value calculated from data using an algorithm. The same calculation performed after transmission can verify if data was corrupted during transfer.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a VPN?",
@@ -1765,7 +1900,8 @@
     "correctIndex": 1,
     "explanation": "A VPN (Virtual Private Network) creates an encrypted connection over a public network, allowing secure remote access as if connected to a private network.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is symmetric encryption?",
@@ -1778,7 +1914,8 @@
     "correctIndex": 1,
     "explanation": "Symmetric encryption uses the same secret key for both encrypting and decrypting data, requiring secure key exchange between parties.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is asymmetric encryption?",
@@ -1791,7 +1928,8 @@
     "correctIndex": 1,
     "explanation": "Asymmetric encryption uses a pair of keys: a public key to encrypt data (shareable) and a private key to decrypt it (kept secret), solving the key distribution problem.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is an SSL/TLS certificate?",
@@ -1804,7 +1942,8 @@
     "correctIndex": 1,
     "explanation": "SSL/TLS certificates verify a website's identity and enable encrypted connections, shown by the padlock icon and HTTPS in browsers.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a man-in-the-middle attack?",
@@ -1817,7 +1956,8 @@
     "correctIndex": 1,
     "explanation": "In a man-in-the-middle attack, the attacker secretly intercepts and potentially alters communication between two parties who believe they're communicating directly.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is access control in computer security?",
@@ -1830,7 +1970,8 @@
     "correctIndex": 1,
     "explanation": "Access control determines what resources users can access and what operations they can perform, using authentication, authorization, and permissions.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is hardware?",
@@ -1843,7 +1984,8 @@
     "correctIndex": 0,
     "explanation": "Hardware means the physical parts you can touch (e.g., CPU, RAM, keyboard).",
     "topic": "Hardware",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which of these is an input device?",
@@ -1856,7 +1998,8 @@
     "correctIndex": 2,
     "explanation": "Input devices send data into the computer.",
     "topic": "Hardware",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which of these is an output device?",
@@ -1869,10 +2012,11 @@
     "correctIndex": 2,
     "explanation": "Output devices present information to the user.",
     "topic": "Hardware",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "A scanner is best described as\u2026",
+    "stem": "A scanner is best described as…",
     "options": [
       "Output device",
       "Input device",
@@ -1882,7 +2026,8 @@
     "correctIndex": 1,
     "explanation": "A scanner captures physical documents/photos and inputs them as data.",
     "topic": "Hardware",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "A musician wants to record vocals on a computer. Which device is needed?",
@@ -1895,7 +2040,8 @@
     "correctIndex": 0,
     "explanation": "A microphone captures sound and inputs it into the computer.",
     "topic": "Hardware",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is a GPU useful for graphics-heavy tasks?",
@@ -1908,7 +2054,8 @@
     "correctIndex": 1,
     "explanation": "GPUs are built for parallel processing, which helps with rendering and some compute workloads.",
     "topic": "Hardware",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which of these is application software?",
@@ -1921,7 +2068,8 @@
     "correctIndex": 2,
     "explanation": "Application software helps users perform tasks (e.g., word processing).",
     "topic": "Software",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which of these is system software?",
@@ -1934,10 +2082,11 @@
     "correctIndex": 2,
     "explanation": "System software manages hardware and provides services for applications.",
     "topic": "Software",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "Utility software is mainly used to\u2026",
+    "stem": "Utility software is mainly used to…",
     "options": [
       "Play games",
       "Maintain, protect, or manage a computer system",
@@ -1947,7 +2096,8 @@
     "correctIndex": 1,
     "explanation": "Utilities support the system (e.g., antivirus, backup tools).",
     "topic": "Software",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is a utility program?",
@@ -1960,10 +2110,11 @@
     "correctIndex": 0,
     "explanation": "Antivirus is a utility that helps protect and maintain the system.",
     "topic": "Software",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "A device driver is best described as\u2026",
+    "stem": "A device driver is best described as…",
     "options": [
       "Application software for office work",
       "System software that lets the OS communicate with hardware",
@@ -1973,10 +2124,11 @@
     "correctIndex": 1,
     "explanation": "Drivers translate OS requests into device-specific commands.",
     "topic": "Software",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Firmware is usually stored in\u2026",
+    "stem": "Firmware is usually stored in…",
     "options": [
       "RAM",
       "ROM/flash memory",
@@ -1986,7 +2138,8 @@
     "correctIndex": 1,
     "explanation": "Firmware must persist without power, so it is stored in non-volatile memory.",
     "topic": "Software",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does CPU stand for?",
@@ -1999,7 +2152,8 @@
     "correctIndex": 0,
     "explanation": "CPU stands for Central Processing Unit.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which CPU component carries out arithmetic and logic operations?",
@@ -2012,7 +2166,8 @@
     "correctIndex": 2,
     "explanation": "The ALU performs arithmetic and logic operations.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which CPU component coordinates the activities of the CPU?",
@@ -2025,10 +2180,11 @@
     "correctIndex": 1,
     "explanation": "The Control Unit manages control signals and timing.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "Registers are\u2026",
+    "stem": "Registers are…",
     "options": [
       "Large permanent storage",
       "Small, very fast storage inside the CPU",
@@ -2038,10 +2194,11 @@
     "correctIndex": 1,
     "explanation": "Registers are tiny ultra-fast storage locations inside the CPU.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Cache memory is mainly used to\u2026",
+    "stem": "Cache memory is mainly used to…",
     "options": [
       "Store files permanently",
       "Hold frequently used data/instructions close to the CPU",
@@ -2051,7 +2208,8 @@
     "correctIndex": 1,
     "explanation": "Cache reduces CPU waiting time by storing frequently used data/instructions.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why are registers faster than RAM?",
@@ -2064,7 +2222,8 @@
     "correctIndex": 1,
     "explanation": "Registers are inside the CPU, so access is extremely fast.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is generally fastest for CPU access?",
@@ -2077,7 +2236,8 @@
     "correctIndex": 2,
     "explanation": "Cache is designed to be very fast and sits close to the CPU.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "In the fetch-decode-execute cycle, what happens during FETCH?",
@@ -2090,7 +2250,8 @@
     "correctIndex": 2,
     "explanation": "Fetch retrieves the next instruction from memory (usually RAM).",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "In the fetch-decode-execute cycle, what happens during DECODE?",
@@ -2103,7 +2264,8 @@
     "correctIndex": 0,
     "explanation": "Decode interprets the instruction so the CPU knows what to do.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "In the fetch-decode-execute cycle, what happens during EXECUTE?",
@@ -2116,10 +2278,11 @@
     "correctIndex": 0,
     "explanation": "Execute performs the instruction (ALU operation, read/write, etc.).",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "Clock speed is measured in\u2026",
+    "stem": "Clock speed is measured in…",
     "options": [
       "GB",
       "GHz",
@@ -2129,7 +2292,8 @@
     "correctIndex": 1,
     "explanation": "Clock speed is cycles per second, commonly in GHz.",
     "topic": "Performance",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is the best reason a higher clock speed can improve performance?",
@@ -2142,7 +2306,8 @@
     "correctIndex": 1,
     "explanation": "Higher clock speed can allow more operations per second.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why doesn't doubling clock speed always double performance?",
@@ -2155,7 +2320,8 @@
     "correctIndex": 1,
     "explanation": "Performance depends on the whole system and how software uses it.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which factor can improve multitasking the most?",
@@ -2168,7 +2334,8 @@
     "correctIndex": 0,
     "explanation": "More cores help with parallel workloads and multitasking.",
     "topic": "Performance",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Two CPUs have the same clock speed. CPU A has 8 cores and CPU B has 4 cores. Which workload benefits most from CPU A?",
@@ -2181,7 +2348,8 @@
     "correctIndex": 1,
     "explanation": "More cores help when many tasks can run in parallel.",
     "topic": "Performance",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "A PC is slow when opening files and loading apps, but fine once open. Most likely upgrade?",
@@ -2194,10 +2362,11 @@
     "correctIndex": 1,
     "explanation": "Loading times are often limited by storage performance.",
     "topic": "Performance",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
-    "stem": "RAM stands for\u2026",
+    "stem": "RAM stands for…",
     "options": [
       "Read Access Memory",
       "Random Access Memory",
@@ -2207,10 +2376,11 @@
     "correctIndex": 1,
     "explanation": "RAM is Random Access Memory.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "RAM is best described as\u2026",
+    "stem": "RAM is best described as…",
     "options": [
       "Permanent storage for files",
       "Main working memory used by running programs",
@@ -2220,10 +2390,11 @@
     "correctIndex": 1,
     "explanation": "RAM holds data/instructions currently being used.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "RAM is\u2026",
+    "stem": "RAM is…",
     "options": [
       "Volatile",
       "Non-volatile",
@@ -2233,10 +2404,11 @@
     "correctIndex": 0,
     "explanation": "Volatile memory loses its contents when power is removed.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "ROM is\u2026",
+    "stem": "ROM is…",
     "options": [
       "Volatile",
       "Non-volatile memory storing firmware/boot instructions",
@@ -2246,7 +2418,8 @@
     "correctIndex": 1,
     "explanation": "ROM stores firmware and does not lose data when power is off.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is ROM suitable for storing boot instructions?",
@@ -2259,7 +2432,8 @@
     "correctIndex": 1,
     "explanation": "Boot instructions must be available at startup even without power.",
     "topic": "RAM_ROM",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does a computer slow down when it runs out of RAM?",
@@ -2272,7 +2446,8 @@
     "correctIndex": 1,
     "explanation": "Using storage as virtual memory is much slower than RAM.",
     "topic": "RAM_ROM",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A laptop loses unsaved work when the battery dies. Which component caused this loss?",
@@ -2285,7 +2460,8 @@
     "correctIndex": 1,
     "explanation": "Unsaved work is in volatile RAM and is lost without power.",
     "topic": "RAM_ROM",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which storage device usually has no moving parts?",
@@ -2298,7 +2474,8 @@
     "correctIndex": 1,
     "explanation": "SSDs use flash memory and have no moving parts.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is typically cheaper per GB?",
@@ -2311,7 +2488,8 @@
     "correctIndex": 1,
     "explanation": "HDDs are usually cheaper per GB than SSDs.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which storage type uses magnetic platters?",
@@ -2324,7 +2502,8 @@
     "correctIndex": 1,
     "explanation": "HDDs store data magnetically on spinning platters.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is an example of optical storage?",
@@ -2337,7 +2516,8 @@
     "correctIndex": 1,
     "explanation": "Blu-ray is optical storage read using lasers.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is an example of flash storage?",
@@ -2350,7 +2530,8 @@
     "correctIndex": 0,
     "explanation": "USB sticks are flash storage.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "A school replaces HDDs with SSDs. Which improvement is most likely?",
@@ -2363,7 +2544,8 @@
     "correctIndex": 0,
     "explanation": "SSDs have faster access times than HDDs.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A laptop is dropped often. Best storage choice to reduce damage risk?",
@@ -2376,10 +2558,11 @@
     "correctIndex": 1,
     "explanation": "SSDs are more shock-resistant because they have no moving parts.",
     "topic": "Storage",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
-    "stem": "Secondary storage is mainly used for\u2026",
+    "stem": "Secondary storage is mainly used for…",
     "options": [
       "Temporary working memory",
       "Long-term storage of files and programs",
@@ -2389,10 +2572,11 @@
     "correctIndex": 1,
     "explanation": "Secondary storage is non-volatile and stores data long term.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "An embedded system is\u2026",
+    "stem": "An embedded system is…",
     "options": [
       "A general-purpose desktop computer",
       "A computer system built into another device for a specific function",
@@ -2402,7 +2586,8 @@
     "correctIndex": 1,
     "explanation": "Embedded systems are designed for a dedicated purpose inside a larger product.",
     "topic": "Embedded",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is MOST likely an embedded system?",
@@ -2415,7 +2600,8 @@
     "correctIndex": 1,
     "explanation": "Smart appliances commonly use embedded systems.",
     "topic": "Embedded",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why are embedded systems often power-efficient?",
@@ -2428,10 +2614,11 @@
     "correctIndex": 1,
     "explanation": "Embedded systems are designed for low power, cost, and specific functions.",
     "topic": "Embedded",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "An operating system is\u2026",
+    "stem": "An operating system is…",
     "options": [
       "A type of input device",
       "System software that manages hardware and provides services for applications",
@@ -2441,7 +2628,8 @@
     "correctIndex": 1,
     "explanation": "The OS manages hardware and allows applications to run.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which OS function organises files on storage?",
@@ -2454,7 +2642,8 @@
     "correctIndex": 0,
     "explanation": "File management handles folders, saving, naming, and permissions.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which OS function controls hardware devices like printers and keyboards?",
@@ -2467,7 +2656,8 @@
     "correctIndex": 0,
     "explanation": "Device management uses drivers to communicate with hardware.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "How does an OS create the illusion that many programs run at once on a single-core CPU?",
@@ -2480,10 +2670,11 @@
     "correctIndex": 1,
     "explanation": "Time slicing gives each process a short time slot so it appears simultaneous.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "GUI stands for\u2026",
+    "stem": "GUI stands for…",
     "options": [
       "General Utility Interface",
       "Graphical User Interface",
@@ -2493,10 +2684,11 @@
     "correctIndex": 1,
     "explanation": "GUI uses windows, icons and menus.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "CLI stands for\u2026",
+    "stem": "CLI stands for…",
     "options": [
       "Command Line Interface",
       "Computer Link Internet",
@@ -2506,7 +2698,8 @@
     "correctIndex": 0,
     "explanation": "CLI is text-based interaction using typed commands.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Why might an expert prefer a CLI?",
@@ -2519,10 +2712,11 @@
     "correctIndex": 1,
     "explanation": "CLI can be efficient and scriptable for experienced users.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "LAN stands for\u2026",
+    "stem": "LAN stands for…",
     "options": [
       "Large Area Network",
       "Local Area Network",
@@ -2532,10 +2726,11 @@
     "correctIndex": 1,
     "explanation": "A LAN covers a small area like a home or school.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "WAN stands for\u2026",
+    "stem": "WAN stands for…",
     "options": [
       "Wide Area Network",
       "Wireless Area Network",
@@ -2545,7 +2740,8 @@
     "correctIndex": 0,
     "explanation": "A WAN covers a large area; the internet is a WAN.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which device connects multiple networks together?",
@@ -2558,7 +2754,8 @@
     "correctIndex": 1,
     "explanation": "Routers connect networks and route packets between them.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which device connects devices within a LAN and forwards frames efficiently?",
@@ -2571,10 +2768,11 @@
     "correctIndex": 1,
     "explanation": "Switches connect devices in a LAN and forward data to the correct device.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "Bandwidth is best described as\u2026",
+    "stem": "Bandwidth is best described as…",
     "options": [
       "Delay before data starts",
       "Maximum data transfer rate of a connection",
@@ -2584,10 +2782,11 @@
     "correctIndex": 1,
     "explanation": "Bandwidth is capacity/rate, often measured in bits per second.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Latency is best described as\u2026",
+    "stem": "Latency is best described as…",
     "options": [
       "Maximum data rate",
       "Delay in data transmission (time taken to travel)",
@@ -2597,10 +2796,11 @@
     "correctIndex": 1,
     "explanation": "Latency is delay, often experienced as lag.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "In a client-server model, the server\u2026",
+    "stem": "In a client-server model, the server…",
     "options": [
       "Requests services from clients",
       "Provides services/resources to clients",
@@ -2610,10 +2810,11 @@
     "correctIndex": 1,
     "explanation": "Servers provide resources (files, websites, printers) to clients.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Peer-to-peer networks are characterised by\u2026",
+    "stem": "Peer-to-peer networks are characterised by…",
     "options": [
       "A central dedicated server for all resources",
       "Devices sharing resources directly without a central server",
@@ -2623,7 +2824,8 @@
     "correctIndex": 1,
     "explanation": "In P2P, devices can share resources directly and act as both client and server.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "In a star topology, what happens if one cable to a PC fails?",
@@ -2636,7 +2838,8 @@
     "correctIndex": 1,
     "explanation": "In a star, each device has its own link; one link failure affects only that device.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "In a star topology, what happens if the central switch fails?",
@@ -2649,10 +2852,11 @@
     "correctIndex": 1,
     "explanation": "The central device is a single point of failure in star topology.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Packet switching means\u2026",
+    "stem": "Packet switching means…",
     "options": [
       "Data is sent as one continuous stream with a reserved path",
       "Data is split into packets that may take different routes",
@@ -2662,10 +2866,11 @@
     "correctIndex": 1,
     "explanation": "Data is split into packets which can take different routes and be reassembled at the destination.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "One advantage of packet switching is\u2026",
+    "stem": "One advantage of packet switching is…",
     "options": [
       "It always reserves bandwidth",
       "If a route fails, packets can be rerouted",
@@ -2675,10 +2880,11 @@
     "correctIndex": 1,
     "explanation": "Packets can be routed around failures or congestion.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "An IP address is\u2026",
+    "stem": "An IP address is…",
     "options": [
       "A unique device address on a network",
       "A password",
@@ -2688,12 +2894,13 @@
     "correctIndex": 0,
     "explanation": "IP addresses identify devices for routing across networks.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "A MAC address is\u2026",
+    "stem": "A MAC address is…",
     "options": [
-      "A device\u2019s hardware address for its network interface",
+      "A device’s hardware address for its network interface",
       "A website name",
       "A type of packet",
       "A cloud region"
@@ -2701,10 +2908,11 @@
     "correctIndex": 0,
     "explanation": "MAC addresses identify network interfaces (hardware-level) on a LAN.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "DNS is used to\u2026",
+    "stem": "DNS is used to…",
     "options": [
       "Encrypt emails",
       "Convert domain names to IP addresses",
@@ -2714,10 +2922,11 @@
     "correctIndex": 1,
     "explanation": "DNS translates domain names (like example.com) to IP addresses.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "A protocol is\u2026",
+    "stem": "A protocol is…",
     "options": [
       "A type of storage device",
       "A set of rules for communication between devices",
@@ -2727,7 +2936,8 @@
     "correctIndex": 1,
     "explanation": "Protocols define how data is formatted and transmitted.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which protocol is used to view web pages?",
@@ -2740,7 +2950,8 @@
     "correctIndex": 1,
     "explanation": "HTTP/HTTPS is used for web browsing.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What does HTTPS add compared to HTTP?",
@@ -2753,7 +2964,8 @@
     "correctIndex": 1,
     "explanation": "HTTPS uses TLS to encrypt traffic and protect against interception/tampering.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which protocol is commonly used to send email between servers?",
@@ -2766,7 +2978,8 @@
     "correctIndex": 0,
     "explanation": "SMTP is used to send email between mail servers.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which protocol is commonly used to transfer files?",
@@ -2779,10 +2992,11 @@
     "correctIndex": 0,
     "explanation": "FTP is used for file transfer.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "TCP is responsible for\u2026",
+    "stem": "TCP is responsible for…",
     "options": [
       "Sending web pages only",
       "Reliable transmission with error checking and retransmission",
@@ -2792,10 +3006,11 @@
     "correctIndex": 1,
     "explanation": "TCP provides reliable delivery, ordering, and error checking.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "IP is responsible for\u2026",
+    "stem": "IP is responsible for…",
     "options": [
       "Routing packets to the correct destination across networks",
       "Encrypting emails",
@@ -2805,10 +3020,11 @@
     "correctIndex": 0,
     "explanation": "IP handles addressing and routing between networks.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Malware is\u2026",
+    "stem": "Malware is…",
     "options": [
       "A type of hardware",
       "Malicious software designed to harm systems or steal data",
@@ -2818,10 +3034,11 @@
     "correctIndex": 1,
     "explanation": "Malware includes viruses, worms, trojans, spyware and more.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "A virus typically\u2026",
+    "stem": "A virus typically…",
     "options": [
       "Replicates by attaching to a host file/program",
       "Only spreads via DNS",
@@ -2831,10 +3048,11 @@
     "correctIndex": 0,
     "explanation": "Viruses attach to a host and usually need to be executed to spread.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "A worm typically\u2026",
+    "stem": "A worm typically…",
     "options": [
       "Needs a host file to spread",
       "Spreads on its own over networks",
@@ -2844,10 +3062,11 @@
     "correctIndex": 1,
     "explanation": "Worms self-replicate across networks without a host file.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "A trojan is\u2026",
+    "stem": "A trojan is…",
     "options": [
       "Malware disguised as legitimate software",
       "A type of backup",
@@ -2857,10 +3076,11 @@
     "correctIndex": 0,
     "explanation": "Trojans trick users into installing them by looking legitimate.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "Phishing is\u2026",
+    "stem": "Phishing is…",
     "options": [
       "Compressing files",
       "Tricking users into revealing sensitive information",
@@ -2870,10 +3090,11 @@
     "correctIndex": 1,
     "explanation": "Phishing uses fake messages/websites to steal credentials.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "A DoS attack aims to\u2026",
+    "stem": "A DoS attack aims to…",
     "options": [
       "Improve performance",
       "Prevent access to a service by overwhelming it",
@@ -2883,10 +3104,11 @@
     "correctIndex": 1,
     "explanation": "A Denial of Service attack overloads a system so legitimate users cannot access it.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "A firewall helps by\u2026",
+    "stem": "A firewall helps by…",
     "options": [
       "Increasing clock speed",
       "Monitoring and controlling incoming/outgoing network traffic",
@@ -2896,10 +3118,11 @@
     "correctIndex": 1,
     "explanation": "Firewalls filter traffic based on rules to block unauthorised access.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Encryption helps by\u2026",
+    "stem": "Encryption helps by…",
     "options": [
       "Making files larger only",
       "Scrambling data so only authorised parties can read it",
@@ -2909,7 +3132,8 @@
     "correctIndex": 1,
     "explanation": "Encryption makes data unreadable without the key.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why are software updates important for security?",
@@ -2922,7 +3146,8 @@
     "correctIndex": 1,
     "explanation": "Updates often patch security holes that attackers exploit.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A user gets an email 'from IT' asking to reset their password via a link. Best action?",
@@ -2933,12 +3158,13 @@
       "Forward to everyone"
     ],
     "correctIndex": 2,
-    "explanation": "This is typical phishing\u2014verify independently rather than using the provided link.",
+    "explanation": "This is typical phishing—verify independently rather than using the provided link.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
-    "stem": "Two-factor authentication (2FA) means\u2026",
+    "stem": "Two-factor authentication (2FA) means…",
     "options": [
       "Using two passwords",
       "Using two different types of evidence to verify identity",
@@ -2948,10 +3174,11 @@
     "correctIndex": 1,
     "explanation": "2FA combines factors (e.g., password + one-time code/biometric).",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "In the UK, laws about personal data are mainly covered by\u2026",
+    "stem": "In the UK, laws about personal data are mainly covered by…",
     "options": [
       "Road Traffic Act",
       "UK GDPR / Data Protection Act 2018",
@@ -2961,10 +3188,11 @@
     "correctIndex": 1,
     "explanation": "UK GDPR and the Data Protection Act govern how organisations process personal data.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Personal data is\u2026",
+    "stem": "Personal data is…",
     "options": [
       "Any file stored on a computer",
       "Information that can identify a person",
@@ -2974,10 +3202,11 @@
     "correctIndex": 1,
     "explanation": "Personal data relates to an identifiable individual (e.g., name, email).",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Software piracy is\u2026",
+    "stem": "Software piracy is…",
     "options": [
       "Using open-source software",
       "Copying/distributing software illegally",
@@ -2987,10 +3216,11 @@
     "correctIndex": 1,
     "explanation": "Piracy violates copyright/licensing terms.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "An ethical issue is\u2026",
+    "stem": "An ethical issue is…",
     "options": [
       "Always illegal",
       "A moral concern about right and wrong behaviour",
@@ -3000,10 +3230,11 @@
     "correctIndex": 1,
     "explanation": "Ethics concerns what should be done, not only what is legal.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "E-waste refers to\u2026",
+    "stem": "E-waste refers to…",
     "options": [
       "Old electronic devices discarded",
       "Encrypted web traffic",
@@ -3013,7 +3244,8 @@
     "correctIndex": 0,
     "explanation": "E-waste is discarded electronics; it may contain toxic materials.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is recycling electronics beneficial?",
@@ -3026,10 +3258,11 @@
     "correctIndex": 1,
     "explanation": "Recycling reduces environmental harm and conserves resources.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Binary is a base\u2026",
+    "stem": "Binary is a base…",
     "options": [
       "2",
       "8",
@@ -3039,10 +3272,11 @@
     "correctIndex": 0,
     "explanation": "Binary uses base 2 with digits 0 and 1.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "Denary (decimal) is a base\u2026",
+    "stem": "Denary (decimal) is a base…",
     "options": [
       "2",
       "8",
@@ -3052,10 +3286,11 @@
     "correctIndex": 2,
     "explanation": "Denary is base 10.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "Hexadecimal is a base\u2026",
+    "stem": "Hexadecimal is a base…",
     "options": [
       "2",
       "8",
@@ -3063,12 +3298,13 @@
       "16"
     ],
     "correctIndex": 3,
-    "explanation": "Hexadecimal uses base 16 (0\u20139, A\u2013F).",
+    "explanation": "Hexadecimal uses base 16 (0–9, A–F).",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "ASCII is used to represent\u2026",
+    "stem": "ASCII is used to represent…",
     "options": [
       "Images",
       "Characters",
@@ -3078,10 +3314,11 @@
     "correctIndex": 1,
     "explanation": "ASCII assigns numbers to characters.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "Unicode is important because it\u2026",
+    "stem": "Unicode is important because it…",
     "options": [
       "Stores only English letters",
       "Supports many more characters and languages than ASCII",
@@ -3091,10 +3328,11 @@
     "correctIndex": 1,
     "explanation": "Unicode supports a wider range of characters for different languages and symbols.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
-    "stem": "A 10\u00d710 image with colour depth 3 bits. Minimum size (bits)?",
+    "stem": "A 10×10 image with colour depth 3 bits. Minimum size (bits)?",
     "options": [
       "100 bits",
       "300 bits",
@@ -3102,9 +3340,10 @@
       "30 bits"
     ],
     "correctIndex": 1,
-    "explanation": "10\u00d710=100 pixels. 100\u00d73 bits=300 bits (ignoring headers/compression).",
+    "explanation": "10×10=100 pixels. 100×3 bits=300 bits (ignoring headers/compression).",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "If an image uses 12 colours, minimum bits per pixel needed?",
@@ -3117,7 +3356,8 @@
     "correctIndex": 2,
     "explanation": "Need at least 12 codes. 4 bits gives 16 possible values (2^4).",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Sound sampled at 8,000 Hz, 8-bit depth, 1 channel, duration 2 s. Size (bytes)?",
@@ -3128,9 +3368,10 @@
       "2,000 bytes"
     ],
     "correctIndex": 0,
-    "explanation": "Samples=8000\u00d72=16000. 8-bit=1 byte. 1 channel \u2192 16000 bytes.",
+    "explanation": "Samples=8000×2=16000. 8-bit=1 byte. 1 channel → 16000 bytes.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is lossy compression?",
@@ -3143,7 +3384,8 @@
     "correctIndex": 1,
     "explanation": "Lossy compression discards some information (e.g., JPEG, MP3).",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is lossless compression?",
@@ -3156,7 +3398,8 @@
     "correctIndex": 1,
     "explanation": "Lossless compression allows perfect reconstruction (e.g., PNG, ZIP).",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which register holds the address of the next instruction to be fetched?",
@@ -3169,10 +3412,11 @@
     "correctIndex": 0,
     "explanation": "The Program Counter stores the address of the next instruction.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "The MAR is used to\u2026",
+    "stem": "The MAR is used to…",
     "options": [
       "Store data being processed by the ALU",
       "Store the address in memory that the CPU wants to access",
@@ -3182,10 +3426,11 @@
     "correctIndex": 1,
     "explanation": "The MAR holds the address of the memory location to read/write.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "The MDR is used to\u2026",
+    "stem": "The MDR is used to…",
     "options": [
       "Store data/instructions being transferred to or from memory",
       "Store IP addresses",
@@ -3195,7 +3440,8 @@
     "correctIndex": 0,
     "explanation": "The MDR holds data read from memory or to be written to memory.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does increasing cache size sometimes improve performance?",
@@ -3208,7 +3454,8 @@
     "correctIndex": 1,
     "explanation": "More cache can increase cache hits and reduce time waiting for RAM.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 'interrupt handling' in an operating system?",
@@ -3221,7 +3468,8 @@
     "correctIndex": 1,
     "explanation": "Interrupts let hardware/software request immediate attention from the CPU.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A computer freezes when one app crashes. What OS feature helps prevent this?",
@@ -3234,7 +3482,8 @@
     "correctIndex": 0,
     "explanation": "Memory protection isolates processes so one crash is less likely to affect others.",
     "topic": "OS",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the purpose of a scheduler in an OS?",
@@ -3247,7 +3496,8 @@
     "correctIndex": 1,
     "explanation": "Scheduling allocates CPU time fairly and handles priorities.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why are switches more efficient than hubs on a LAN?",
@@ -3260,23 +3510,25 @@
     "correctIndex": 1,
     "explanation": "Switches reduce unnecessary traffic by sending frames to the correct port/device.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Why is Wi\u2011Fi often less reliable than Ethernet?",
+    "stem": "Why is Wi‑Fi often less reliable than Ethernet?",
     "options": [
-      "Wi\u2011Fi uses packets",
-      "Wi\u2011Fi is affected by interference and signal strength",
+      "Wi‑Fi uses packets",
+      "Wi‑Fi is affected by interference and signal strength",
       "Ethernet uses ROM",
       "Ethernet is always slower"
     ],
     "correctIndex": 1,
     "explanation": "Wireless signals can be disrupted by distance, walls, and interference.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "UDP is often described as\u2026",
+    "stem": "UDP is often described as…",
     "options": [
       "Always encrypted",
       "Faster but less reliable than TCP (no guaranteed delivery)",
@@ -3286,7 +3538,8 @@
     "correctIndex": 1,
     "explanation": "UDP has low overhead; some packets may be lost.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A live video call prefers low latency over perfect reliability. Which transport is commonly used?",
@@ -3299,7 +3552,8 @@
     "correctIndex": 1,
     "explanation": "Real-time media often uses UDP to reduce delay; some loss is acceptable.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why are long passphrases stronger than short complex passwords?",
@@ -3312,7 +3566,8 @@
     "correctIndex": 1,
     "explanation": "Brute force becomes much harder as length increases.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which measure BEST reduces damage from ransomware?",
@@ -3325,10 +3580,11 @@
     "correctIndex": 1,
     "explanation": "Backups allow recovery without paying attackers.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Brute force attack means\u2026",
+    "stem": "Brute force attack means…",
     "options": [
       "Guessing many password combinations until one works",
       "Deleting files to free space",
@@ -3338,7 +3594,8 @@
     "correctIndex": 0,
     "explanation": "Brute force tries many combinations; longer passwords are harder to crack.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "How many different values can 5 bits represent?",
@@ -3351,7 +3608,8 @@
     "correctIndex": 3,
     "explanation": "With n bits you can represent 2^n values. 2^5=32.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "How many colours can be represented with a colour depth of 8 bits?",
@@ -3362,12 +3620,13 @@
       "1024"
     ],
     "correctIndex": 2,
-    "explanation": "8 bits \u2192 2^8 = 256 colours.",
+    "explanation": "8 bits → 2^8 = 256 colours.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "An image is 100\u00d750 pixels, colour depth 4 bits. Minimum size (bytes)?",
+    "stem": "An image is 100×50 pixels, colour depth 4 bits. Minimum size (bytes)?",
     "options": [
       "2,500 bytes",
       "25,000 bytes",
@@ -3375,9 +3634,10 @@
       "10,000 bytes"
     ],
     "correctIndex": 0,
-    "explanation": "Pixels=5,000. Bits=5,000\u00d74=20,000. Bytes=20,000\u00f78=2,500 bytes.",
+    "explanation": "Pixels=5,000. Bits=5,000×4=20,000. Bytes=20,000÷8=2,500 bytes.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Audio: 44,100 Hz, 16-bit, stereo (2 channels), duration 3 s. Approx size (bytes)?",
@@ -3388,9 +3648,10 @@
       "4,410,000"
     ],
     "correctIndex": 1,
-    "explanation": "Samples=44,100\u00d73=132,300. Bits/sample=16\u00d72=32 bits=4 bytes. 132,300\u00d74=529,200 bytes.",
+    "explanation": "Samples=44,100×3=132,300. Bits/sample=16×2=32 bits=4 bytes. 132,300×4=529,200 bytes.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does increasing colour depth increase file size?",
@@ -3403,7 +3664,8 @@
     "correctIndex": 1,
     "explanation": "More bits per pixel means more data stored overall.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which scenario is MOST suitable for lossless compression?",
@@ -3416,7 +3678,8 @@
     "correctIndex": 1,
     "explanation": "Text and important documents usually need exact recovery.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which scenario is MOST suitable for lossy compression?",
@@ -3429,7 +3692,8 @@
     "correctIndex": 1,
     "explanation": "Web photos often use lossy compression (JPEG) to reduce size.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is 'data minimisation' good practice?",
@@ -3442,10 +3706,11 @@
     "correctIndex": 1,
     "explanation": "Collecting less data reduces risk and improves privacy compliance.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "A company sells customer emails to advertisers without telling customers. This is mainly a\u2026",
+    "stem": "A company sells customer emails to advertisers without telling customers. This is mainly a…",
     "options": [
       "Hardware fault",
       "Data protection/privacy issue",
@@ -3455,7 +3720,8 @@
     "correctIndex": 1,
     "explanation": "Using personal data beyond agreed purposes breaches privacy/data protection principles.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "A photographer needs portable storage that is durable and small. Best choice?",
@@ -3468,7 +3734,8 @@
     "correctIndex": 1,
     "explanation": "SD cards are small portable flash storage.",
     "topic": "Storage",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is an SSD generally faster than an HDD?",
@@ -3481,7 +3748,8 @@
     "correctIndex": 1,
     "explanation": "No moving head/platters reduces latency and improves access speed.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which part of the CPU decodes instructions and controls data flow?",
@@ -3494,7 +3762,8 @@
     "correctIndex": 1,
     "explanation": "The Control Unit interprets instructions and directs operations.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is smallest and fastest storage?",
@@ -3507,7 +3776,8 @@
     "correctIndex": 2,
     "explanation": "Registers are the smallest and fastest storage locations.",
     "topic": "CPU",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is non-volatile?",
@@ -3520,7 +3790,8 @@
     "correctIndex": 2,
     "explanation": "ROM is non-volatile; it keeps contents without power.",
     "topic": "RAM_ROM",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is a function of an operating system?",
@@ -3533,7 +3804,8 @@
     "correctIndex": 1,
     "explanation": "The OS manages memory, processes, devices and files.",
     "topic": "OS",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which best describes a router?",
@@ -3546,7 +3818,8 @@
     "correctIndex": 1,
     "explanation": "Routers connect networks and route packets between them.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is an example of malware?",
@@ -3559,7 +3832,8 @@
     "correctIndex": 1,
     "explanation": "A virus is malicious software.",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "How many values can 3 bits represent?",
@@ -3572,7 +3846,8 @@
     "correctIndex": 2,
     "explanation": "2^3 = 8 possible values.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which protocol is used for email sending?",
@@ -3585,7 +3860,8 @@
     "correctIndex": 0,
     "explanation": "SMTP is used to send emails between servers.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which storage is fastest for long-term file storage?",
@@ -3598,7 +3874,8 @@
     "correctIndex": 0,
     "explanation": "SSDs are fast non-volatile storage for files.",
     "topic": "Storage",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a network?",
@@ -3611,7 +3888,8 @@
     "correctIndex": 1,
     "explanation": "A network is a set of connected devices that can share data and resources.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What is authentication?",
@@ -3624,7 +3902,8 @@
     "correctIndex": 1,
     "explanation": "Authentication checks who you are (e.g., password, fingerprint).",
     "topic": "Security",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What does 'bit depth' relate to in audio?",
@@ -3637,7 +3916,8 @@
     "correctIndex": 1,
     "explanation": "Bit depth is the number of bits used to represent each sample amplitude.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which statement best describes the role of the Program Counter (PC)?",
@@ -3650,7 +3930,8 @@
     "correctIndex": 1,
     "explanation": "The Program Counter holds the memory address of the next instruction in the fetch-decode-execute cycle.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why can a CPU 'bottleneck' a system even with lots of RAM and a fast SSD?",
@@ -3663,7 +3944,8 @@
     "correctIndex": 1,
     "explanation": "If the CPU cannot execute instructions quickly enough, it limits overall system performance.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which OS function deals with allocating CPU time and managing processes?",
@@ -3676,7 +3958,8 @@
     "correctIndex": 1,
     "explanation": "Process management includes scheduling and controlling running programs.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A student opens a large game and their music stutters. Which OS-managed resource is most likely under pressure?",
@@ -3689,20 +3972,22 @@
     "correctIndex": 0,
     "explanation": "Heavy apps can use lots of CPU time; the OS scheduler shares CPU time between processes.",
     "topic": "OS",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is most likely to provide a fixed, high-bandwidth connection in a school computer lab?",
     "options": [
-      "Wi\u2011Fi",
+      "Wi‑Fi",
       "Ethernet (wired)",
       "Bluetooth",
       "Infrared"
     ],
     "correctIndex": 1,
-    "explanation": "Ethernet is wired and typically offers higher, more stable bandwidth than Wi\u2011Fi in busy environments.",
+    "explanation": "Ethernet is wired and typically offers higher, more stable bandwidth than Wi‑Fi in busy environments.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why do switches use MAC addresses?",
@@ -3715,7 +4000,8 @@
     "correctIndex": 1,
     "explanation": "Switches learn which MAC addresses are on which ports and forward frames only where needed.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is the best description of 'social engineering'?",
@@ -3728,10 +4014,11 @@
     "correctIndex": 1,
     "explanation": "Social engineering targets human behaviour rather than technical weaknesses.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "A website database is leaked. Attackers try the leaked email/password pairs on other sites. This is called\u2026",
+    "stem": "A website database is leaked. Attackers try the leaked email/password pairs on other sites. This is called…",
     "options": [
       "Packet switching",
       "Credential stuffing",
@@ -3741,10 +4028,11 @@
     "correctIndex": 1,
     "explanation": "Credential stuffing is when attackers reuse leaked login details across multiple sites.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
-    "stem": "A 20\u00d730 image uses 8-bit colour depth. Minimum uncompressed file size (bytes)?",
+    "stem": "A 20×30 image uses 8-bit colour depth. Minimum uncompressed file size (bytes)?",
     "options": [
       "600 bytes",
       "4,800 bytes",
@@ -3752,9 +4040,10 @@
       "48,000 bytes"
     ],
     "correctIndex": 0,
-    "explanation": "Pixels=20\u00d730=600. Bits=600\u00d78=4,800 bits. Bytes=4,800\u00f78=600 bytes (ignoring headers/compression).",
+    "explanation": "Pixels=20×30=600. Bits=600×8=4,800 bits. Bytes=4,800÷8=600 bytes (ignoring headers/compression).",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "How many bits are in 1 byte?",
@@ -3767,7 +4056,8 @@
     "correctIndex": 1,
     "explanation": "A byte is made of 8 bits.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What does 'LSB' stand for in binary?",
@@ -3778,9 +4068,10 @@
       "Least Sampled Bit"
     ],
     "correctIndex": 0,
-    "explanation": "LSB means Least Significant Bit\u2014the rightmost bit in a binary number.",
+    "explanation": "LSB means Least Significant Bit—the rightmost bit in a binary number.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "What does 'MSB' stand for in binary?",
@@ -3791,9 +4082,10 @@
       "Memory System Base"
     ],
     "correctIndex": 0,
-    "explanation": "MSB means Most Significant Bit\u2014the leftmost bit in a binary number.",
+    "explanation": "MSB means Most Significant Bit—the leftmost bit in a binary number.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "How many values can 7 bits represent?",
@@ -3806,7 +4098,8 @@
     "correctIndex": 3,
     "explanation": "n bits represent 2^n values. 2^7 = 128 values.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "How many different values can 1 byte represent?",
@@ -3819,7 +4112,8 @@
     "correctIndex": 3,
     "explanation": "1 byte = 8 bits, so it represents 2^8 = 256 values.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 1010 in denary (base 10)?",
@@ -3830,9 +4124,10 @@
       "12"
     ],
     "correctIndex": 2,
-    "explanation": "1010\u2082 = 8 + 2 = 10.",
+    "explanation": "1010₂ = 8 + 2 = 10.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 1100 in denary (base 10)?",
@@ -3843,9 +4138,10 @@
       "16"
     ],
     "correctIndex": 1,
-    "explanation": "1100\u2082 = 8 + 4 = 12.",
+    "explanation": "1100₂ = 8 + 4 = 12.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 0111 in denary (base 10)?",
@@ -3856,9 +4152,10 @@
       "9"
     ],
     "correctIndex": 1,
-    "explanation": "0111\u2082 = 4 + 2 + 1 = 7.",
+    "explanation": "0111₂ = 4 + 2 + 1 = 7.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 1001 in denary (base 10)?",
@@ -3869,9 +4166,10 @@
       "11"
     ],
     "correctIndex": 1,
-    "explanation": "1001\u2082 = 8 + 1 = 9.",
+    "explanation": "1001₂ = 8 + 1 = 9.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 1111 in denary (base 10)?",
@@ -3882,9 +4180,10 @@
       "13"
     ],
     "correctIndex": 1,
-    "explanation": "1111\u2082 = 8+4+2+1=15.",
+    "explanation": "1111₂ = 8+4+2+1=15.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 0101 in denary (base 10)?",
@@ -3895,9 +4194,10 @@
       "7"
     ],
     "correctIndex": 1,
-    "explanation": "0101\u2082 = 4 + 1 = 5.",
+    "explanation": "0101₂ = 4 + 1 = 5.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 13 in 8-bit binary?",
@@ -3908,9 +4208,10 @@
       "00011101"
     ],
     "correctIndex": 0,
-    "explanation": "13\u2081\u2080 = 8+4+1 \u2192 00001101.",
+    "explanation": "13₁₀ = 8+4+1 → 00001101.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 6 in 8-bit binary?",
@@ -3921,9 +4222,10 @@
       "00000011"
     ],
     "correctIndex": 0,
-    "explanation": "6\u2081\u2080 = 4+2 \u2192 00000110.",
+    "explanation": "6₁₀ = 4+2 → 00000110.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 9 in 8-bit binary?",
@@ -3934,9 +4236,10 @@
       "00001100"
     ],
     "correctIndex": 0,
-    "explanation": "9\u2081\u2080 = 8+1 \u2192 00001001.",
+    "explanation": "9₁₀ = 8+1 → 00001001.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is 20 in 8-bit binary?",
@@ -3947,9 +4250,10 @@
       "00100100"
     ],
     "correctIndex": 0,
-    "explanation": "20\u2081\u2080 = 16+4 \u2192 00010100.",
+    "explanation": "20₁₀ = 16+4 → 00010100.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "In hexadecimal, what value does 'A' represent?",
@@ -3962,7 +4266,8 @@
     "correctIndex": 1,
     "explanation": "In hex, A=10, B=11, C=12, D=13, E=14, F=15.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "In hexadecimal, what value does 'F' represent?",
@@ -3975,7 +4280,8 @@
     "correctIndex": 1,
     "explanation": "In hex, F represents 15.",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is hex convenient for representing binary?",
@@ -3988,7 +4294,8 @@
     "correctIndex": 1,
     "explanation": "Hex maps neatly to binary: 4 bits (a nibble) per hex digit.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is binary 1111 in hexadecimal?",
@@ -3999,9 +4306,10 @@
       "D"
     ],
     "correctIndex": 1,
-    "explanation": "1111\u2082 = 15\u2081\u2080 = F\u2081\u2086.",
+    "explanation": "1111₂ = 15₁₀ = F₁₆.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is binary 1010 in hexadecimal?",
@@ -4012,9 +4320,10 @@
       "8"
     ],
     "correctIndex": 1,
-    "explanation": "1010\u2082 = 10\u2081\u2080 = A\u2081\u2086.",
+    "explanation": "1010₂ = 10₁₀ = A₁₆.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is hexadecimal 1C in binary?",
@@ -4025,9 +4334,10 @@
       "00010110"
     ],
     "correctIndex": 0,
-    "explanation": "1C\u2081\u2086 = 0001 1100\u2082.",
+    "explanation": "1C₁₆ = 0001 1100₂.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is hexadecimal 2F in binary?",
@@ -4038,9 +4348,10 @@
       "00101110"
     ],
     "correctIndex": 0,
-    "explanation": "2F\u2081\u2086 = 0010 1111\u2082.",
+    "explanation": "2F₁₆ = 0010 1111₂.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is hexadecimal 0A in binary?",
@@ -4051,9 +4362,10 @@
       "00000110"
     ],
     "correctIndex": 0,
-    "explanation": "0A\u2081\u2086 = 0000 1010\u2082.",
+    "explanation": "0A₁₆ = 0000 1010₂.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is overflow in binary?",
@@ -4066,7 +4378,8 @@
     "correctIndex": 1,
     "explanation": "Overflow happens when the result needs more bits than are available, causing wraparound/loss of the leading bit.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Add 00001111 and 00000001 (8-bit). What is the result?",
@@ -4079,7 +4392,8 @@
     "correctIndex": 0,
     "explanation": "15 + 1 = 16, which is 00010000 in 8-bit binary.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "In 4-bit unsigned binary, what happens when you add 1111 and 0001?",
@@ -4092,23 +4406,25 @@
     "correctIndex": 0,
     "explanation": "4-bit unsigned max is 15 (1111). 15+1=16 needs 5 bits, so it overflows and wraps to 0000.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What does 'resolution' refer to in a bitmap image?",
     "options": [
       "The number of colours",
-      "The number of pixels (width \u00d7 height)",
+      "The number of pixels (width × height)",
       "The file name length",
       "The sampling rate"
     ],
     "correctIndex": 1,
-    "explanation": "Resolution is the number of pixels used to form the image, usually width \u00d7 height.",
+    "explanation": "Resolution is the number of pixels used to form the image, usually width × height.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Colour depth describes\u2026",
+    "stem": "Colour depth describes…",
     "options": [
       "How many pixels the image has",
       "How many bits are used per pixel",
@@ -4118,10 +4434,11 @@
     "correctIndex": 1,
     "explanation": "Colour depth is bits per pixel; more bits allow more colours.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "An image is 200\u00d7100 pixels with 1-bit colour depth. Minimum size (bytes)?",
+    "stem": "An image is 200×100 pixels with 1-bit colour depth. Minimum size (bytes)?",
     "options": [
       "2,500",
       "25,000",
@@ -4129,12 +4446,13 @@
       "5,000"
     ],
     "correctIndex": 0,
-    "explanation": "Pixels=20,000. Bits=20,000\u00d71=20,000. Bytes=20,000\u00f78=2,500.",
+    "explanation": "Pixels=20,000. Bits=20,000×1=20,000. Bytes=20,000÷8=2,500.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
-    "stem": "An image is 80\u00d760 pixels with 8-bit colour depth. Minimum size (bytes)?",
+    "stem": "An image is 80×60 pixels with 8-bit colour depth. Minimum size (bytes)?",
     "options": [
       "4,800",
       "38,400",
@@ -4142,9 +4460,10 @@
       "3,840"
     ],
     "correctIndex": 0,
-    "explanation": "Pixels=4,800. Bits=4,800\u00d78=38,400 bits. Bytes=38,400\u00f78=4,800.",
+    "explanation": "Pixels=4,800. Bits=4,800×8=38,400 bits. Bytes=38,400÷8=4,800.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "If colour depth is increased from 8-bit to 16-bit, what happens to uncompressed file size (same resolution)?",
@@ -4157,10 +4476,11 @@
     "correctIndex": 2,
     "explanation": "Doubling bits per pixel roughly doubles the uncompressed data size.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Sampling rate is\u2026",
+    "stem": "Sampling rate is…",
     "options": [
       "Bits per sample",
       "Samples per second",
@@ -4170,10 +4490,11 @@
     "correctIndex": 1,
     "explanation": "Sampling rate is how many samples are taken each second, measured in Hz.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Bit depth in audio affects\u2026",
+    "stem": "Bit depth in audio affects…",
     "options": [
       "How often samples are taken",
       "How many amplitude values are possible per sample",
@@ -4183,10 +4504,11 @@
     "correctIndex": 1,
     "explanation": "Higher bit depth allows more amplitude levels (better quality) but increases file size.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Stereo audio means\u2026",
+    "stem": "Stereo audio means…",
     "options": [
       "One channel",
       "Two channels",
@@ -4196,7 +4518,8 @@
     "correctIndex": 1,
     "explanation": "Stereo uses two channels (left and right).",
     "topic": "DataRepresentation",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Audio sampled at 10,000 Hz, 8-bit, mono, 5 seconds. Size (bytes)?",
@@ -4207,12 +4530,13 @@
       "5,000"
     ],
     "correctIndex": 0,
-    "explanation": "Samples=10,000\u00d75=50,000. 8-bit=1 byte. Mono=1 channel \u2192 50,000 bytes.",
+    "explanation": "Samples=10,000×5=50,000. 8-bit=1 byte. Mono=1 channel → 50,000 bytes.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
-    "stem": "If you double the sampling rate (same duration/bit depth/channels), file size\u2026",
+    "stem": "If you double the sampling rate (same duration/bit depth/channels), file size…",
     "options": [
       "Halves",
       "Stays same",
@@ -4222,10 +4546,11 @@
     "correctIndex": 2,
     "explanation": "Doubling sampling rate doubles the number of samples, so file size doubles.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Run-length encoding (RLE) works best when\u2026",
+    "stem": "Run-length encoding (RLE) works best when…",
     "options": [
       "Data is random with no repetition",
       "There are long runs of repeated values",
@@ -4235,7 +4560,8 @@
     "correctIndex": 1,
     "explanation": "RLE is most effective when data contains repeated sequences (e.g., large areas of the same colour).",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which file type is most commonly lossy?",
@@ -4248,7 +4574,8 @@
     "correctIndex": 2,
     "explanation": "JPEG is a lossy image compression format. PNG and ZIP are lossless.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a NIC used for?",
@@ -4261,7 +4588,8 @@
     "correctIndex": 1,
     "explanation": "A Network Interface Card allows a device to connect to a network.",
     "topic": "NetworksBasics",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which topology uses a central device (like a switch) that all nodes connect to?",
@@ -4274,10 +4602,11 @@
     "correctIndex": 2,
     "explanation": "Star topology uses a central switch/hub device.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "One advantage of star topology is\u2026",
+    "stem": "One advantage of star topology is…",
     "options": [
       "A break in one cable breaks the whole network",
       "Easy to add/remove devices and faults are isolated",
@@ -4287,23 +4616,25 @@
     "correctIndex": 1,
     "explanation": "In star, each device has its own connection, so faults can be isolated.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "One disadvantage of star topology is\u2026",
+    "stem": "One disadvantage of star topology is…",
     "options": [
       "No central point of failure",
       "If the central switch fails, the network can stop",
       "It is always slower than bus",
-      "It cannot use Wi\u2011Fi"
+      "It cannot use Wi‑Fi"
     ],
     "correctIndex": 1,
     "explanation": "The central device is a single point of failure.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "A modem is mainly used to\u2026",
+    "stem": "A modem is mainly used to…",
     "options": [
       "Store passwords",
       "Convert signals to connect to an ISP line",
@@ -4313,7 +4644,8 @@
     "correctIndex": 1,
     "explanation": "A modem modulates/demodulates signals for certain internet connections.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which measure is typically in bits per second?",
@@ -4326,10 +4658,11 @@
     "correctIndex": 1,
     "explanation": "Bandwidth is measured in bits per second (bps).",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "High latency is most noticeable as\u2026",
+    "stem": "High latency is most noticeable as…",
     "options": [
       "More storage space",
       "Lag/delay",
@@ -4339,7 +4672,8 @@
     "correctIndex": 1,
     "explanation": "Latency is the delay; high latency feels like lag.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why can packets arrive out of order?",
@@ -4352,7 +4686,8 @@
     "correctIndex": 1,
     "explanation": "Different routes and congestion can cause varying delays, so packets may arrive out of order.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is the best description of DNS?",
@@ -4365,10 +4700,11 @@
     "correctIndex": 1,
     "explanation": "DNS maps human-readable domain names to numeric IP addresses.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Packet switching improves reliability because\u2026",
+    "stem": "Packet switching improves reliability because…",
     "options": [
       "It reserves a dedicated circuit",
       "If one route fails, packets can be rerouted",
@@ -4378,10 +4714,11 @@
     "correctIndex": 1,
     "explanation": "Packets can be rerouted around failures or congestion.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "A MAC address is mainly used\u2026",
+    "stem": "A MAC address is mainly used…",
     "options": [
       "For routing across the internet",
       "Within a LAN for switching frames to the right device",
@@ -4391,7 +4728,8 @@
     "correctIndex": 1,
     "explanation": "Switches use MAC addresses to forward frames within a local network.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which protocol is used for secure web browsing?",
@@ -4404,7 +4742,8 @@
     "correctIndex": 1,
     "explanation": "HTTPS is the secure version of HTTP using TLS encryption.",
     "topic": "Protocols",
-    "difficulty": 1
+    "difficulty": 1,
+    "subject": "computer-science"
   },
   {
     "stem": "Which layer of TCP/IP deals with reliable delivery?",
@@ -4417,7 +4756,8 @@
     "correctIndex": 1,
     "explanation": "The transport layer (TCP) provides reliability, acknowledgements and retransmissions.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which protocol is typically used to receive email (not send)?",
@@ -4430,7 +4770,8 @@
     "correctIndex": 1,
     "explanation": "IMAP or POP3 are used to retrieve emails; SMTP is used to send.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why might UDP be chosen over TCP for online gaming?",
@@ -4443,7 +4784,8 @@
     "correctIndex": 1,
     "explanation": "Games often prioritise low latency; occasional loss is acceptable.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the main job of IP in networking?",
@@ -4456,7 +4798,8 @@
     "correctIndex": 1,
     "explanation": "IP handles addressing and routing across networks.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which OS feature allows multiple programs to appear to run at once on a single-core CPU?",
@@ -4469,7 +4812,8 @@
     "correctIndex": 0,
     "explanation": "Time slicing rapidly switches CPU time between processes so it appears simultaneous.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What is the purpose of a file system?",
@@ -4482,7 +4826,8 @@
     "correctIndex": 1,
     "explanation": "A file system organises data on storage (folders, names, allocation).",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which component loads the operating system at boot?",
@@ -4495,7 +4840,8 @@
     "correctIndex": 0,
     "explanation": "Firmware in ROM starts the boot process and loads the OS.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does defragmentation help some HDDs but not SSDs?",
@@ -4508,7 +4854,8 @@
     "correctIndex": 1,
     "explanation": "HDDs have seek time; SSDs have near-uniform access so defrag is less useful.",
     "topic": "Storage",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a common role of the OS device manager?",
@@ -4521,7 +4868,8 @@
     "correctIndex": 1,
     "explanation": "Device management uses drivers so the OS can control hardware.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does it mean when a process is 'swapped out'?",
@@ -4534,7 +4882,8 @@
     "correctIndex": 0,
     "explanation": "Swapping moves inactive data from RAM to storage (virtual memory) to free RAM.",
     "topic": "RAM_ROM",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is a likely symptom of too little RAM?",
@@ -4542,12 +4891,13 @@
       "Faster booting",
       "Frequent disk activity and slowdown when multitasking",
       "Higher screen resolution",
-      "Better Wi\u2011Fi signal"
+      "Better Wi‑Fi signal"
     ],
     "correctIndex": 1,
     "explanation": "Low RAM can cause swapping to disk, making the system slow.",
     "topic": "RAM_ROM",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which threat involves software that locks your files and demands payment?",
@@ -4560,7 +4910,8 @@
     "correctIndex": 1,
     "explanation": "Ransomware encrypts or locks files and demands payment.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is the BEST defence against malware infection from downloads?",
@@ -4573,7 +4924,8 @@
     "correctIndex": 1,
     "explanation": "Combining safe behaviour with antivirus and updates reduces malware risk.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What is a keylogger?",
@@ -4586,7 +4938,8 @@
     "correctIndex": 1,
     "explanation": "Keyloggers capture typed keys to steal credentials.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is using the same password on many sites risky?",
@@ -4599,7 +4952,8 @@
     "correctIndex": 1,
     "explanation": "Credential reuse allows attackers to access multiple accounts after one breach.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is an example of physical security?",
@@ -4612,10 +4966,11 @@
     "correctIndex": 1,
     "explanation": "Physical security controls access to hardware and locations.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "Social engineering mainly exploits\u2026",
+    "stem": "Social engineering mainly exploits…",
     "options": [
       "Binary arithmetic",
       "Human behaviour and trust",
@@ -4625,7 +4980,8 @@
     "correctIndex": 1,
     "explanation": "It targets people (e.g., persuasion, urgency) rather than technical flaws.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is a likely ethical concern with facial recognition in public spaces?",
@@ -4638,7 +4994,8 @@
     "correctIndex": 1,
     "explanation": "Ethical concerns include privacy, consent, and misuse of identification data.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is e-waste a problem?",
@@ -4651,7 +5008,8 @@
     "correctIndex": 1,
     "explanation": "E-waste contains harmful materials; unsafe disposal harms the environment and people.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does 'consent' mean in data protection?",
@@ -4664,7 +5022,8 @@
     "correctIndex": 1,
     "explanation": "Consent means users agree after understanding what data is collected and why.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is an example of copyright infringement?",
@@ -4677,7 +5036,8 @@
     "correctIndex": 1,
     "explanation": "Copying/distributing copyrighted software without permission breaches copyright.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which device forwards data based on IP addresses?",
@@ -4690,7 +5050,8 @@
     "correctIndex": 1,
     "explanation": "Routers forward packets between networks using IP addresses.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which memory is fastest?",
@@ -4703,7 +5064,8 @@
     "correctIndex": 3,
     "explanation": "Registers are the fastest storage locations (inside the CPU).",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why do organisations use servers in client-server networks?",
@@ -4716,7 +5078,8 @@
     "correctIndex": 1,
     "explanation": "Servers centralise resources and policies, making management and security easier.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which component is responsible for decoding instructions and issuing control signals?",
@@ -4729,7 +5092,8 @@
     "correctIndex": 1,
     "explanation": "The Control Unit decodes instructions and controls the CPU.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is encryption not the same as backup?",
@@ -4742,7 +5106,8 @@
     "correctIndex": 1,
     "explanation": "Encryption keeps data private; backups allow recovery if data is lost or damaged.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why might a mesh topology be very reliable?",
@@ -4755,7 +5120,8 @@
     "correctIndex": 1,
     "explanation": "Multiple connections provide redundancy if one link fails.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A school collects student fingerprints for lunch payments. Main concern?",
@@ -4768,7 +5134,8 @@
     "correctIndex": 1,
     "explanation": "Biometric data is sensitive; it requires strong security and clear purpose/consent.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which device forwards data based on MAC addresses within a LAN?",
@@ -4781,7 +5148,8 @@
     "correctIndex": 1,
     "explanation": "Switches forward frames within a LAN using MAC addresses.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does 'availability' mean in security?",
@@ -4794,10 +5162,11 @@
     "correctIndex": 2,
     "explanation": "Availability means services/data are accessible to authorised users when required.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "A 'bitmap' image is made of\u2026",
+    "stem": "A 'bitmap' image is made of…",
     "options": [
       "Commands and shapes",
       "A grid of pixels",
@@ -4807,7 +5176,8 @@
     "correctIndex": 1,
     "explanation": "Bitmap images store colour values for each pixel in a grid.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does 'confidentiality' mean in security?",
@@ -4820,7 +5190,8 @@
     "correctIndex": 0,
     "explanation": "Confidentiality means preventing unauthorised access to data.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is an OS responsibility?",
@@ -4833,7 +5204,8 @@
     "correctIndex": 1,
     "explanation": "The OS manages resources like memory, processes, devices and files.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A student can't load websites but can still ping an IP address. Most likely issue?",
@@ -4846,10 +5218,11 @@
     "correctIndex": 1,
     "explanation": "If IP connectivity works but domain names fail, DNS is likely the issue.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
-    "stem": "An image is 64\u00d764 pixels, colour depth 1 bit. Minimum size (bytes)?",
+    "stem": "An image is 64×64 pixels, colour depth 1 bit. Minimum size (bytes)?",
     "options": [
       "512",
       "4096",
@@ -4857,9 +5230,10 @@
       "256"
     ],
     "correctIndex": 0,
-    "explanation": "Pixels=4096. Bits=4096\u00d71=4096 bits. Bytes=4096\u00f78=512 bytes.",
+    "explanation": "Pixels=4096. Bits=4096×1=4096 bits. Bytes=4096÷8=512 bytes.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "What does 'integrity' mean in security?",
@@ -4872,20 +5246,22 @@
     "correctIndex": 1,
     "explanation": "Integrity is about data being correct and protected from unauthorised changes.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why can adding more RAM improve performance?",
     "options": [
       "It increases clock speed",
       "It reduces swapping to virtual memory on storage",
-      "It makes Wi\u2011Fi faster",
+      "It makes Wi‑Fi faster",
       "It increases pixels"
     ],
     "correctIndex": 1,
     "explanation": "More RAM reduces the need for slow virtual memory swapping.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does the OS use permissions (read/write/execute)?",
@@ -4898,10 +5274,11 @@
     "correctIndex": 1,
     "explanation": "Permissions help protect data and enforce security and user control.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "A user is tricked into installing fake 'antivirus' software. This is most likely\u2026",
+    "stem": "A user is tricked into installing fake 'antivirus' software. This is most likely…",
     "options": [
       "A trojan",
       "A firewall",
@@ -4909,9 +5286,10 @@
       "DNS"
     ],
     "correctIndex": 0,
-    "explanation": "Fake security software is a common trojan tactic\u2014disguised as legitimate.",
+    "explanation": "Fake security software is a common trojan tactic—disguised as legitimate.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which is a key advantage of SSDs over HDDs?",
@@ -4924,7 +5302,8 @@
     "correctIndex": 1,
     "explanation": "SSDs use flash memory and have faster access with better durability.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which storage is best for transferring homework between home and school?",
@@ -4937,7 +5316,8 @@
     "correctIndex": 1,
     "explanation": "USB drives are portable, non-volatile flash storage.",
     "topic": "Storage",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "A CPU has a high clock speed but low cache. Which task suffers most?",
@@ -4950,7 +5330,8 @@
     "correctIndex": 1,
     "explanation": "Low cache causes frequent slow RAM access for repeated data.",
     "topic": "CPU",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does pipelining improve CPU throughput?",
@@ -4963,7 +5344,8 @@
     "correctIndex": 1,
     "explanation": "Pipelining overlaps stages so multiple instructions are processed concurrently.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which register stores the current instruction?",
@@ -4976,7 +5358,8 @@
     "correctIndex": 1,
     "explanation": "The Current Instruction Register holds the instruction being decoded/executed.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A PC freezes when opening many browser tabs. Best upgrade?",
@@ -4989,7 +5372,8 @@
     "correctIndex": 1,
     "explanation": "More RAM reduces swapping to virtual memory.",
     "topic": "RAM_ROM",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why are SSDs quieter than HDDs?",
@@ -5002,7 +5386,8 @@
     "correctIndex": 1,
     "explanation": "No moving parts means no mechanical noise.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which storage is volatile?",
@@ -5015,7 +5400,8 @@
     "correctIndex": 2,
     "explanation": "RAM is volatile and loses data when power is off.",
     "topic": "Storage",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A user installs software without permission and it fails. Which OS feature blocked it?",
@@ -5028,7 +5414,8 @@
     "correctIndex": 1,
     "explanation": "Permissions restrict what users can install or change.",
     "topic": "OS",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does multitasking rely on fast context switching?",
@@ -5041,7 +5428,8 @@
     "correctIndex": 1,
     "explanation": "Context switching allows processes to share CPU time.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which OS task handles saving and loading files?",
@@ -5054,7 +5442,8 @@
     "correctIndex": 0,
     "explanation": "File management organises data on storage.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A school network slows at lunchtime. Which factor is MOST likely?",
@@ -5067,7 +5456,8 @@
     "correctIndex": 1,
     "explanation": "Many users share limited bandwidth, causing congestion.",
     "topic": "NetworksBasics",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does packet switching scale well for the internet?",
@@ -5080,7 +5470,8 @@
     "correctIndex": 1,
     "explanation": "Packet switching allows many users to share links dynamically.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which device assigns IP addresses using DHCP?",
@@ -5093,7 +5484,8 @@
     "correctIndex": 1,
     "explanation": "Routers commonly run DHCP servers.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A download resumes after interruption. Which feature enabled this?",
@@ -5106,7 +5498,8 @@
     "correctIndex": 1,
     "explanation": "TCP detects loss and retransmits packets.",
     "topic": "Protocols",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why does HTTPS protect against eavesdropping?",
@@ -5119,7 +5512,8 @@
     "correctIndex": 1,
     "explanation": "Encryption prevents third parties reading intercepted data.",
     "topic": "Protocols",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A company encrypts laptops. What risk is MOST reduced?",
@@ -5132,7 +5526,8 @@
     "correctIndex": 1,
     "explanation": "Encryption protects confidentiality on stolen devices.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which attack overwhelms a service with traffic?",
@@ -5145,7 +5540,8 @@
     "correctIndex": 1,
     "explanation": "DoS floods a service to deny access.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why are backups best kept offline?",
@@ -5158,7 +5554,8 @@
     "correctIndex": 1,
     "explanation": "Offline backups cannot be encrypted by ransomware.",
     "topic": "Security",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Using customer data for a new purpose without notice breaks which principle?",
@@ -5171,7 +5568,8 @@
     "correctIndex": 1,
     "explanation": "Data should only be used for stated purposes.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is anonymisation used?",
@@ -5184,10 +5582,11 @@
     "correctIndex": 1,
     "explanation": "Removing identifiers protects privacy.",
     "topic": "Ethics_Law_Env",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
-    "stem": "An image is 256\u00d7256 pixels with 24-bit colour. Approx size (MB)?",
+    "stem": "An image is 256×256 pixels with 24-bit colour. Approx size (MB)?",
     "options": [
       "0.2",
       "0.5",
@@ -5195,9 +5594,10 @@
       "16"
     ],
     "correctIndex": 0,
-    "explanation": "256\u00d7256=65,536 pixels. Bits=65,536\u00d724=1,572,864 bits \u2248196,608 bytes \u22480.19 MB.",
+    "explanation": "256×256=65,536 pixels. Bits=65,536×24=1,572,864 bits ≈196,608 bytes ≈0.19 MB.",
     "topic": "DataRepresentation",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Why is lossy compression unsuitable for source code?",
@@ -5210,7 +5610,8 @@
     "correctIndex": 1,
     "explanation": "Source code must be exact; losing data alters behaviour.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "What does image resolution mean?",
@@ -5223,7 +5624,8 @@
     "correctIndex": 1,
     "explanation": "Resolution refers to the number of pixels.",
     "topic": "DataRepresentation",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Which device forwards frames within a LAN?",
@@ -5236,7 +5638,8 @@
     "correctIndex": 1,
     "explanation": "Switches forward frames using MAC addresses.",
     "topic": "NetworksBasics",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "A fake 'update' installs malware. What type is this?",
@@ -5249,7 +5652,8 @@
     "correctIndex": 1,
     "explanation": "Malware disguised as legitimate software is a trojan.",
     "topic": "Security",
-    "difficulty": 3
+    "difficulty": 3,
+    "subject": "computer-science"
   },
   {
     "stem": "Which part of the CPU performs calculations?",
@@ -5262,7 +5666,8 @@
     "correctIndex": 0,
     "explanation": "ALU performs arithmetic and logic.",
     "topic": "CPU",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why are permissions important?",
@@ -5275,7 +5680,8 @@
     "correctIndex": 1,
     "explanation": "Permissions enforce security and control.",
     "topic": "OS",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   },
   {
     "stem": "Why can adding RAM speed up a system?",
@@ -5288,6 +5694,7 @@
     "correctIndex": 1,
     "explanation": "More RAM reduces virtual memory use.",
     "topic": "Performance",
-    "difficulty": 2
+    "difficulty": 2,
+    "subject": "computer-science"
   }
 ]

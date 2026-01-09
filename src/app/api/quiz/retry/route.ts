@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { generateNewQuizVersion } from '@/lib/quiz';
-import { QuizResponse, QuizQuestion } from '@/types';
+import { QuizResponse, QuizQuestion, Subject, SUBJECTS } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,8 +14,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate a new quiz version
-    const { quizVersion, questions } = await generateNewQuizVersion();
+    const body = await request.json();
+    const { subject } = body as { subject: Subject };
+
+    // Validate subject
+    if (!subject || !SUBJECTS[subject]) {
+      return NextResponse.json(
+        { error: 'Valid subject is required' },
+        { status: 400 }
+      );
+    }
+
+    // Generate a new quiz version for the specified subject
+    const { quizVersion, subject: quizSubject, questions } = await generateNewQuizVersion(subject);
 
     // Return questions without correct answers
     // Mark the last question (index 5) as bonus if it's a hard question (difficulty 3)
@@ -29,6 +40,7 @@ export async function POST(request: NextRequest) {
 
     const response: QuizResponse = {
       quizVersion,
+      subject: quizSubject,
       questions: safeQuestions,
       startedAt: new Date().toISOString(),
     };

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { submitQuizAttempt } from '@/lib/quiz';
 import { recordActivity, getStreakStatus } from '@/lib/streak';
-import { SubmitRequest, SubmitResponse, QuestionFeedback } from '@/types';
+import { SubmitRequest, SubmitResponse, QuestionFeedback, SUBJECTS } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +16,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body: SubmitRequest = await request.json();
-    const { answers, durationSeconds } = body;
+    const { subject, answers, durationSeconds } = body;
+
+    // Validate subject
+    if (!subject || !SUBJECTS[subject]) {
+      return NextResponse.json(
+        { error: 'Valid subject is required' },
+        { status: 400 }
+      );
+    }
 
     // Validate request
     if (!answers || !Array.isArray(answers)) {
@@ -57,6 +65,7 @@ export async function POST(request: NextRequest) {
     // Submit the attempt
     const { attempt, questions } = await submitQuizAttempt(
       session.label,
+      subject,
       answers,
       durationSeconds || 0,
       ipAddress
@@ -77,14 +86,15 @@ export async function POST(request: NextRequest) {
       };
     });
 
-    // Record streak activity
+    // Record streak activity for this subject
     const timezone = request.headers.get('x-timezone') || 'Europe/Lisbon';
     const { streak: updatedStreak, freezeEarned } = await recordActivity(
       session.label,
+      subject,
       'quiz_submit',
       timezone
     );
-    const streakStatus = await getStreakStatus(session.label, timezone);
+    const streakStatus = await getStreakStatus(session.label, subject, timezone);
 
     const response: SubmitResponse & {
       streak: { currentStreak: number; freezeDays: number; freezeEarned: boolean };

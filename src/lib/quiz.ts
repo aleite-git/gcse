@@ -1,17 +1,18 @@
 import { getDb, COLLECTIONS } from './firebase';
-import { DailyAssignment, Attempt, Answer, TopicBreakdown, Question } from '@/types';
+import { DailyAssignment, Attempt, Answer, TopicBreakdown, Question, Subject } from '@/types';
 import { getTodayLisbon } from './date';
 import { selectQuizQuestions, getQuestionsByIds } from './questions';
 import { recordQuestionAttempts } from './questionStats';
 import crypto from 'crypto';
 
 /**
- * Get or create today's daily assignment
+ * Get or create today's daily assignment for a specific subject
  */
-export async function getOrCreateDailyAssignment(): Promise<DailyAssignment> {
+export async function getOrCreateDailyAssignment(subject: Subject): Promise<DailyAssignment> {
   const db = getDb();
   const today = getTodayLisbon();
-  const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(today);
+  const docId = `${today}-${subject}`;
+  const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId);
 
   const doc = await docRef.get();
 
@@ -20,6 +21,7 @@ export async function getOrCreateDailyAssignment(): Promise<DailyAssignment> {
     return {
       id: doc.id,
       date: data.date,
+      subject: data.subject,
       quizVersion: data.quizVersion,
       generatedAt: data.generatedAt?.toDate() || new Date(),
       questionIds: data.questionIds,
@@ -27,9 +29,10 @@ export async function getOrCreateDailyAssignment(): Promise<DailyAssignment> {
   }
 
   // Create new assignment
-  const questions = await selectQuizQuestions();
+  const questions = await selectQuizQuestions(subject);
   const assignment: Omit<DailyAssignment, 'id'> = {
     date: today,
+    subject,
     quizVersion: 1,
     generatedAt: new Date(),
     questionIds: questions.map((q) => q.id),
@@ -38,42 +41,47 @@ export async function getOrCreateDailyAssignment(): Promise<DailyAssignment> {
   await docRef.set(assignment);
 
   return {
-    id: today,
+    id: docId,
     ...assignment,
   };
 }
 
 /**
- * Get the current quiz version and questions for today
+ * Get the current quiz version and questions for today for a specific subject
  */
-export async function getTodayQuiz(): Promise<{
+export async function getTodayQuiz(subject: Subject): Promise<{
   quizVersion: number;
+  subject: Subject;
   questions: Question[];
 }> {
-  const assignment = await getOrCreateDailyAssignment();
+  const assignment = await getOrCreateDailyAssignment(subject);
   const questions = await getQuestionsByIds(assignment.questionIds);
 
   return {
     quizVersion: assignment.quizVersion,
+    subject,
     questions,
   };
 }
 
 /**
- * Generate a new quiz version (for retry)
+ * Generate a new quiz version (for retry) for a specific subject
  */
-export async function generateNewQuizVersion(): Promise<{
+export async function generateNewQuizVersion(subject: Subject): Promise<{
   quizVersion: number;
+  subject: Subject;
   questions: Question[];
 }> {
   const db = getDb();
   const today = getTodayLisbon();
-  const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(today);
+  const docId = `${today}-${subject}`;
+  const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId);
 
-  // Get questions used today
+  // Get questions used today for this subject
   const attemptsSnapshot = await db
     .collection(COLLECTIONS.ATTEMPTS)
     .where('date', '==', today)
+    .where('subject', '==', subject)
     .get();
 
   const usedToday = new Set<string>();
@@ -94,12 +102,13 @@ export async function generateNewQuizVersion(): Promise<{
   }
 
   // Select new questions avoiding today's questions
-  const questions = await selectQuizQuestions(usedToday);
+  const questions = await selectQuizQuestions(subject, usedToday);
   const newVersion = currentDoc.exists ? (currentDoc.data()!.quizVersion || 1) + 1 : 1;
 
   await docRef.set(
     {
       date: today,
+      subject,
       quizVersion: newVersion,
       generatedAt: new Date(),
       questionIds: questions.map((q) => q.id),
@@ -109,14 +118,15 @@ export async function generateNewQuizVersion(): Promise<{
 
   return {
     quizVersion: newVersion,
+    subject,
     questions,
   };
 }
 
 /**
- * Get today's attempts for a user
+ * Get today's attempts for a user for a specific subject
  */
-export async function getTodayAttempts(userLabel: string): Promise<Attempt[]> {
+export async function getTodayAttempts(userLabel: string, subject: Subject): Promise<Attempt[]> {
   const db = getDb();
   const today = getTodayLisbon();
 
@@ -124,6 +134,7 @@ export async function getTodayAttempts(userLabel: string): Promise<Attempt[]> {
     .collection(COLLECTIONS.ATTEMPTS)
     .where('date', '==', today)
     .where('userLabel', '==', userLabel)
+    .where('subject', '==', subject)
     .orderBy('attemptNumber', 'asc')
     .get();
 
@@ -154,10 +165,11 @@ export async function getAttemptById(id: string): Promise<Attempt | null> {
 }
 
 /**
- * Submit a quiz attempt
+ * Submit a quiz attempt for a specific subject
  */
 export async function submitQuizAttempt(
   userLabel: string,
+  subject: Subject,
   answers: Answer[],
   durationSeconds: number,
   ipAddress?: string
@@ -167,7 +179,7 @@ export async function submitQuizAttempt(
 }> {
   const db = getDb();
   const today = getTodayLisbon();
-  const assignment = await getOrCreateDailyAssignment();
+  const assignment = await getOrCreateDailyAssignment(subject);
 
   // Validate answers (5 regular + 1 bonus = 6 questions)
   if (answers.length !== 6) {
@@ -207,12 +219,13 @@ export async function submitQuizAttempt(
   }
 
   // Get attempt number
-  const existingAttempts = await getTodayAttempts(userLabel);
+  const existingAttempts = await getTodayAttempts(userLabel, subject);
   const attemptNumber = existingAttempts.length + 1;
 
   // Create attempt document
   const attemptData: Omit<Attempt, 'id'> = {
     date: today,
+    subject,
     attemptNumber,
     quizVersion: assignment.quizVersion,
     questionIds: assignment.questionIds,
@@ -300,30 +313,32 @@ function hashIp(ip: string): string {
 }
 
 /**
- * Check if user has attempted today's quiz
+ * Check if user has attempted today's quiz for a specific subject
  */
-export async function hasAttemptedToday(userLabel: string): Promise<boolean> {
-  const attempts = await getTodayAttempts(userLabel);
+export async function hasAttemptedToday(userLabel: string, subject: Subject): Promise<boolean> {
+  const attempts = await getTodayAttempts(userLabel, subject);
   return attempts.length > 0;
 }
 
 /**
- * Generate and save tomorrow's quiz assignment
+ * Generate and save tomorrow's quiz assignment for a specific subject
  * First call creates the assignment, subsequent calls return the same questions
  * If no admin previews, the quiz is created on-the-fly via getOrCreateDailyAssignment
  */
-export async function generateTomorrowPreview(): Promise<{
+export async function generateTomorrowPreview(subject: Subject): Promise<{
   date: string;
+  subject: Subject;
   questions: Question[];
 }> {
   // Get tomorrow's date
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  const docId = `${tomorrowStr}-${subject}`;
 
   // Check if tomorrow's assignment already exists
   const db = getDb();
-  const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(tomorrowStr);
+  const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId);
   const doc = await docRef.get();
 
   if (doc.exists) {
@@ -332,13 +347,15 @@ export async function generateTomorrowPreview(): Promise<{
     const questions = await getQuestionsByIds(data.questionIds);
     return {
       date: tomorrowStr,
+      subject,
       questions,
     };
   }
 
   // Get today's questions to exclude from tomorrow's selection
   const today = getTodayLisbon();
-  const todayDoc = await db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(today).get();
+  const todayDocId = `${today}-${subject}`;
+  const todayDoc = await db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(todayDocId).get();
   const todayQuestionIds = new Set<string>();
 
   if (todayDoc.exists) {
@@ -349,11 +366,12 @@ export async function generateTomorrowPreview(): Promise<{
   }
 
   // Select questions for tomorrow (excluding today's questions)
-  const questions = await selectQuizQuestions(todayQuestionIds);
+  const questions = await selectQuizQuestions(subject, todayQuestionIds);
 
   // Save tomorrow's assignment so subsequent previews return the same questions
   const assignment: Omit<DailyAssignment, 'id'> = {
     date: tomorrowStr,
+    subject,
     quizVersion: 1,
     generatedAt: new Date(),
     questionIds: questions.map((q) => q.id),
@@ -363,15 +381,17 @@ export async function generateTomorrowPreview(): Promise<{
 
   return {
     date: tomorrowStr,
+    subject,
     questions,
   };
 }
 
 /**
- * Get progress summary for a user
+ * Get progress summary for a user for a specific subject
  */
 export async function getProgressSummary(
   userLabel: string,
+  subject: Subject,
   days: number = 7
 ): Promise<{
   attemptedToday: boolean;
@@ -394,6 +414,7 @@ export async function getProgressSummary(
   const snapshot = await db
     .collection(COLLECTIONS.ATTEMPTS)
     .where('userLabel', '==', userLabel)
+    .where('subject', '==', subject)
     .where('date', '>=', dates[dates.length - 1])
     .get();
 

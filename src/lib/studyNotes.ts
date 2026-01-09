@@ -829,6 +829,235 @@ export const studyNotes: Record<string, StudyNote> = {
       },
     ],
   },
+
+  // Biology Study Notes
+  'Bioenergetics': {
+    topic: 'Bioenergetics',
+    title: 'Bioenergetics – Photosynthesis and Respiration',
+    sections: [
+      {
+        heading: 'Photosynthesis',
+        content: 'Photosynthesis is the process by which plants make glucose using light energy. It takes place in chloroplasts.',
+        bullets: [
+          'Word equation: carbon dioxide + water → glucose + oxygen',
+          'Uses light energy absorbed by chlorophyll',
+          'Rate affected by light intensity, carbon dioxide concentration, and temperature',
+        ],
+      },
+      {
+        heading: 'Respiration',
+        content: 'Respiration releases energy from glucose. It occurs in all living cells.',
+        bullets: [
+          'Aerobic: glucose + oxygen → carbon dioxide + water',
+          'Anaerobic (animals): glucose → lactic acid',
+          'Anaerobic (plants/yeast): glucose → ethanol + carbon dioxide',
+        ],
+      },
+    ],
+  },
+
+  'Cell biology': {
+    topic: 'Cell biology',
+    title: 'Cell Biology – Structure and Transport',
+    sections: [
+      {
+        heading: 'Cell Structure',
+        content: 'Cells are the basic building blocks of life. Different cell types have different structures.',
+        bullets: [
+          'Nucleus controls activities and contains DNA',
+          'Mitochondria release energy by respiration',
+          'Ribosomes make proteins',
+          'Plant cells have a cell wall, chloroplasts, and a permanent vacuole',
+        ],
+      },
+      {
+        heading: 'Transport in Cells',
+        content: 'Substances move in and out of cells by diffusion, osmosis, or active transport.',
+        bullets: [
+          'Diffusion: movement from high to low concentration',
+          'Osmosis: diffusion of water through a partially permeable membrane',
+          'Active transport: movement against concentration gradient using energy',
+        ],
+      },
+    ],
+  },
+
+  'Ecology': {
+    topic: 'Ecology',
+    title: 'Ecology – Ecosystems and Energy Transfer',
+    sections: [
+      {
+        heading: 'Ecosystems',
+        content: 'An ecosystem is the interaction between living organisms and their environment.',
+        bullets: [
+          'Producers make their own food (plants)',
+          'Consumers eat other organisms',
+          'Decomposers break down dead material and recycle nutrients',
+        ],
+      },
+      {
+        heading: 'Energy Transfer',
+        content: 'Energy is transferred through food chains and webs but is lost at each stage.',
+        bullets: [
+          'Energy lost as heat during respiration',
+          'Only about 10% of energy is transferred to the next trophic level',
+          'Biomass decreases at higher trophic levels',
+        ],
+      },
+    ],
+  },
+
+  'Homeostasis and response': {
+    topic: 'Homeostasis and response',
+    title: 'Homeostasis and Response – Control Systems',
+    sections: [
+      {
+        heading: 'Homeostasis',
+        content: 'Homeostasis maintains a stable internal environment.',
+        bullets: [
+          'Controls body temperature, blood glucose, and water balance',
+          'Uses negative feedback',
+          'Involves nervous and hormonal systems',
+        ],
+      },
+      {
+        heading: 'Blood Glucose Control',
+        content: 'Blood glucose is controlled by insulin and glucagon.',
+        bullets: [
+          'Insulin lowers blood glucose',
+          'Glucagon raises blood glucose',
+          'Produced by the pancreas',
+        ],
+      },
+    ],
+  },
+
+  'Inheritance, variation and evolution': {
+    topic: 'Inheritance, variation and evolution',
+    title: 'Inheritance, Variation and Evolution – Genetics Basics',
+    sections: [
+      {
+        heading: 'Genes and Inheritance',
+        content: 'Genetic information is carried in DNA and genes.',
+        bullets: [
+          'Genes are sections of DNA',
+          'Alleles are different versions of a gene',
+          'Dominant alleles are expressed with one copy',
+        ],
+      },
+      {
+        heading: 'Evolution',
+        content: 'Evolution occurs by natural selection.',
+        bullets: [
+          'Variation exists within populations',
+          'Better-adapted organisms survive and reproduce',
+          'Over time, advantageous alleles become more common',
+        ],
+      },
+    ],
+  },
+
+  'Maths skills': {
+    topic: 'Maths skills',
+    title: 'Maths Skills in Biology',
+    sections: [
+      {
+        heading: 'Calculations',
+        content: 'Maths is used to analyse biological data.',
+        bullets: [
+          'Magnification = image size ÷ actual size',
+          'Percentage change = (change ÷ original) × 100',
+          'Mean = total ÷ number',
+        ],
+      },
+      {
+        heading: 'Units',
+        content: 'Correct units are essential in calculations.',
+        bullets: [
+          'Length often measured in micrometres (µm)',
+          'Volume in cm³ or dm³',
+          'Temperature in °C',
+        ],
+      },
+    ],
+  },
+
+  'Organisation': {
+    topic: 'Organisation',
+    title: 'Organisation – Cells to Systems',
+    sections: [
+      {
+        heading: 'Levels of Organisation',
+        content: 'Living organisms are organised into hierarchical levels.',
+        bullets: [
+          'Cells → Tissues → Organs → Organ systems → Organisms',
+          'Tissues are groups of similar cells working together',
+          'Organs contain different tissues working together',
+        ],
+      },
+      {
+        heading: 'Digestive System',
+        content: 'The digestive system breaks down food for absorption.',
+        bullets: [
+          'Enzymes break down large molecules into smaller ones',
+          'Amylase breaks down starch into sugars',
+          'Proteases break down proteins into amino acids',
+          'Lipases break down lipids into fatty acids and glycerol',
+        ],
+      },
+    ],
+  },
+
+  'Required practicals': {
+    topic: 'Required practicals',
+    title: 'Required Practicals – Key Knowledge',
+    sections: [
+      {
+        heading: 'Food Tests',
+        content: 'Food tests identify biological molecules.',
+        bullets: [
+          'Starch: iodine turns blue-black',
+          'Reducing sugars: Benedict\'s solution turns brick-red when heated',
+          'Protein: Biuret turns purple',
+          'Lipids: ethanol emulsion test gives cloudy white result',
+        ],
+      },
+      {
+        heading: 'Osmosis Practical',
+        content: 'Osmosis is investigated using potato cylinders.',
+        bullets: [
+          'Measure change in mass',
+          'Keep size of potato cylinders the same',
+          'Use a range of sugar concentrations',
+        ],
+      },
+    ],
+  },
+
+  'Working scientifically': {
+    topic: 'Working scientifically',
+    title: 'Working Scientifically – Investigations',
+    sections: [
+      {
+        heading: 'Variables',
+        content: 'Investigations must be planned carefully.',
+        bullets: [
+          'Independent variable: what you change',
+          'Dependent variable: what you measure',
+          'Control variables: what you keep the same',
+        ],
+      },
+      {
+        heading: 'Data and Reliability',
+        content: 'Results must be reliable and valid.',
+        bullets: [
+          'Repeats improve reliability',
+          'Anomalous results do not fit the pattern',
+          'Large sample sizes reduce random error',
+        ],
+      },
+    ],
+  },
 };
 
 export function getStudyNotes(topic: string): StudyNote | undefined {

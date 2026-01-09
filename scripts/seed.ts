@@ -139,6 +139,7 @@ async function seedQuestions(db: FirebaseFirestore.Firestore) {
       correctIndex: question.correctIndex,
       explanation: question.explanation,
       topic: question.topic,
+      subject: question.subject || 'computer-science', // Default to computer-science for backward compatibility
       difficulty: question.difficulty,
       tags: question.tags || [],
       active: true,

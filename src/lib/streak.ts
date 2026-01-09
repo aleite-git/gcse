@@ -1,5 +1,5 @@
 import { getDb, COLLECTIONS } from './firebase';
-import { UserStreak, StreakStatus } from '@/types';
+import { UserStreak, StreakStatus, Subject } from '@/types';
 
 // Configuration
 const MAX_FREEZES = 2; // Maximum freeze days a user can hold
@@ -33,20 +33,23 @@ function daysBetween(date1: string, date2: string): number {
 }
 
 /**
- * Get or create user streak document
+ * Get or create user streak document for a specific subject
  */
 export async function getOrCreateUserStreak(
   userLabel: string,
+  subject: Subject,
   timezone: string = 'Europe/Lisbon'
 ): Promise<UserStreak> {
   const db = getDb();
-  const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(userLabel);
+  const docId = `${userLabel}-${subject}`;
+  const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(docId);
   const doc = await docRef.get();
 
   if (doc.exists) {
     const data = doc.data()!;
     return {
       userLabel: data.userLabel,
+      subject: data.subject,
       currentStreak: data.currentStreak || 0,
       longestStreak: data.longestStreak || 0,
       lastActivityDate: data.lastActivityDate || '',
@@ -62,6 +65,7 @@ export async function getOrCreateUserStreak(
   // Create new streak document
   const newStreak: UserStreak = {
     userLabel,
+    subject,
     currentStreak: 0,
     longestStreak: 0,
     lastActivityDate: '',
@@ -83,9 +87,10 @@ export async function getOrCreateUserStreak(
  */
 export async function checkAndApplyFreeze(
   userLabel: string,
+  subject: Subject,
   timezone: string
 ): Promise<{ streak: UserStreak; frozeApplied: boolean; missedDays: number }> {
-  const streak = await getOrCreateUserStreak(userLabel, timezone);
+  const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
   const today = getTodayInTimezone(timezone);
 
   // If no previous activity, nothing to freeze
@@ -111,12 +116,12 @@ export async function checkAndApplyFreeze(
   if (freezesToUse > 0) {
     // Apply freeze days
     const db = getDb();
-    const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(userLabel);
+    const docId = `${userLabel}-${subject}`;
+    const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(docId);
 
     // Update streak with freeze applied
     // The streak continues, we just mark freeze days as used
     // We also need to update lastActivityDate to cover the gap
-    const newLastActivityDate = getYesterdayInTimezone(timezone);
 
     await docRef.update({
       freezeDays: streak.freezeDays - freezesToUse,
@@ -125,7 +130,7 @@ export async function checkAndApplyFreeze(
       updatedAt: new Date(),
     });
 
-    const updatedStreak = await getOrCreateUserStreak(userLabel, timezone);
+    const updatedStreak = await getOrCreateUserStreak(userLabel, subject, timezone);
     return {
       streak: updatedStreak,
       frozeApplied: true,
@@ -143,12 +148,13 @@ export async function checkAndApplyFreeze(
  */
 export async function recordActivity(
   userLabel: string,
+  subject: Subject,
   activityType: 'quiz_submit' | 'login',
   timezone: string = 'Europe/Lisbon'
 ): Promise<{ streak: UserStreak; isNewDay: boolean; freezeEarned: boolean }> {
   const db = getDb();
   const today = getTodayInTimezone(timezone);
-  const streak = await getOrCreateUserStreak(userLabel, timezone);
+  const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
 
   // Check if we already had activity today
   if (streak.lastActivityDate === today) {
@@ -158,6 +164,7 @@ export async function recordActivity(
   // Record the activity
   await db.collection(COLLECTIONS.STREAK_ACTIVITIES).add({
     userLabel,
+    subject,
     date: today,
     activityType,
     createdAt: new Date(),
@@ -222,7 +229,8 @@ export async function recordActivity(
   const newLongestStreak = Math.max(streak.longestStreak, newStreak);
 
   // Update the document
-  const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(userLabel);
+  const docId = `${userLabel}-${subject}`;
+  const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(docId);
   await docRef.update({
     currentStreak: newStreak,
     longestStreak: newLongestStreak,
@@ -234,7 +242,7 @@ export async function recordActivity(
     updatedAt: new Date(),
   });
 
-  const updatedStreak = await getOrCreateUserStreak(userLabel, timezone);
+  const updatedStreak = await getOrCreateUserStreak(userLabel, subject, timezone);
   return { streak: updatedStreak, isNewDay: true, freezeEarned };
 }
 
@@ -243,9 +251,10 @@ export async function recordActivity(
  */
 export async function useFreeze(
   userLabel: string,
+  subject: Subject,
   timezone: string = 'Europe/Lisbon'
 ): Promise<{ success: boolean; message: string; streak: UserStreak }> {
-  const streak = await getOrCreateUserStreak(userLabel, timezone);
+  const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
   const today = getTodayInTimezone(timezone);
 
   // Check if user has freeze days available
@@ -271,7 +280,8 @@ export async function useFreeze(
 
   // Apply the freeze
   const db = getDb();
-  const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(userLabel);
+  const docId = `${userLabel}-${subject}`;
+  const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(docId);
 
   await docRef.update({
     freezeDays: streak.freezeDays - 1,
@@ -281,7 +291,7 @@ export async function useFreeze(
     updatedAt: new Date(),
   });
 
-  const updatedStreak = await getOrCreateUserStreak(userLabel, timezone);
+  const updatedStreak = await getOrCreateUserStreak(userLabel, subject, timezone);
   return { success: true, message: 'Freeze applied successfully', streak: updatedStreak };
 }
 
@@ -290,9 +300,10 @@ export async function useFreeze(
  */
 export async function getStreakStatus(
   userLabel: string,
+  subject: Subject,
   timezone: string = 'Europe/Lisbon'
 ): Promise<StreakStatus> {
-  const streak = await getOrCreateUserStreak(userLabel, timezone);
+  const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
   const today = getTodayInTimezone(timezone);
   const yesterday = getYesterdayInTimezone(timezone);
 
@@ -343,15 +354,17 @@ export async function getStreakStatus(
  */
 export async function updateTimezone(
   userLabel: string,
+  subject: Subject,
   timezone: string
 ): Promise<void> {
   const db = getDb();
-  const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(userLabel);
+  const docId = `${userLabel}-${subject}`;
+  const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(docId);
   const doc = await docRef.get();
 
   if (doc.exists) {
     await docRef.update({ timezone, updatedAt: new Date() });
   } else {
-    await getOrCreateUserStreak(userLabel, timezone);
+    await getOrCreateUserStreak(userLabel, subject, timezone);
   }
 }

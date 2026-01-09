@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { getAllQuestions, addQuestion, bulkImportQuestions } from '@/lib/questions';
-import { QuestionInput } from '@/types';
+import { QuestionInput, Subject, SUBJECTS } from '@/types';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +14,19 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const questions = await getAllQuestions();
+    // Optional subject filtering
+    const { searchParams } = new URL(request.url);
+    const subject = searchParams.get('subject') as Subject | null;
+
+    // Validate subject if provided
+    if (subject && !SUBJECTS[subject]) {
+      return NextResponse.json(
+        { error: 'Invalid subject' },
+        { status: 400 }
+      );
+    }
+
+    const questions = await getAllQuestions(subject || undefined);
     return NextResponse.json({ questions });
   } catch (error) {
     console.error('Error getting questions:', error);
@@ -40,6 +52,15 @@ export async function POST(request: NextRequest) {
 
     // Check if bulk import
     if (body.questions && Array.isArray(body.questions)) {
+      // Validate subject on all questions
+      for (const q of body.questions) {
+        if (!q.subject || !SUBJECTS[q.subject as Subject]) {
+          return NextResponse.json(
+            { error: 'All questions must have a valid subject' },
+            { status: 400 }
+          );
+        }
+      }
       const count = await bulkImportQuestions(body.questions as QuestionInput[]);
       return NextResponse.json({ success: true, imported: count });
     }
@@ -47,7 +68,15 @@ export async function POST(request: NextRequest) {
     // Single question add
     const questionInput = body as QuestionInput;
 
-    // Validate
+    // Validate subject
+    if (!questionInput.subject || !SUBJECTS[questionInput.subject]) {
+      return NextResponse.json(
+        { error: 'Valid subject is required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate other fields
     if (!questionInput.stem || !questionInput.options || !questionInput.explanation) {
       return NextResponse.json(
         { error: 'Missing required fields' },

@@ -1,6 +1,16 @@
-// Types for the Daily 5 GCSE CS Quiz Application
+// Types for the Daily 5 GCSE Quiz Application
 
-export type Topic =
+// Subject definitions
+export type Subject = 'computer-science' | 'biology' | 'chemistry';
+
+export const SUBJECTS: Record<Subject, { name: string; icon: string; color: string }> = {
+  'computer-science': { name: 'Computer Science', icon: '💻', color: 'from-purple-500 to-pink-500' },
+  'biology': { name: 'Biology', icon: '🧬', color: 'from-green-500 to-emerald-500' },
+  'chemistry': { name: 'Chemistry', icon: '⚗️', color: 'from-blue-500 to-cyan-500' },
+};
+
+// Computer Science topics
+export type CSTopic =
   | 'CPU'
   | 'RAM_ROM'
   | 'Storage'
@@ -12,6 +22,32 @@ export type Topic =
   | 'Ethics_Law_Env'
   | 'Performance';
 
+// Biology topics
+export type BiologyTopic =
+  | 'CellBiology'
+  | 'Organisation'
+  | 'Infection'
+  | 'Bioenergetics'
+  | 'Homeostasis'
+  | 'Inheritance'
+  | 'Variation'
+  | 'Ecology';
+
+// Chemistry topics
+export type ChemistryTopic =
+  | 'AtomicStructure'
+  | 'BondingStructure'
+  | 'QuantitativeChemistry'
+  | 'ChemicalChanges'
+  | 'EnergyChanges'
+  | 'RatesReactions'
+  | 'OrganicChemistry'
+  | 'ChemicalAnalysis'
+  | 'AtmosphereResources';
+
+// Union of all topics (for backward compatibility)
+export type Topic = CSTopic | BiologyTopic | ChemistryTopic;
+
 export interface Question {
   id: string;
   stem: string;
@@ -19,6 +55,7 @@ export interface Question {
   correctIndex: 0 | 1 | 2 | 3;
   explanation: string;
   topic: Topic;
+  subject: Subject;
   difficulty: 1 | 2 | 3;
   tags?: string[];
   active: boolean;
@@ -31,6 +68,7 @@ export interface QuestionInput {
   correctIndex: 0 | 1 | 2 | 3;
   explanation: string;
   topic: Topic;
+  subject: Subject;
   difficulty: 1 | 2 | 3;
   tags?: string[];
   active?: boolean;
@@ -45,8 +83,9 @@ export interface AccessCode {
 }
 
 export interface DailyAssignment {
-  id: string; // YYYY-MM-DD
+  id: string; // YYYY-MM-DD-{subject}
   date: string;
+  subject: Subject;
   quizVersion: number;
   generatedAt: Date;
   questionIds: string[];
@@ -67,6 +106,7 @@ export interface TopicBreakdown {
 export interface Attempt {
   id: string;
   date: string; // YYYY-MM-DD in Europe/Lisbon
+  subject: Subject;
   attemptNumber: number;
   quizVersion: number;
   questionIds: string[];
@@ -98,11 +138,13 @@ export interface QuizQuestion {
 
 export interface QuizResponse {
   quizVersion: number;
+  subject: Subject;
   questions: QuizQuestion[];
   startedAt: string;
 }
 
 export interface SubmitRequest {
+  subject: Subject;
   answers: Answer[];
   durationSeconds: number;
 }
@@ -152,6 +194,7 @@ export interface QuestionStats {
 // Streak system types
 export interface UserStreak {
   userLabel: string;
+  subject: Subject;
   currentStreak: number;
   longestStreak: number;
   lastActivityDate: string; // YYYY-MM-DD in user's timezone
@@ -165,6 +208,7 @@ export interface UserStreak {
 
 export interface StreakActivity {
   userLabel: string;
+  subject: Subject;
   date: string; // YYYY-MM-DD
   activityType: 'quiz_submit' | 'login';
   createdAt: Date;

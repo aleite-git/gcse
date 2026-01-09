@@ -1,10 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getTodayQuiz } from '@/lib/quiz';
-import { QuizResponse, QuizQuestion } from '@/types';
+import { QuizResponse, QuizQuestion, Subject, SUBJECTS } from '@/types';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { quizVersion, questions } = await getTodayQuiz();
+    const { searchParams } = new URL(request.url);
+    const subject = searchParams.get('subject') as Subject | null;
+
+    // Validate subject parameter
+    if (!subject || !SUBJECTS[subject]) {
+      return NextResponse.json(
+        { error: 'Valid subject parameter is required (computer-science, biology, or chemistry)' },
+        { status: 400 }
+      );
+    }
+
+    const { quizVersion, subject: quizSubject, questions } = await getTodayQuiz(subject);
 
     // Return questions without correct answers
     // Mark the last question (index 5) as bonus if it's a hard question (difficulty 3)
@@ -18,6 +29,7 @@ export async function GET() {
 
     const response: QuizResponse = {
       quizVersion,
+      subject: quizSubject,
       questions: safeQuestions,
       startedAt: new Date().toISOString(),
     };
