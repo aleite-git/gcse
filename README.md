@@ -1,10 +1,10 @@
-# Daily 5 GCSE CS Quiz
+# Daily 5 GCSE Quiz
 
-A private web application that serves a daily 5-question quiz for GCSE Computer Science (Computer Systems & Theory). Designed to run on Google Cloud Platform free tier.
+A small web application that serves a daily 5-question quiz for GCSE preparation. Starting with Computer Science (Computer Systems & Theory) and adding others as my boss (aka daughter) asks. Designed to run on Google Cloud Platform free tier but may still incur costs - use at own risk.
 
 ## Features
 
-- Daily 5-question multiple choice quiz
+- Daily 5-question multiple choice quiz + bonus question with extra difficulty
 - Must answer all 5 questions before submitting
 - Immediate feedback with explanations
 - Retry with new questions
