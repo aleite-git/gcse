@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Attempt, Topic } from '@/types';
+import { Attempt, Topic, Subject, SUBJECTS } from '@/types';
 
 interface UserStat {
   userLabel: string;
@@ -26,6 +26,7 @@ interface PreviewQuestion {
 
 interface PreviewData {
   date: string;
+  subject: Subject;
   questions: PreviewQuestion[];
 }
 
@@ -74,6 +75,7 @@ export default function AdminResultsPage() {
   const [questionStats, setQuestionStats] = useState<QuestionWithStats[]>([]);
   const [statsLoading, setStatsLoading] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [selectedSubject, setSelectedSubject] = useState<Subject>('computer-science');
   const router = useRouter();
 
   const fetchResults = useCallback(async () => {
@@ -102,10 +104,10 @@ export default function AdminResultsPage() {
     fetchResults();
   }, [fetchResults]);
 
-  const fetchPreview = async () => {
+  const fetchPreview = async (subject: Subject) => {
     setPreviewLoading(true);
     try {
-      const response = await fetch('/api/admin/preview');
+      const response = await fetch(`/api/admin/preview?subject=${subject}`);
       if (response.ok) {
         const data = await response.json();
         setPreview(data);
@@ -209,12 +211,37 @@ export default function AdminResultsPage() {
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">Tomorrow&apos;s Quiz Preview</h2>
+            <div className="flex gap-2">
+              {(Object.keys(SUBJECTS) as Subject[]).map((subject) => (
+                <button
+                  key={subject}
+                  onClick={() => {
+                    setSelectedSubject(subject);
+                    if (showPreview && preview?.subject !== subject) {
+                      fetchPreview(subject);
+                    } else if (!showPreview) {
+                      fetchPreview(subject);
+                    }
+                  }}
+                  disabled={previewLoading}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 ${
+                    selectedSubject === subject
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {SUBJECTS[subject].icon} {SUBJECTS[subject].name}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex justify-end mb-4">
             <button
               onClick={() => {
                 if (showPreview) {
                   setShowPreview(false);
                 } else {
-                  fetchPreview();
+                  fetchPreview(selectedSubject);
                 }
               }}
               disabled={previewLoading}
@@ -226,7 +253,7 @@ export default function AdminResultsPage() {
           {showPreview && preview && (
             <div className="space-y-4">
               <p className="text-sm text-gray-500 mb-4">
-                Preview for {formatDate(preview.date)} - These questions may change if regenerated.
+                Preview for {formatDate(preview.date)} ({SUBJECTS[preview.subject].name}) - These questions may change if regenerated.
               </p>
               {preview.questions.map((q, index) => (
                 <div key={q.id} className={`p-4 rounded-lg ${q.isBonus ? 'bg-amber-50 border-2 border-amber-300' : 'bg-gray-50'}`}>
@@ -270,7 +297,7 @@ export default function AdminResultsPage() {
             </div>
           )}
           {!showPreview && !previewLoading && (
-            <p className="text-gray-500 text-sm">Click &quot;Show Preview&quot; to see tomorrow&apos;s quiz questions.</p>
+            <p className="text-gray-500 text-sm">Select a subject and click &quot;Show Preview&quot; to see tomorrow&apos;s quiz questions.</p>
           )}
         </div>
 

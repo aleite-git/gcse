@@ -3,20 +3,50 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Question, QuestionInput, Topic } from '@/types';
+import { Question, QuestionInput, Topic, Subject, SUBJECTS } from '@/types';
 
-const TOPICS: Topic[] = [
-  'CPU',
-  'RAM_ROM',
-  'Storage',
-  'OS',
-  'Embedded',
-  'NetworksBasics',
-  'Protocols',
-  'Security',
-  'Ethics_Law_Env',
-  'Performance',
-];
+// Topics organized by subject
+const TOPICS_BY_SUBJECT: Record<Subject, string[]> = {
+  'computer-science': [
+    'CPU',
+    'RAM_ROM',
+    'Storage',
+    'OS',
+    'Embedded',
+    'NetworksBasics',
+    'Protocols',
+    'Security',
+    'Ethics_Law_Env',
+    'Performance',
+  ],
+  'biology': [
+    'Cell biology',
+    'Organisation',
+    'Infection and response',
+    'Bioenergetics',
+    'Homeostasis and response',
+    'Inheritance, variation and evolution',
+    'Ecology',
+    'Maths skills',
+    'Required practicals',
+    'Working scientifically',
+  ],
+  'chemistry': [
+    'Atomic structure and the periodic table',
+    'Bonding, structure and the properties of matter',
+    'Quantitative chemistry',
+    'Chemical changes',
+    'Energy changes',
+    'The rate and extent of chemical change',
+    'Organic chemistry',
+    'Chemical analysis',
+    'Chemistry of the atmosphere',
+    'Using resources',
+  ],
+};
+
+// Get all topics from all subjects
+const ALL_TOPICS = Object.values(TOPICS_BY_SUBJECT).flat();
 
 export default function AdminQuestionsPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -24,6 +54,7 @@ export default function AdminQuestionsPage() {
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
+  const [filterSubject, setFilterSubject] = useState<Subject | 'all'>('all');
   const [filterTopic, setFilterTopic] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
@@ -78,10 +109,22 @@ export default function AdminQuestionsPage() {
   };
 
   const filteredQuestions = questions.filter((q) => {
+    const matchesSubject = filterSubject === 'all' || q.subject === filterSubject;
     const matchesTopic = filterTopic === 'all' || q.topic === filterTopic;
     const matchesSearch = q.stem.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesTopic && matchesSearch;
+    return matchesSubject && matchesTopic && matchesSearch;
   });
+
+  // Get available topics based on selected subject filter
+  const availableTopics = filterSubject === 'all'
+    ? ALL_TOPICS
+    : TOPICS_BY_SUBJECT[filterSubject];
+
+  // Count questions per subject
+  const subjectCounts = (Object.keys(SUBJECTS) as Subject[]).reduce((acc, subject) => {
+    acc[subject] = questions.filter(q => q.subject === subject).length;
+    return acc;
+  }, {} as Record<Subject, number>);
 
   const activeCount = questions.filter((q) => q.active).length;
 
@@ -137,6 +180,35 @@ export default function AdminQuestionsPage() {
           </div>
         )}
 
+        {/* Subject Filter Tabs */}
+        <div className="bg-white rounded-xl shadow-sm p-2 mb-4">
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => { setFilterSubject('all'); setFilterTopic('all'); }}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                filterSubject === 'all'
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              All Subjects ({questions.length})
+            </button>
+            {(Object.keys(SUBJECTS) as Subject[]).map((subject) => (
+              <button
+                key={subject}
+                onClick={() => { setFilterSubject(subject); setFilterTopic('all'); }}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  filterSubject === subject
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {SUBJECTS[subject].icon} {SUBJECTS[subject].name} ({subjectCounts[subject] || 0})
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Actions */}
         <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
           <div className="flex flex-wrap gap-4 items-center justify-between">
@@ -159,7 +231,7 @@ export default function AdminQuestionsPage() {
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="all">All Topics</option>
-                {TOPICS.map((topic) => (
+                {availableTopics.map((topic) => (
                   <option key={topic} value={topic}>
                     {topic.replace(/_/g, ' ')}
                   </option>
@@ -203,7 +275,10 @@ export default function AdminQuestionsPage() {
             >
               <div className="flex justify-between items-start gap-4">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded">
+                      {SUBJECTS[question.subject]?.icon} {SUBJECTS[question.subject]?.name || question.subject}
+                    </span>
                     <span className="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs font-medium rounded">
                       {question.topic.replace(/_/g, ' ')}
                     </span>
@@ -404,7 +479,32 @@ function QuestionForm({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Subject
+              </label>
+              <select
+                value={formData.subject}
+                onChange={(e) => {
+                  const newSubject = e.target.value as Subject;
+                  const newTopics = TOPICS_BY_SUBJECT[newSubject];
+                  setFormData({
+                    ...formData,
+                    subject: newSubject,
+                    topic: newTopics[0] as Topic, // Reset topic to first of new subject
+                  });
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              >
+                {(Object.keys(SUBJECTS) as Subject[]).map((subject) => (
+                  <option key={subject} value={subject}>
+                    {SUBJECTS[subject].icon} {SUBJECTS[subject].name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Topic
@@ -414,7 +514,7 @@ function QuestionForm({
                 onChange={(e) => setFormData({ ...formData, topic: e.target.value as Topic })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
               >
-                {TOPICS.map((topic) => (
+                {TOPICS_BY_SUBJECT[formData.subject].map((topic) => (
                   <option key={topic} value={topic}>
                     {topic.replace(/_/g, ' ')}
                   </option>
