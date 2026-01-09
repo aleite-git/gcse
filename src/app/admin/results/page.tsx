@@ -5,6 +5,34 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Attempt, Topic, Subject, SUBJECTS } from '@/types';
 
+// Map topics to their subjects
+const TOPICS_BY_SUBJECT: Record<Subject, string[]> = {
+  'computer-science': [
+    'CPU', 'RAM_ROM', 'Storage', 'OS', 'Embedded',
+    'NetworksBasics', 'Protocols', 'Security', 'Ethics_Law_Env', 'Performance',
+  ],
+  'biology': [
+    'Cell biology', 'Organisation', 'Infection and response', 'Bioenergetics',
+    'Homeostasis and response', 'Inheritance, variation and evolution', 'Ecology',
+    'Maths skills', 'Required practicals', 'Working scientifically',
+  ],
+  'chemistry': [
+    'Atomic structure and the periodic table', 'Bonding, structure and the properties of matter',
+    'Quantitative chemistry', 'Chemical changes', 'Energy changes',
+    'The rate and extent of chemical change', 'Organic chemistry', 'Chemical analysis',
+    'Chemistry of the atmosphere', 'Using resources',
+  ],
+};
+
+function getSubjectForTopic(topic: string): Subject | null {
+  for (const [subject, topics] of Object.entries(TOPICS_BY_SUBJECT)) {
+    if (topics.includes(topic)) {
+      return subject as Subject;
+    }
+  }
+  return null;
+}
+
 interface UserStat {
   userLabel: string;
   totalAttempts: number;
@@ -305,30 +333,68 @@ export default function AdminResultsPage() {
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Topic Performance</h2>
           {data?.topicStats && data.topicStats.length > 0 ? (
-            <div className="space-y-4">
-              {data.topicStats.map((stat) => (
-                <div key={stat.topic} className="flex items-center gap-4">
-                  <div className="w-40 text-sm font-medium text-gray-700">
-                    {formatTopic(stat.topic as Topic)}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${getPerformanceColor(stat.correctRate)}`}
-                          style={{ width: `${stat.correctRate}%` }}
-                        />
+            <div className="space-y-6">
+              {(Object.keys(SUBJECTS) as Subject[]).map((subject) => {
+                const subjectTopics = data.topicStats.filter(
+                  (stat) => getSubjectForTopic(stat.topic) === subject
+                );
+                if (subjectTopics.length === 0) return null;
+
+                // Calculate subject average
+                const totalCorrect = subjectTopics.reduce((sum, t) => sum + t.correct, 0);
+                const totalQuestions = subjectTopics.reduce((sum, t) => sum + t.totalQuestions, 0);
+                const subjectAvg = totalQuestions > 0 ? (totalCorrect / totalQuestions) * 100 : 0;
+
+                return (
+                  <div key={subject} className="border border-gray-200 rounded-lg overflow-hidden">
+                    <div className={`px-4 py-3 bg-gradient-to-r ${SUBJECTS[subject].color} bg-opacity-10 border-b border-gray-200`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">{SUBJECTS[subject].icon}</span>
+                          <span className="font-semibold text-gray-900">{SUBJECTS[subject].name}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-gray-600">
+                            {totalCorrect}/{totalQuestions} correct
+                          </span>
+                          <span className={`px-2 py-1 rounded text-sm font-medium ${
+                            subjectAvg >= 70 ? 'bg-green-100 text-green-800' :
+                            subjectAvg >= 50 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {subjectAvg.toFixed(1)}%
+                          </span>
+                        </div>
                       </div>
-                      <span className="text-sm text-gray-600 w-16 text-right">
-                        {stat.correctRate.toFixed(1)}%
-                      </span>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {subjectTopics.map((stat) => (
+                        <div key={stat.topic} className="flex items-center gap-4">
+                          <div className="w-48 text-sm font-medium text-gray-700 truncate">
+                            {formatTopic(stat.topic as Topic)}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${getPerformanceColor(stat.correctRate)}`}
+                                  style={{ width: `${stat.correctRate}%` }}
+                                />
+                              </div>
+                              <span className="text-sm text-gray-600 w-14 text-right">
+                                {stat.correctRate.toFixed(0)}%
+                              </span>
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-500 w-20 text-right">
+                            {stat.correct}/{stat.totalQuestions}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <div className="text-xs text-gray-500 w-24 text-right">
-                    {stat.correct}/{stat.totalQuestions} correct
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <p className="text-gray-500">No data available yet</p>
