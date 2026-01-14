@@ -5,7 +5,7 @@ let cachedFilter: ProfanityFilter | null = null;
 let cachedProfanity: Profanity | null = null;
 
 function buildFilter(): ProfanityFilter {
-  cachedProfanity = new Profanity({ wholeWord: false, replaceWords: false });
+  cachedProfanity = new Profanity({ wholeWord: false });
 
   return {
     isProfane(text: string): boolean {
