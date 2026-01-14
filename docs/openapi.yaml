@@ -141,6 +141,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                emailTaken:
+                  summary: Email already in use
+                  value:
+                    error: Email already in use
+                usernameTaken:
+                  summary: Username already in use
+                  value:
+                    error: Username already in use
         '500':
           description: Server error
           content:
