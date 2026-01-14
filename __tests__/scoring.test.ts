@@ -56,28 +56,31 @@ describe('Quiz Scoring', () => {
     { id: 'q3', correctIndex: 2, topic: 'Storage' },
     { id: 'q4', correctIndex: 3, topic: 'CPU' },
     { id: 'q5', correctIndex: 0, topic: 'Security' },
+    { id: 'q6', correctIndex: 1, topic: 'Protocols' },
   ];
 
-  it('should score all correct answers as 5/5', () => {
+  it('should score all correct answers as 6/6', () => {
     const answers: Answer[] = [
       { questionId: 'q1', selectedIndex: 0 },
       { questionId: 'q2', selectedIndex: 1 },
       { questionId: 'q3', selectedIndex: 2 },
       { questionId: 'q4', selectedIndex: 3 },
       { questionId: 'q5', selectedIndex: 0 },
+      { questionId: 'q6', selectedIndex: 1 },
     ];
 
     const result = calculateScore(sampleQuestions, answers);
-    expect(result.score).toBe(5);
+    expect(result.score).toBe(6);
   });
 
-  it('should score all incorrect answers as 0/5', () => {
+  it('should score all incorrect answers as 0/6', () => {
     const answers: Answer[] = [
       { questionId: 'q1', selectedIndex: 1 },
       { questionId: 'q2', selectedIndex: 0 },
       { questionId: 'q3', selectedIndex: 0 },
       { questionId: 'q4', selectedIndex: 0 },
       { questionId: 'q5', selectedIndex: 1 },
+      { questionId: 'q6', selectedIndex: 0 },
     ];
 
     const result = calculateScore(sampleQuestions, answers);
@@ -91,6 +94,7 @@ describe('Quiz Scoring', () => {
       { questionId: 'q3', selectedIndex: 2 }, // correct
       { questionId: 'q4', selectedIndex: 0 }, // incorrect
       { questionId: 'q5', selectedIndex: 0 }, // correct
+      { questionId: 'q6', selectedIndex: 0 }, // incorrect
     ];
 
     const result = calculateScore(sampleQuestions, answers);
@@ -104,6 +108,7 @@ describe('Quiz Scoring', () => {
       { questionId: 'q3', selectedIndex: 2 },
       { questionId: 'q4', selectedIndex: 3 },
       { questionId: 'q5', selectedIndex: 0 },
+      { questionId: 'q6', selectedIndex: 1 },
     ];
 
     const result = calculateScore(sampleQuestions, answers);
@@ -112,6 +117,7 @@ describe('Quiz Scoring', () => {
     expect(result.topicBreakdown['RAM_ROM']).toEqual({ correct: 1, total: 1 });
     expect(result.topicBreakdown['Storage']).toEqual({ correct: 1, total: 1 });
     expect(result.topicBreakdown['Security']).toEqual({ correct: 1, total: 1 });
+    expect(result.topicBreakdown['Protocols']).toEqual({ correct: 1, total: 1 });
   });
 
   it('should calculate topic breakdown correctly for partial correct', () => {
@@ -121,6 +127,7 @@ describe('Quiz Scoring', () => {
       { questionId: 'q3', selectedIndex: 2 }, // correct (Storage)
       { questionId: 'q4', selectedIndex: 0 }, // incorrect (CPU)
       { questionId: 'q5', selectedIndex: 1 }, // incorrect (Security)
+      { questionId: 'q6', selectedIndex: 1 }, // correct (Protocols)
     ];
 
     const result = calculateScore(sampleQuestions, answers);
@@ -129,6 +136,7 @@ describe('Quiz Scoring', () => {
     expect(result.topicBreakdown['RAM_ROM']).toEqual({ correct: 0, total: 1 });
     expect(result.topicBreakdown['Storage']).toEqual({ correct: 1, total: 1 });
     expect(result.topicBreakdown['Security']).toEqual({ correct: 0, total: 1 });
+    expect(result.topicBreakdown['Protocols']).toEqual({ correct: 1, total: 1 });
   });
 
   it('should handle questions from same topic', () => {
@@ -138,6 +146,7 @@ describe('Quiz Scoring', () => {
       { id: 'q3', correctIndex: 2, topic: 'CPU' },
       { id: 'q4', correctIndex: 3, topic: 'CPU' },
       { id: 'q5', correctIndex: 0, topic: 'CPU' },
+      { id: 'q6', correctIndex: 1, topic: 'CPU' },
     ];
 
     const answers: Answer[] = [
@@ -146,10 +155,11 @@ describe('Quiz Scoring', () => {
       { questionId: 'q3', selectedIndex: 0 },
       { questionId: 'q4', selectedIndex: 3 },
       { questionId: 'q5', selectedIndex: 1 },
+      { questionId: 'q6', selectedIndex: 1 },
     ];
 
     const result = calculateScore(sameTopicQuestions, answers);
-    expect(result.score).toBe(3);
-    expect(result.topicBreakdown['CPU']).toEqual({ correct: 3, total: 5 });
+    expect(result.score).toBe(4);
+    expect(result.topicBreakdown['CPU']).toEqual({ correct: 4, total: 6 });
   });
 });

@@ -1,11 +1,11 @@
 # Daily 5 GCSE Quiz
 
-A small web application that serves a daily 5-question quiz for GCSE preparation. Starting with Computer Science (Computer Systems & Theory) and adding others as my boss (aka daughter) asks. Designed to run on Google Cloud Platform free tier but may still incur costs - use at own risk.
+A small web application that serves a daily 5-question quiz plus 1 bonus (6 total) for GCSE preparation. Starting with Computer Science (Computer Systems & Theory) and adding others as my boss (aka daughter) asks. Designed to run on Google Cloud Platform free tier but may still incur costs - use at own risk.
 
 ## Features
 
-- Daily 5-question multiple choice quiz + bonus question with extra difficulty
-- Must answer all 5 questions before submitting
+- Daily 5-question multiple choice quiz + bonus question with extra difficulty (6 total)
+- Must answer all 6 questions before submitting
 - Immediate feedback with explanations
 - Retry with new questions
 - Progress tracking (last 7 days)
@@ -117,7 +117,7 @@ npm test
 ```
 
 Tests cover:
-- Submission validation (must answer all 5 questions)
+- Submission validation (must answer all 6 questions)
 - Scoring correctness
 - Date handling in Europe/Lisbon timezone
 
@@ -267,7 +267,7 @@ rm key.json
 | date | string | YYYY-MM-DD (doc ID) |
 | quizVersion | number | Version counter |
 | generatedAt | timestamp | Generation time |
-| questionIds | array[5] | Selected question IDs |
+| questionIds | array[6] | Selected question IDs |
 
 #### `attempts`
 | Field | Type | Description |
@@ -275,10 +275,10 @@ rm key.json
 | date | string | YYYY-MM-DD in Lisbon |
 | attemptNumber | number | Attempt counter |
 | quizVersion | number | Quiz version used |
-| questionIds | array[5] | Question IDs |
+| questionIds | array[6] | Question IDs |
 | answers | array | User answers |
 | isComplete | boolean | Submission complete |
-| score | 0-5 | Score |
+| score | 0-6 | Score |
 | topicBreakdown | map | Per-topic results |
 | submittedAt | timestamp | Submission time |
 | durationSeconds | number | Time taken |

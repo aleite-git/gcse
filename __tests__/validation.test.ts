@@ -7,9 +7,9 @@ describe('Quiz Submission Validation', () => {
   function validateSubmission(answers: Array<{ questionId: string; selectedIndex: number }>, assignedQuestionIds: string[]) {
     const errors: string[] = [];
 
-    // Check that exactly 5 answers are provided
-    if (answers.length !== 5) {
-      errors.push('Must answer all 5 questions');
+    // Check that exactly 6 answers are provided (5 regular + 1 bonus)
+    if (answers.length !== 6) {
+      errors.push('Must answer all 6 questions');
     }
 
     // Check that all answers have required fields
@@ -40,35 +40,9 @@ describe('Quiz Submission Validation', () => {
     };
   }
 
-  const validQuestionIds = ['q1', 'q2', 'q3', 'q4', 'q5'];
+  const validQuestionIds = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
 
-  it('should accept valid submission with 5 answers', () => {
-    const answers = [
-      { questionId: 'q1', selectedIndex: 0 },
-      { questionId: 'q2', selectedIndex: 1 },
-      { questionId: 'q3', selectedIndex: 2 },
-      { questionId: 'q4', selectedIndex: 3 },
-      { questionId: 'q5', selectedIndex: 0 },
-    ];
-
-    const result = validateSubmission(answers, validQuestionIds);
-    expect(result.isValid).toBe(true);
-    expect(result.errors).toHaveLength(0);
-  });
-
-  it('should reject submission with fewer than 5 answers', () => {
-    const answers = [
-      { questionId: 'q1', selectedIndex: 0 },
-      { questionId: 'q2', selectedIndex: 1 },
-      { questionId: 'q3', selectedIndex: 2 },
-    ];
-
-    const result = validateSubmission(answers, validQuestionIds);
-    expect(result.isValid).toBe(false);
-    expect(result.errors).toContain('Must answer all 5 questions');
-  });
-
-  it('should reject submission with more than 5 answers', () => {
+  it('should accept valid submission with 6 answers', () => {
     const answers = [
       { questionId: 'q1', selectedIndex: 0 },
       { questionId: 'q2', selectedIndex: 1 },
@@ -79,8 +53,36 @@ describe('Quiz Submission Validation', () => {
     ];
 
     const result = validateSubmission(answers, validQuestionIds);
+    expect(result.isValid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+
+  it('should reject submission with fewer than 6 answers', () => {
+    const answers = [
+      { questionId: 'q1', selectedIndex: 0 },
+      { questionId: 'q2', selectedIndex: 1 },
+      { questionId: 'q3', selectedIndex: 2 },
+    ];
+
+    const result = validateSubmission(answers, validQuestionIds);
     expect(result.isValid).toBe(false);
-    expect(result.errors).toContain('Must answer all 5 questions');
+    expect(result.errors).toContain('Must answer all 6 questions');
+  });
+
+  it('should reject submission with more than 6 answers', () => {
+    const answers = [
+      { questionId: 'q1', selectedIndex: 0 },
+      { questionId: 'q2', selectedIndex: 1 },
+      { questionId: 'q3', selectedIndex: 2 },
+      { questionId: 'q4', selectedIndex: 3 },
+      { questionId: 'q5', selectedIndex: 0 },
+      { questionId: 'q6', selectedIndex: 1 },
+      { questionId: 'q7', selectedIndex: 2 },
+    ];
+
+    const result = validateSubmission(answers, validQuestionIds);
+    expect(result.isValid).toBe(false);
+    expect(result.errors).toContain('Must answer all 6 questions');
   });
 
   it('should reject submission with invalid selectedIndex (negative)', () => {
@@ -118,6 +120,7 @@ describe('Quiz Submission Validation', () => {
       { questionId: 'q3', selectedIndex: 2 },
       { questionId: 'q4', selectedIndex: 3 },
       { questionId: 'invalid-question', selectedIndex: 0 },
+      { questionId: 'q6', selectedIndex: 1 },
     ];
 
     const result = validateSubmission(answers, validQuestionIds);
@@ -130,6 +133,6 @@ describe('Quiz Submission Validation', () => {
 
     const result = validateSubmission(answers, validQuestionIds);
     expect(result.isValid).toBe(false);
-    expect(result.errors).toContain('Must answer all 5 questions');
+    expect(result.errors).toContain('Must answer all 6 questions');
   });
 });

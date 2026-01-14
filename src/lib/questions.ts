@@ -118,7 +118,7 @@ export async function getRecentlyUsedQuestionIds(days: number, subject: Subject)
 
 /**
  * Select 5 regular questions + 1 bonus hard question for a quiz
- * with topic balancing and repeat avoidance
+ * with topic balancing, difficulty targets, and repeat avoidance
  */
 export async function selectQuizQuestions(
   subject: Subject,
@@ -134,72 +134,66 @@ export async function selectQuizQuestions(
   const freshQuestions = allQuestions.filter((q) => !allExclusions.has(q.id));
   const usedQuestions = allQuestions.filter((q) => allExclusions.has(q.id));
 
-  // Filter out hard questions for bonus selection later
-  const regularFreshQuestions = freshQuestions.filter((q) => q.difficulty !== 3);
+  // Difficulty pools for regular questions
+  const easyFresh = freshQuestions.filter((q) => q.difficulty === 1);
+  const mediumFresh = freshQuestions.filter((q) => q.difficulty === 2);
   const hardFreshQuestions = freshQuestions.filter((q) => q.difficulty === 3);
 
-  // Get all available topics from fresh regular questions
-  const topicCounts = new Map<Topic, Question[]>();
-  for (const q of regularFreshQuestions) {
-    const list = topicCounts.get(q.topic) || [];
-    list.push(q);
-    topicCounts.set(q.topic, list);
-  }
+  const easyUsed = usedQuestions.filter((q) => q.difficulty === 1);
+  const mediumUsed = usedQuestions.filter((q) => q.difficulty === 2);
 
   const selected: Question[] = [];
-  const usedTopics = new Set<Topic>();
+  const selectedIds = new Set<string>();
 
-  // Strategy: Try to pick from at least 3 different topics
-  // First pass: pick one from each topic (up to 5)
-  const topics = Array.from(topicCounts.keys());
-  shuffleArray(topics);
-
-  for (const topic of topics) {
-    if (selected.length >= 5) break;
-
-    const topicQuestions = topicCounts.get(topic)!;
-    if (topicQuestions.length > 0) {
-      const randomIndex = Math.floor(Math.random() * topicQuestions.length);
-      const question = topicQuestions[randomIndex];
-      selected.push(question);
-      usedTopics.add(topic);
-      // Remove from pool
-      topicQuestions.splice(randomIndex, 1);
-    }
+  const easySelected = pickQuestionsByTopic(easyFresh, 3);
+  for (const q of easySelected) {
+    selected.push(q);
+    selectedIds.add(q.id);
   }
 
-  // Second pass: fill remaining slots from any topic (non-hard questions)
-  if (selected.length < 5) {
-    const remaining = regularFreshQuestions.filter((q) => !selected.includes(q));
-    shuffleArray(remaining);
-
-    for (const q of remaining) {
-      if (selected.length >= 5) break;
-      selected.push(q);
-    }
-  }
-
-  // If still not enough, use previously used non-hard questions
-  if (selected.length < 5) {
-    const selectedIds = new Set(selected.map((q) => q.id));
-    const fallback = usedQuestions.filter((q) => !selectedIds.has(q.id) && q.difficulty !== 3);
-    shuffleArray(fallback);
-
+  if (selected.length < 3) {
+    const remaining = 3 - selected.length;
+    const fallback = pickQuestionsByTopic(
+      easyUsed.filter((q) => !selectedIds.has(q.id)),
+      remaining
+    );
     for (const q of fallback) {
-      if (selected.length >= 5) break;
       selected.push(q);
+      selectedIds.add(q.id);
+    }
+  }
+
+  const mediumSelected = pickQuestionsByTopic(
+    mediumFresh.filter((q) => !selectedIds.has(q.id)),
+    2
+  );
+  for (const q of mediumSelected) {
+    selected.push(q);
+    selectedIds.add(q.id);
+  }
+
+  if (selected.length < 5) {
+    const remaining = 5 - selected.length;
+    const fallback = pickQuestionsByTopic(
+      mediumUsed.filter((q) => !selectedIds.has(q.id)),
+      remaining
+    );
+    for (const q of fallback) {
+      selected.push(q);
+      selectedIds.add(q.id);
     }
   }
 
   // Final fallback: if we still don't have 5, use any non-hard questions
   if (selected.length < 5) {
-    const selectedIds = new Set(selected.map((q) => q.id));
-    const anyQuestions = allQuestions.filter((q) => !selectedIds.has(q.id) && q.difficulty !== 3);
-    shuffleArray(anyQuestions);
-
-    for (const q of anyQuestions) {
-      if (selected.length >= 5) break;
+    const remaining = 5 - selected.length;
+    const anyQuestions = allQuestions.filter(
+      (q) => !selectedIds.has(q.id) && q.difficulty !== 3
+    );
+    const fallback = pickQuestionsByTopic(anyQuestions, remaining);
+    for (const q of fallback) {
       selected.push(q);
+      selectedIds.add(q.id);
     }
   }
 
@@ -207,7 +201,6 @@ export async function selectQuizQuestions(
   shuffleArray(selected);
 
   // Now select 1 bonus hard question (difficulty 3)
-  const selectedIds = new Set(selected.map((q) => q.id));
   let bonusQuestion: Question | null = null;
 
   // Try fresh hard questions first
@@ -238,6 +231,45 @@ export async function selectQuizQuestions(
   return selected.slice(0, 6);
 }
 
+function pickQuestionsByTopic(questions: Question[], count: number): Question[] {
+  if (count <= 0 || questions.length === 0) {
+    return [];
+  }
+
+  const topicCounts = new Map<Topic, Question[]>();
+  for (const q of questions) {
+    const list = topicCounts.get(q.topic) || [];
+    list.push(q);
+    topicCounts.set(q.topic, list);
+  }
+
+  const selected: Question[] = [];
+  const topics = Array.from(topicCounts.keys());
+  shuffleArray(topics);
+
+  // First pass: try to spread across topics
+  for (const topic of topics) {
+    if (selected.length >= count) break;
+    const topicQuestions = topicCounts.get(topic)!;
+    if (topicQuestions.length === 0) continue;
+
+    const randomIndex = Math.floor(Math.random() * topicQuestions.length);
+    selected.push(topicQuestions[randomIndex]);
+    topicQuestions.splice(randomIndex, 1);
+  }
+
+  // Second pass: fill remaining slots from any topic
+  if (selected.length < count) {
+    const remaining = questions.filter((q) => !selected.includes(q));
+    shuffleArray(remaining);
+    for (const q of remaining) {
+      if (selected.length >= count) break;
+      selected.push(q);
+    }
+  }
+
+  return selected;
+}
 /**
  * Add a new question
  */

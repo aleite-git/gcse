@@ -83,6 +83,7 @@ export async function POST(request: NextRequest) {
         isCorrect: answer.selectedIndex === q.correctIndex,
         explanation: q.explanation,
         topic: q.topic,
+        notes: q.notes,
       };
     });
 

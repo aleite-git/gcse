@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
       topic: q.topic,
       correctIndex: q.correctIndex,
       explanation: q.explanation,
+      notes: q.notes,
       difficulty: q.difficulty,
       isBonus: index === 5 && q.difficulty === 3,
     }));

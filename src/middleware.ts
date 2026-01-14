@@ -12,6 +12,13 @@ const adminRoutes = ['/admin'];
 
 // Public routes
 const publicRoutes = ['/', '/api/login'];
+const publicApiRoutes = [
+  '/api/mobile/register',
+  '/api/mobile/login',
+  '/api/mobile/username/check',
+  '/api/mobile/oauth/google',
+  '/api/mobile/oauth/apple',
+];
 
 function getSecretKey(): Uint8Array {
   const secret = process.env.SESSION_SECRET;
@@ -51,20 +58,27 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = publicRoutes.some(
     (route) => pathname === route || pathname.startsWith('/api/login')
   );
+  const isPublicApiRoute = publicApiRoutes.some((route) => pathname.startsWith(route));
 
-  if (isPublicRoute) {
+  if (isPublicRoute || isPublicApiRoute) {
     return NextResponse.next();
   }
 
-  // Get session token
-  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  // API routes check
+  const isApiRoute = pathname.startsWith('/api');
+
+  // Get session token (cookie first, then Authorization header for API)
+  let token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  if (!token && isApiRoute) {
+    const authHeader = request.headers.get('authorization');
+    if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
+      token = authHeader.slice(7).trim();
+    }
+  }
 
   // Check if route requires authentication
   const requiresAuth = protectedRoutes.some((route) => pathname.startsWith(route));
   const requiresAdmin = adminRoutes.some((route) => pathname.startsWith(route));
-
-  // API routes check
-  const isApiRoute = pathname.startsWith('/api');
 
   if (requiresAuth || requiresAdmin || isApiRoute) {
     if (!token) {

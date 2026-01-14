@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
       stem: q.stem,
       options: q.options,
       topic: q.topic,
+      notes: q.notes,
       isBonus: index === 5 && q.difficulty === 3,
     }));
 
