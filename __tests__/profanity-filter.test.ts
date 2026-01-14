@@ -14,6 +14,7 @@ describe('profanity filter', () => {
 
     expect(filter.isProfane('shit_098')).toBe(true);
     expect(filter.isProfane('sh1t123')).toBe(true);
+    expect(filter.isProfane('ExistingUser')).toBe(false);
     expect(filter.isProfane('hello_123')).toBe(false);
   });
 });

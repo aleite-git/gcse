@@ -282,7 +282,7 @@ export async function loginMobileOAuthUser(
     }
   }
 
-  if (!profile.email) {
+  if (profile.provider === 'google' && !profile.email) {
     throw new MobileAuthError('Email is required', 400);
   }
 
@@ -292,25 +292,23 @@ export async function loginMobileOAuthUser(
   }
 
   const usernameValue = (input.username as string).trim();
-  if (profanityFilter.isProfane(usernameValue)) {
-    throw new MobileAuthError('Username is not allowed', 400);
-  }
-
   const usernameLower = normalizeUsername(usernameValue);
   const existingByUsername = await store.getByUsername(usernameLower);
   if (existingByUsername) {
     throw new MobileAuthError('Username already in use', 409);
   }
 
-  const existingByEmail = await store.getByEmail(profile.emailLower);
-  if (existingByEmail) {
-    throw new MobileAuthError('Email already in use', 409);
+  if (profile.emailLower) {
+    const existingByEmail = await store.getByEmail(profile.emailLower);
+    if (existingByEmail) {
+      throw new MobileAuthError('Email already in use', 409);
+    }
   }
 
   const passwordHash = await bcrypt.hash(profile.subject, 12);
 
   return store.createUser({
-    email: profile.email.trim(),
+    email: profile.email ? profile.email.trim() : '',
     emailLower: profile.emailLower,
     passwordHash,
     username: usernameValue,

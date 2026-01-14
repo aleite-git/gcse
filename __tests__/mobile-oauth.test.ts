@@ -72,7 +72,7 @@ describe('mobile oauth token verification', () => {
     });
 
     await expect(verifyAppleIdToken('token', 'client-id')).rejects.toMatchObject({
-      message: 'Invalid token',
+      message: 'Invalid OAuth token',
       status: 401,
     });
   });

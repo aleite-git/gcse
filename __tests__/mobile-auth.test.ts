@@ -660,4 +660,29 @@ describe('mobile oauth login', () => {
     expect(user.oauthProvider).toBe('google');
     expect(users).toHaveLength(1);
   });
+
+  it('creates a new apple oauth user without email', async () => {
+    const { store, users } = createInMemoryStore();
+    const filter = createProfanityFilter();
+
+    const user = await loginMobileOAuthUser(
+      {
+        profile: {
+          provider: 'apple',
+          subject: 'subject-apple',
+          email: '',
+          emailLower: '',
+          emailVerified: false,
+        },
+        username: 'NewUser',
+      },
+      store,
+      filter
+    );
+
+    expect(user.username).toBe('NewUser');
+    expect(user.email).toBe('');
+    expect(user.oauthProvider).toBe('apple');
+    expect(users).toHaveLength(1);
+  });
 });

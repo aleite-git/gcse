@@ -311,6 +311,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid OAuth token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidToken:
+                  summary: Invalid OAuth token
+                  value:
+                    error: Invalid OAuth token
         '409':
           description: Email or username already in use
           content:
@@ -345,6 +356,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid OAuth token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidToken:
+                  summary: Invalid OAuth token
+                  value:
+                    error: Invalid OAuth token
         '409':
           description: Email or username already in use
           content:

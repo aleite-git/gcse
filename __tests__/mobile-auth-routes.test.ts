@@ -654,6 +654,23 @@ describe('mobile auth routes', () => {
     expect(payload).toMatchObject({ error: 'Google client ID not configured' });
   });
 
+  it('returns 401 when Google token is invalid', async () => {
+    verifyGoogleIdToken.mockRejectedValueOnce(new MobileAuthError('Invalid OAuth token', 401));
+    process.env.GOOGLE_CLIENT_ID = 'google-client';
+
+    const request = new Request('http://localhost/api/mobile/oauth/google', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ idToken: 'token-123' }),
+    }) as NextRequest;
+
+    const response = await googleOauthPost(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(payload).toMatchObject({ error: 'Invalid OAuth token' });
+  });
+
   it('logs in with Apple OAuth', async () => {
     const { store } = createMobileStoreMock();
     createFirestoreMobileUserStore.mockReturnValue(store);
@@ -688,7 +705,7 @@ describe('mobile auth routes', () => {
   });
 
   it('returns 401 when Apple token is invalid', async () => {
-    verifyAppleIdToken.mockRejectedValueOnce(new MobileAuthError('Invalid token', 401));
+    verifyAppleIdToken.mockRejectedValueOnce(new MobileAuthError('Invalid OAuth token', 401));
     process.env.APPLE_CLIENT_ID = 'apple-client';
 
     const request = new Request('http://localhost/api/mobile/oauth/apple', {
@@ -701,6 +718,6 @@ describe('mobile auth routes', () => {
     const payload = await response.json();
 
     expect(response.status).toBe(401);
-    expect(payload).toMatchObject({ error: 'Invalid token' });
+    expect(payload).toMatchObject({ error: 'Invalid OAuth token' });
   });
 });

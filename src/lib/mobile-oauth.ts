@@ -29,14 +29,14 @@ async function verifyToken(
     const { payload } = await jwtVerify(idToken, jwks, options);
     return payload;
   } catch {
-    throw new MobileAuthError('Invalid token', 401);
+    throw new MobileAuthError('Invalid OAuth token', 401);
   }
 }
 
 function buildProfile(provider: 'google' | 'apple', payload: JWTPayload): OAuthProfile {
   const subject = ensureString(payload.sub);
   if (!subject) {
-    throw new MobileAuthError('Invalid token', 401);
+    throw new MobileAuthError('Invalid OAuth token', 401);
   }
 
   const email = ensureString(payload.email);
