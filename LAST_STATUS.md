@@ -29,7 +29,7 @@ A daily quiz application for GCSE students covering three subjects:
 - **URL:** https://gcse-quiz-997951122924.europe-west1.run.app
 - **Project ID:** gcse-cs-1
 - **Region:** europe-west1
-- **Current Version:** v8
+- **Current Version:** v24
 
 ## Database Collections
 
