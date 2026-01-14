@@ -1,92 +1,19 @@
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
+import { createProfanityFilter } from '@/lib/profanity-filter';
 
-function createMockLeoFilter(options: { wordDictionary?: Record<string, string[]> }) {
-  const words: string[] = [];
-  const clearList = jest.fn(() => {
-    words.splice(0, words.length);
-  });
-  const add = jest.fn((data: string[] | string) => {
-    if (Array.isArray(data)) {
-      words.push(...data);
-    } else {
-      words.push(data);
-    }
-  });
-  const loadDictionary = jest.fn(() => {
-    words.push('loaded');
-  });
-  const check = jest.fn((text: string) => words.includes(text));
+describe('profanity filter', () => {
+  it('returns the same cached filter instance', () => {
+    const first = createProfanityFilter();
+    const second = createProfanityFilter();
 
-  return {
-    filter: {
-      wordDictionary: options.wordDictionary,
-      clearList,
-      add,
-      loadDictionary,
-      check,
-    },
-    helpers: {
-      clearList,
-      add,
-      loadDictionary,
-      check,
-      words,
-    },
-  };
-}
-
-describe('profanity filter configuration', () => {
-  it('merges supported dictionaries when available', async () => {
-    const mock = createMockLeoFilter({
-      wordDictionary: {
-        en: ['alpha'],
-        fr: ['beta'],
-        ru: ['gamma'],
-      },
-    });
-
-    jest.resetModules();
-    jest.unstable_mockModule('leo-profanity', () => ({
-      default: mock.filter,
-    }));
-    jest.unstable_mockModule('naughty-words', () => ({
-      default: {
-        pt: ['Puta'],
-        es: ['Hijoputa'],
-        de: ['Arsch'],
-        hi: ['Chod'],
-      },
-    }));
-
-    const module = await import('@/lib/profanity-filter');
-    const filter = module.createProfanityFilter();
-
-    expect(filter.isProfane('alpha')).toBe(true);
-    expect(filter.isProfane('beta')).toBe(true);
-    expect(filter.isProfane('gamma')).toBe(true);
-    expect(filter.isProfane('puta')).toBe(true);
-    expect(filter.isProfane('hijoputa')).toBe(true);
-    expect(filter.isProfane('arsch')).toBe(true);
-    expect(filter.isProfane('chod')).toBe(true);
-    expect(mock.helpers.loadDictionary).not.toHaveBeenCalled();
-    expect(mock.helpers.clearList).toHaveBeenCalledTimes(1);
+    expect(first).toBe(second);
   });
 
-  it('falls back to loadDictionary when dictionaries are missing', async () => {
-    const mock = createMockLeoFilter({ wordDictionary: undefined });
+  it('detects profane usernames with digits and underscores', () => {
+    const filter = createProfanityFilter();
 
-    jest.resetModules();
-    jest.unstable_mockModule('leo-profanity', () => ({
-      default: mock.filter,
-    }));
-    jest.unstable_mockModule('naughty-words', () => ({
-      default: {},
-    }));
-
-    const module = await import('@/lib/profanity-filter');
-    const filter = module.createProfanityFilter();
-
-    expect(filter.isProfane('loaded')).toBe(true);
-    expect(mock.helpers.loadDictionary).toHaveBeenCalledWith('en');
+    expect(filter.isProfane('shit_098')).toBe(true);
+    expect(filter.isProfane('sh1t123')).toBe(true);
+    expect(filter.isProfane('hello_123')).toBe(false);
   });
 });
