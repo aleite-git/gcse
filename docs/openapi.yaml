@@ -135,6 +135,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidUsername:
+                  summary: Invalid username format
+                  value:
+                    error: Username must be 5-15 characters
+                profaneUsername:
+                  summary: Profane username
+                  value:
+                    error: Username is not allowed
         '409':
           description: Email or username already in use
           content:
@@ -242,6 +251,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidUsername:
+                  summary: Invalid username format
+                  value:
+                    error: Username must be 5-15 characters
+                profaneUsername:
+                  summary: Profane username
+                  value:
+                    error: Username is not allowed
         '401':
           description: Missing or invalid session token
           content:
@@ -249,11 +267,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
-          description: Username change limit reached
+          description: Must wait 30 days before changing username again
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                cooldown:
+                  summary: Username change cooldown window
+                  value:
+                    error: Must wait 30 days before changing username again
         '409':
           description: Username already in use
           content:
@@ -359,6 +382,7 @@ components:
           minLength: 5
           maxLength: 15
           pattern: '^[A-Za-z0-9_]+$'
+          description: Must be 5-15 chars and not contain profanity.
     LoginRequest:
       oneOf:
         - type: object
@@ -395,6 +419,7 @@ components:
           minLength: 5
           maxLength: 15
           pattern: '^[A-Za-z0-9_]+$'
+          description: Must be 5-15 chars and not contain profanity.
     OAuthRequest:
       type: object
       required:
@@ -404,7 +429,7 @@ components:
           type: string
         username:
           type: string
-          description: Required the first time a user logs in with OAuth.
+          description: Required the first time a user logs in with OAuth. Must be 5-15 chars and not contain profanity.
           minLength: 5
           maxLength: 15
           pattern: '^[A-Za-z0-9_]+$'
@@ -438,7 +463,6 @@ components:
         - success
         - token
         - username
-        - remainingChanges
       properties:
         success:
           type: boolean
@@ -446,8 +470,6 @@ components:
           type: string
         username:
           type: string
-        remainingChanges:
-          type: integer
     ErrorResponse:
       type: object
       required:
