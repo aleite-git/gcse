@@ -115,6 +115,8 @@ gcse_cs_daily5_questions*.json
 question_bank/
 mobile/
 !src/app/api/mobile/
+/scripts/
+/seed/*.json
 duplicate-stems-report.json
 AQA_GCSE_*.json
 GCSE_*.json
