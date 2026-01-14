@@ -349,6 +349,7 @@ components:
           type: string
           minLength: 5
           maxLength: 15
+          pattern: '^[A-Za-z0-9_]+$'
     LoginRequest:
       oneOf:
         - type: object
@@ -371,6 +372,7 @@ components:
               type: string
               minLength: 5
               maxLength: 15
+              pattern: '^[A-Za-z0-9_]+$'
             password:
               type: string
               minLength: 1
@@ -383,6 +385,7 @@ components:
           type: string
           minLength: 5
           maxLength: 15
+          pattern: '^[A-Za-z0-9_]+$'
     OAuthRequest:
       type: object
       required:
@@ -395,6 +398,7 @@ components:
           description: Required the first time a user logs in with OAuth.
           minLength: 5
           maxLength: 15
+          pattern: '^[A-Za-z0-9_]+$'
     AuthResponse:
       type: object
       required:
