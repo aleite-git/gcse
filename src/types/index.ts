@@ -6,7 +6,7 @@ export type Subject = 'computer-science' | 'biology' | 'chemistry';
 export const SUBJECTS: Record<Subject, { name: string; icon: string; color: string }> = {
   'computer-science': { name: 'Computer Science', icon: '💻', color: 'from-purple-500 to-pink-500' },
   'biology': { name: 'Biology', icon: '🧬', color: 'from-green-500 to-emerald-500' },
-  'chemistry': { name: 'Chemistry', icon: '⚗️', color: 'from-blue-500 to-cyan-500' },
+  'chemistry': { name: 'Chemistry', icon: '⚗️', color: 'from-slate-600 to-sky-600' },
 };
 
 // Computer Science topics
@@ -54,6 +54,7 @@ export interface Question {
   options: [string, string, string, string];
   correctIndex: 0 | 1 | 2 | 3;
   explanation: string;
+  notes?: string;
   topic: Topic;
   subject: Subject;
   difficulty: 1 | 2 | 3;
@@ -67,6 +68,7 @@ export interface QuestionInput {
   options: [string, string, string, string];
   correctIndex: 0 | 1 | 2 | 3;
   explanation: string;
+  notes?: string;
   topic: Topic;
   subject: Subject;
   difficulty: 1 | 2 | 3;
@@ -134,6 +136,7 @@ export interface QuizQuestion {
   options: [string, string, string, string];
   topic: Topic;
   isBonus?: boolean;
+  notes?: string;
 }
 
 export interface QuizResponse {
@@ -158,6 +161,7 @@ export interface QuestionFeedback {
   isCorrect: boolean;
   explanation: string;
   topic: Topic;
+  notes?: string;
 }
 
 export interface SubmitResponse {

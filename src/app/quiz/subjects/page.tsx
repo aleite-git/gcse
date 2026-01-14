@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Subject, SUBJECTS, StreakStatus } from '@/types';
+import { useMe } from '@/lib/use-me';
+import { getActiveSubjectsForApp } from '@/lib/onboarding';
 import { StreakDisplay } from '@/components/StreakDisplay';
 
 interface SubjectProgress {
@@ -26,12 +28,15 @@ export default function SubjectPickerPage() {
   });
   const [timezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone);
   const router = useRouter();
+  const { profile, status } = useMe();
+  const activeSubjects = useMemo(() => getActiveSubjectsForApp(profile), [profile]);
+  const activeSubjectsKey = activeSubjects.join('|');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch progress for all subjects in parallel
-        const subjects = Object.keys(SUBJECTS) as Subject[];
+        const subjects = activeSubjects.length > 0 ? activeSubjects : (Object.keys(SUBJECTS) as Subject[]);
 
         const progressPromises = subjects.map(async (subject) => {
           try {
@@ -86,14 +91,14 @@ export default function SubjectPickerPage() {
     };
 
     fetchData();
-  }, [router, timezone]);
+  }, [activeSubjectsKey, router, timezone]);
 
   const handleLogout = async () => {
     await fetch('/api/logout', { method: 'POST' });
     router.push('/');
   };
 
-  if (loading) {
+  if (loading || status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center">
@@ -107,6 +112,25 @@ export default function SubjectPickerPage() {
     );
   }
 
+  if (profile && activeSubjects.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-bold text-white">No active subjects</h2>
+          <p className="mt-3 text-white/60">
+            Choose at least one subject to unlock your daily quizzes.
+          </p>
+          <button
+            onClick={() => router.push('/onboarding/subjects')}
+            className="mt-6 rounded-full bg-purple-500 px-6 py-3 text-white font-semibold hover:bg-purple-400"
+          >
+            Choose subjects
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-8 px-4">
       <div className="max-w-4xl mx-auto">
@@ -115,16 +139,24 @@ export default function SubjectPickerPage() {
             <h1 className="text-3xl font-bold text-white">Choose Your Subject</h1>
             <p className="text-white/60 mt-1">Complete a quiz for each subject daily</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="text-white/40 hover:text-white/80 text-sm transition-colors"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/settings/subjects"
+              className="text-white/40 hover:text-white/80 text-sm transition-colors"
+            >
+              Edit subjects
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="text-white/40 hover:text-white/80 text-sm transition-colors"
+            >
+              Logout
+            </button>
+          </div>
         </header>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {(Object.keys(SUBJECTS) as Subject[]).map((subject) => {
+          {(activeSubjects.length > 0 ? activeSubjects : (Object.keys(SUBJECTS) as Subject[])).map((subject) => {
             const subjectInfo = SUBJECTS[subject];
             const subjectProgress = progress[subject];
             const subjectStreak = streaks[subject];
@@ -178,23 +210,23 @@ function SubjectCard({
   return (
     <Link
       href={`/quiz/today?subject=${subject}`}
-      className={`relative group block rounded-3xl p-6 backdrop-blur-xl border transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
-        completed
-          ? 'bg-white/5 border-white/10 hover:border-white/20'
-          : `bg-gradient-to-br ${colorGradient} bg-opacity-10 border-white/20 hover:border-white/40`
-      }`}
+      className="relative group block rounded-3xl p-6 backdrop-blur-xl border border-white/10 bg-white/5 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-white/20"
     >
-      {/* Background gradient overlay */}
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${colorGradient} opacity-10 group-hover:opacity-20 transition-opacity`} />
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/5 to-white/0 opacity-40 group-hover:opacity-60 transition-opacity" />
 
-      {/* Completed checkmark */}
-      {completed && (
-        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30">
+      <div
+        className={`absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full border ${
+          completed
+            ? 'border-green-400/80 bg-green-500 shadow-lg shadow-green-500/30'
+            : 'border-white/30 bg-white/10'
+        }`}
+      >
+        {completed && (
           <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
           </svg>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="relative z-10">
         {/* Icon */}
@@ -204,25 +236,19 @@ function SubjectCard({
         <h2 className="text-xl font-bold text-white mb-2">{name}</h2>
 
         {/* Status */}
-        {completed ? (
-          <div className="space-y-1">
-            <p className="text-sm text-white/60">
-              Completed today
-            </p>
-            {bestScore !== undefined && (
-              <p className="text-sm text-white/40">
-                Best score: <span className="text-white/80 font-medium">{bestScore}/6</span>
-                {attempts && attempts > 1 && (
-                  <span className="text-white/30"> ({attempts} attempts)</span>
-                )}
-              </p>
-            )}
-          </div>
-        ) : (
-          <p className={`text-sm font-medium bg-gradient-to-r ${colorGradient} bg-clip-text text-transparent`}>
-            Start today&apos;s quiz
+        <div className="space-y-1">
+          <p className="text-sm text-white/60">
+            {completed ? "Completed today" : "Pending today\u2019s quiz"}
           </p>
-        )}
+          {completed && bestScore !== undefined && (
+            <p className="text-sm text-white/40">
+              Best score: <span className="text-white/80 font-medium">{bestScore}/6</span>
+              {attempts && attempts > 1 && (
+                <span className="text-white/30"> ({attempts} attempts)</span>
+              )}
+            </p>
+          )}
+        </div>
 
         {/* Streak indicator */}
         {streak !== undefined && streak > 0 && (
@@ -235,7 +261,6 @@ function SubjectCard({
         )}
       </div>
 
-      {/* Arrow indicator */}
       <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
         <svg className="w-6 h-6 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

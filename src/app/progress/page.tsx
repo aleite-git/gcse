@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ProgressSummary, Topic, StreakStatus, Subject, SUBJECTS } from '@/types';
+import { useMe } from '@/lib/use-me';
+import { getActiveSubjectsForApp } from '@/lib/onboarding';
 import { StreakDisplay } from '@/components/StreakDisplay';
 
 export default function ProgressPage() {
@@ -39,9 +41,12 @@ function ProgressContent() {
   const [error, setError] = useState('');
   const [timezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone);
   const router = useRouter();
+  const { profile, status } = useMe();
+  const activeSubjects = useMemo(() => getActiveSubjectsForApp(profile), [profile]);
+  const activeSubjectsKey = activeSubjects.join('|');
 
   useEffect(() => {
-    if (!subject || !SUBJECTS[subject]) {
+    if (!subject || !SUBJECTS[subject] || (activeSubjects.length > 0 && !activeSubjects.includes(subject))) {
       setLoading(false);
       return;
     }
@@ -77,20 +82,22 @@ function ProgressContent() {
     };
 
     fetchData();
-  }, [router, timezone, subject]);
+  }, [activeSubjectsKey, router, timezone, subject]);
 
   const handleLogout = async () => {
     await fetch('/api/logout', { method: 'POST' });
     router.push('/');
   };
 
-  if (!subject || !SUBJECTS[subject]) {
+  if (!subject || !SUBJECTS[subject] || (activeSubjects.length > 0 && !activeSubjects.includes(subject))) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="text-6xl mb-4">📊</div>
-          <h1 className="text-2xl font-bold text-white mb-2">No Subject Selected</h1>
-          <p className="text-white/60 mb-6">Please select a subject to view your progress.</p>
+          <h1 className="text-2xl font-bold text-white mb-2">Subject not available</h1>
+          <p className="text-white/60 mb-6">
+            Select one of your active subjects to view progress.
+          </p>
           <Link
             href="/quiz/subjects"
             className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all"
@@ -102,7 +109,7 @@ function ProgressContent() {
     );
   }
 
-  if (loading) {
+  if (loading || status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center">

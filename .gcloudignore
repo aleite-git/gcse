@@ -1,0 +1,5 @@
+#!include:.gitignore
+
+# Exclude large data and separate apps from Cloud Build upload
+/question_bank/
+/mobile/

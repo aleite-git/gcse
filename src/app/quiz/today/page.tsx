@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { QuizResponse, QuizQuestion, Answer, SubmitResponse, QuestionFeedback, StreakStatus, Subject, SUBJECTS } from '@/types';
+import { useMe } from '@/lib/use-me';
+import { getActiveSubjectsForApp } from '@/lib/onboarding';
 import { studyNotes, StudyNote } from '@/lib/studyNotes';
 import { StreakDisplay, StreakCelebration } from '@/components/StreakDisplay';
 
@@ -41,13 +43,16 @@ function QuizContent() {
   const searchParams = useSearchParams();
   const subject = searchParams.get('subject') as Subject | null;
   const subjectInfo = subject ? SUBJECTS[subject] : null;
+  const { profile, status } = useMe();
+  const activeSubjects = useMemo(() => getActiveSubjectsForApp(profile), [profile]);
+  const activeSubjectsKey = activeSubjects.join('|');
 
   const [state, setState] = useState<QuizState>('loading');
   const [quiz, setQuiz] = useState<QuizResponse | null>(null);
   const [answers, setAnswers] = useState<Map<string, number>>(new Map());
   const [results, setResults] = useState<SubmitResponse | null>(null);
   const [error, setError] = useState('');
-  const [startTime] = useState(() => Date.now());
+  const [startTime, setStartTime] = useState(() => Date.now());
   const [streakStatus, setStreakStatus] = useState<StreakStatus | null>(null);
   const [streakResult, setStreakResult] = useState<StreakResult | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
@@ -57,6 +62,11 @@ function QuizContent() {
   const loadQuiz = useCallback(async () => {
     // Validate subject
     if (!subject || !SUBJECTS[subject]) {
+      setState('no-subject');
+      return;
+    }
+
+    if (activeSubjects.length > 0 && !activeSubjects.includes(subject)) {
       setState('no-subject');
       return;
     }
@@ -77,6 +87,7 @@ function QuizContent() {
       const data: QuizResponse = await response.json();
       setQuiz(data);
       setAnswers(new Map());
+      setStartTime(Date.now());
       setState('quiz');
 
       // Fetch streak status for this subject
@@ -93,7 +104,7 @@ function QuizContent() {
       setError('Failed to load quiz. Please try again.');
       setState('quiz');
     }
-  }, [router, timezone, subject]);
+  }, [activeSubjectsKey, router, timezone, subject]);
 
   useEffect(() => {
     loadQuiz();
@@ -157,7 +168,7 @@ function QuizContent() {
     }
   };
 
-  const handleRetry = async () => {
+  const handleTryNewQuiz = async () => {
     if (!subject) return;
 
     setState('loading');
@@ -180,11 +191,21 @@ function QuizContent() {
       setQuiz(data);
       setAnswers(new Map());
       setResults(null);
+      setStartTime(Date.now());
       setState('quiz');
     } catch {
       setError('Failed to generate new quiz. Please try again.');
       setState('results');
     }
+  };
+
+  const handleTryAgainSameQuiz = () => {
+    if (!quiz) return;
+    setAnswers(new Map());
+    setResults(null);
+    setShowCelebration(false);
+    setStartTime(Date.now());
+    setState('quiz');
   };
 
   const handleLogout = async () => {
@@ -197,8 +218,8 @@ function QuizContent() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="text-6xl mb-4">📚</div>
-          <h1 className="text-2xl font-bold text-white mb-2">No Subject Selected</h1>
-          <p className="text-white/60 mb-6">Please select a subject to start your quiz.</p>
+          <h1 className="text-2xl font-bold text-white mb-2">Subject not available</h1>
+          <p className="text-white/60 mb-6">Select one of your active subjects to start your quiz.</p>
           <Link
             href="/quiz/subjects"
             className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all"
@@ -210,7 +231,7 @@ function QuizContent() {
     );
   }
 
-  if (state === 'loading') {
+  if (state === 'loading' || status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center">
@@ -236,7 +257,8 @@ function QuizContent() {
         )}
         <ResultsView
           results={results}
-          onRetry={handleRetry}
+          onTryAgain={handleTryAgainSameQuiz}
+          onTryNewQuiz={handleTryNewQuiz}
           onLogout={handleLogout}
           streakResult={streakResult}
           streakStatus={streakStatus}
@@ -405,8 +427,10 @@ function QuestionCard({
   disabled: boolean;
 }) {
   const [showNotes, setShowNotes] = useState(false);
+  const notesText = question.notes?.trim();
   const notes = studyNotes[question.topic];
   const isBonus = question.isBonus;
+  const hasNotes = Boolean(notesText) || Boolean(notes);
 
   return (
     <div className={`rounded-2xl p-6 backdrop-blur-xl border transition-all ${
@@ -439,7 +463,7 @@ function QuestionCard({
           }`}>
             {formatTopic(question.topic)}
           </span>
-          {notes && (
+          {hasNotes && (
             <button
               onClick={() => setShowNotes(!showNotes)}
               className="px-3 py-1 text-xs font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full hover:bg-cyan-500/30 transition-colors"
@@ -450,8 +474,12 @@ function QuestionCard({
         </div>
       </div>
 
-      {showNotes && notes && (
-        <StudyNotesPanel notes={notes} onClose={() => setShowNotes(false)} />
+      {showNotes && (
+        <QuestionNotesPanel
+          notesText={notesText}
+          studyNote={notes}
+          onClose={() => setShowNotes(false)}
+        />
       )}
 
       <div className="space-y-3">
@@ -526,9 +554,45 @@ function StudyNotesPanel({ notes, onClose }: { notes: StudyNote; onClose: () => 
   );
 }
 
+function QuestionNotesPanel({
+  notesText,
+  studyNote,
+  onClose,
+}: {
+  notesText?: string;
+  studyNote?: StudyNote;
+  onClose: () => void;
+}) {
+  if (notesText) {
+    return (
+      <div className="mb-5 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl backdrop-blur-sm">
+        <div className="flex justify-between items-start mb-3">
+          <h3 className="font-semibold text-cyan-300">Notes</h3>
+          <button
+            onClick={onClose}
+            className="text-cyan-400 hover:text-cyan-300 transition-colors p-1"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <p className="text-sm text-white/60 whitespace-pre-line">{notesText}</p>
+      </div>
+    );
+  }
+
+  if (studyNote) {
+    return <StudyNotesPanel notes={studyNote} onClose={onClose} />;
+  }
+
+  return null;
+}
+
 function ResultsView({
   results,
-  onRetry,
+  onTryAgain,
+  onTryNewQuiz,
   onLogout,
   streakResult,
   streakStatus,
@@ -536,7 +600,8 @@ function ResultsView({
   subjectInfo,
 }: {
   results: SubmitResponse;
-  onRetry: () => void;
+  onTryAgain: () => void;
+  onTryNewQuiz: () => void;
   onLogout: () => void;
   streakResult: StreakResult | null;
   streakStatus: StreakStatus | null;
@@ -628,10 +693,16 @@ function ResultsView({
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <button
-            onClick={onRetry}
+            onClick={onTryAgain}
             className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-2xl hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105 active:scale-95"
           >
-            Try Again
+            Try Quiz Again
+          </button>
+          <button
+            onClick={onTryNewQuiz}
+            className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-2xl hover:bg-white/20 transition-all"
+          >
+            Try New Quiz
           </button>
           <Link
             href="/quiz/subjects"
@@ -660,7 +731,9 @@ function FeedbackCard({
 }) {
   const [showNotes, setShowNotes] = useState(false);
   const [expanded, setExpanded] = useState(!feedback.isCorrect);
+  const notesText = feedback.notes?.trim();
   const notes = studyNotes[feedback.topic];
+  const hasNotes = Boolean(notesText) || Boolean(notes);
 
   return (
     <div
@@ -731,7 +804,7 @@ function FeedbackCard({
             <span className="text-xs text-white/30 px-2 py-1 bg-white/5 rounded-full">
               {feedback.topic.replace(/_/g, ' ')}
             </span>
-            {notes && (
+            {hasNotes && (
               <button
                 onClick={() => setShowNotes(!showNotes)}
                 className="text-xs px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full hover:bg-cyan-500/30 transition-colors"
@@ -740,9 +813,13 @@ function FeedbackCard({
               </button>
             )}
           </div>
-          {showNotes && notes && (
+          {showNotes && (
             <div className="mt-3 ml-11">
-              <StudyNotesPanel notes={notes} onClose={() => setShowNotes(false)} />
+              <QuestionNotesPanel
+                notesText={notesText}
+                studyNote={notes}
+                onClose={() => setShowNotes(false)}
+              />
             </div>
           )}
         </div>

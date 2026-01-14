@@ -122,6 +122,14 @@ export async function getSession(): Promise<SessionPayload | null> {
  * Get session from a request (for API routes)
  */
 export async function getSessionFromRequest(request: Request): Promise<SessionPayload | null> {
+  const authHeader = request.headers.get('authorization');
+  if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
+    const token = authHeader.slice(7).trim();
+    if (token) {
+      return verifySessionToken(token);
+    }
+  }
+
   const cookieHeader = request.headers.get('cookie');
   if (!cookieHeader) {
     return null;

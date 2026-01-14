@@ -111,6 +111,15 @@ logs/
 # Temporary question bank files
 gcse_cs_daily5_questions*.json
 
+# Large datasets and separate app
+question_bank/
+mobile/
+!src/app/api/mobile/
+duplicate-stems-report.json
+AQA_GCSE_*.json
+GCSE_*.json
+gcse_biology_study_notes.json
+
 # Service account key file
 key.json
 
