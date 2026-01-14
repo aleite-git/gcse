@@ -45,3 +45,7 @@ __tests__
 *.spec.ts
 *.spec.tsx
 jest.config.js
+
+# Large data and separate apps (not needed for backend image)
+/question_bank/
+/mobile/

@@ -66,4 +66,6 @@ export const COLLECTIONS = {
   QUESTION_STATS: 'questionStats',
   USER_STREAKS: 'userStreaks',
   STREAK_ACTIVITIES: 'streakActivities',
+  MOBILE_USERS: 'mobileUsers',
+  USER_PROFILES: 'userProfiles',
 } as const;
