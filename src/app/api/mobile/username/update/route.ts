@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
       success: true,
       token,
       username: result.user.username,
-      remainingChanges: result.remainingChanges,
     });
   } catch (error) {
     if (error instanceof MobileAuthError) {

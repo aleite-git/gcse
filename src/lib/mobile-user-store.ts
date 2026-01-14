@@ -48,7 +48,7 @@ export function createFirestoreMobileUserStore(): MobileUserStore {
     },
     async updateUsername(
       userId: string,
-      update: { username: string; usernameLower: string; usernameChangeCount: number }
+      update: { username: string; usernameLower: string; usernameChangedAt: Date }
     ): Promise<void> {
       await collection.doc(userId).update(update);
     },

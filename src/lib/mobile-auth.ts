@@ -4,7 +4,7 @@ import type { ActiveSubject } from './active-subjects';
 export const USERNAME_MIN_LENGTH = 5;
 export const USERNAME_MAX_LENGTH = 15;
 export const USERNAME_REGEX = /^[A-Za-z0-9_]+$/;
-export const MAX_USERNAME_CHANGES = 3;
+export const USERNAME_CHANGE_COOLDOWN_MS = 30 * 24 * 60 * 60 * 1000;
 
 export interface MobileUserRecord {
   id: string;
@@ -13,7 +13,7 @@ export interface MobileUserRecord {
   passwordHash: string;
   username: string;
   usernameLower: string;
-  usernameChangeCount: number;
+  usernameChangedAt?: Date | { toDate: () => Date } | number | null;
   activeSubjects?: ActiveSubject[];
   onboardingComplete?: boolean;
   oauthProvider?: 'google' | 'apple';
@@ -27,7 +27,7 @@ export interface NewMobileUser {
   passwordHash: string;
   username: string;
   usernameLower: string;
-  usernameChangeCount: number;
+  usernameChangedAt: Date | null;
   activeSubjects: ActiveSubject[];
   onboardingComplete: boolean;
   oauthProvider?: 'google' | 'apple';
@@ -42,7 +42,7 @@ export interface MobileUserStore {
   createUser(user: NewMobileUser): Promise<MobileUserRecord>;
   updateUsername(
     userId: string,
-    update: { username: string; usernameLower: string; usernameChangeCount: number }
+    update: { username: string; usernameLower: string; usernameChangedAt: Date }
   ): Promise<void>;
   updateOAuth(
     userId: string,
@@ -121,9 +121,48 @@ export function validateUsernameFormat(username: unknown): string | null {
   return null;
 }
 
+export function validateUsernameRules(
+  username: unknown,
+  profanityFilter: ProfanityFilter
+): string | null {
+  const formatError = validateUsernameFormat(username);
+  if (formatError) {
+    return formatError;
+  }
+
+  const usernameValue = (username as string).trim();
+  if (profanityFilter.isProfane(usernameValue)) {
+    return 'Username is not allowed';
+  }
+
+  return null;
+}
+
+function resolveUsernameChangedAt(value: MobileUserRecord['usernameChangedAt']): Date | null {
+  if (!value) {
+    return null;
+  }
+
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (typeof value === 'number') {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  if (typeof value === 'object' && typeof value.toDate === 'function') {
+    return value.toDate();
+  }
+
+  return null;
+}
+
 export async function registerMobileUser(
   input: { email: unknown; password: unknown; username: unknown },
-  store: MobileUserStore
+  store: MobileUserStore,
+  profanityFilter: ProfanityFilter
 ): Promise<MobileUserRecord> {
   const emailError = validateEmailFormat(input.email);
   if (emailError) {
@@ -135,7 +174,7 @@ export async function registerMobileUser(
     throw new MobileAuthError(passwordError, 400);
   }
 
-  const usernameError = validateUsernameFormat(input.username);
+  const usernameError = validateUsernameRules(input.username, profanityFilter);
   if (usernameError) {
     throw new MobileAuthError(usernameError, 400);
   }
@@ -167,7 +206,7 @@ export async function registerMobileUser(
     passwordHash,
     username,
     usernameLower,
-    usernameChangeCount: 0,
+    usernameChangedAt: null,
     activeSubjects: [],
     onboardingComplete: false,
     createdAt: new Date(),
@@ -196,10 +235,6 @@ export async function loginMobileUser(
     const emailLower = normalizeEmail(emailValue);
     user = await store.getByEmail(emailLower);
   } else if (usernameValue.trim().length > 0) {
-    const usernameError = validateUsernameFormat(usernameValue);
-    if (usernameError) {
-      throw new MobileAuthError(usernameError, 400);
-    }
     const usernameLower = normalizeUsername(usernameValue);
     user = await store.getByUsername(usernameLower);
   } else {
@@ -251,7 +286,7 @@ export async function loginMobileOAuthUser(
     throw new MobileAuthError('Email is required', 400);
   }
 
-  const usernameError = validateUsernameFormat(input.username);
+  const usernameError = validateUsernameRules(input.username, profanityFilter);
   if (usernameError) {
     throw new MobileAuthError(usernameError, 400);
   }
@@ -280,7 +315,7 @@ export async function loginMobileOAuthUser(
     passwordHash,
     username: usernameValue,
     usernameLower,
-    usernameChangeCount: 0,
+    usernameChangedAt: null,
     activeSubjects: [],
     onboardingComplete: false,
     oauthProvider: profile.provider,
@@ -329,18 +364,15 @@ export async function updateMobileUsername(
   input: { currentUsername: string; newUsername: unknown },
   store: MobileUserStore,
   profanityFilter: ProfanityFilter
-): Promise<{ user: MobileUserRecord; remainingChanges: number }> {
-  const usernameError = validateUsernameFormat(input.newUsername);
+): Promise<{ user: MobileUserRecord }> {
+  const usernameError = validateUsernameRules(input.newUsername, profanityFilter);
   if (usernameError) {
     throw new MobileAuthError(usernameError, 400);
   }
 
   const newUsernameValue = input.newUsername as string;
-  if (profanityFilter.isProfane(newUsernameValue)) {
-    throw new MobileAuthError('Username is not allowed', 400);
-  }
-
-  const newUsernameLower = normalizeUsername(newUsernameValue);
+  const updatedUsername = newUsernameValue.trim();
+  const newUsernameLower = normalizeUsername(updatedUsername);
   const currentUsernameLower = normalizeUsername(input.currentUsername);
 
   if (newUsernameLower === currentUsernameLower) {
@@ -352,9 +384,12 @@ export async function updateMobileUsername(
     throw new MobileAuthError('Unauthorized', 401);
   }
 
-  const currentCount = user.usernameChangeCount ?? 0;
-  if (currentCount >= MAX_USERNAME_CHANGES) {
-    throw new MobileAuthError('Username change limit reached', 403);
+  const lastChangedAt = resolveUsernameChangedAt(user.usernameChangedAt ?? null);
+  if (lastChangedAt) {
+    const elapsed = Date.now() - lastChangedAt.getTime();
+    if (elapsed < USERNAME_CHANGE_COOLDOWN_MS) {
+      throw new MobileAuthError('Must wait 30 days before changing username again', 403);
+    }
   }
 
   const existing = await store.getByUsername(newUsernameLower);
@@ -362,12 +397,11 @@ export async function updateMobileUsername(
     throw new MobileAuthError('Username already in use', 409);
   }
 
-  const nextCount = currentCount + 1;
-  const updatedUsername = newUsernameValue.trim();
+  const usernameChangedAt = new Date();
   await store.updateUsername(user.id, {
     username: updatedUsername,
     usernameLower: newUsernameLower,
-    usernameChangeCount: nextCount,
+    usernameChangedAt,
   });
 
   return {
@@ -375,8 +409,7 @@ export async function updateMobileUsername(
       ...user,
       username: updatedUsername,
       usernameLower: newUsernameLower,
-      usernameChangeCount: nextCount,
+      usernameChangedAt,
     },
-    remainingChanges: Math.max(0, MAX_USERNAME_CHANGES - nextCount),
   };
 }

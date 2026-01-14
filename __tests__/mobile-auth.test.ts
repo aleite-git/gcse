@@ -18,7 +18,7 @@ function createInMemoryStore(seed: Array<{
   passwordHash: string;
   username: string;
   usernameLower: string;
-  usernameChangeCount: number;
+  usernameChangedAt?: Date | null;
   oauthProvider?: 'google' | 'apple';
   oauthSubject?: string;
   createdAt: Date;
@@ -36,7 +36,7 @@ function createInMemoryStore(seed: Array<{
       passwordHash: string;
       username: string;
       usernameLower: string;
-      usernameChangeCount: number;
+      usernameChangedAt: Date | null;
       oauthProvider?: 'google' | 'apple';
       oauthSubject?: string;
       createdAt: Date;
@@ -50,7 +50,7 @@ function createInMemoryStore(seed: Array<{
     },
     updateUsername: async (
       userId: string,
-      update: { username: string; usernameLower: string; usernameChangeCount: number }
+      update: { username: string; usernameLower: string; usernameChangedAt: Date }
     ) => {
       const index = users.findIndex((user) => user.id === userId);
       if (index >= 0) {
@@ -78,7 +78,8 @@ describe('mobile auth registration', () => {
     await expect(
       registerMobileUser(
         { email: 123, password: 'Password1', username: 'valid_user' },
-        store
+        store,
+        createProfanityFilter()
       )
     ).rejects.toMatchObject({
       message: 'Email is required',
@@ -92,7 +93,8 @@ describe('mobile auth registration', () => {
     await expect(
       registerMobileUser(
         { email: 'not-an-email', password: 'Password1', username: 'valid_user' },
-        store
+        store,
+        createProfanityFilter()
       )
     ).rejects.toMatchObject({
       message: 'Invalid email format',
@@ -106,7 +108,8 @@ describe('mobile auth registration', () => {
     await expect(
       registerMobileUser(
         { email: 'test@example.com', password: '   ', username: 'valid_user' },
-        store
+        store,
+        createProfanityFilter()
       )
     ).rejects.toMatchObject({
       message: 'Password is required',
@@ -120,7 +123,8 @@ describe('mobile auth registration', () => {
     await expect(
       registerMobileUser(
         { email: 'test@example.com', password: 'Password1', username: '' },
-        store
+        store,
+        createProfanityFilter()
       )
     ).rejects.toMatchObject({
       message: 'Username is required',
@@ -134,7 +138,8 @@ describe('mobile auth registration', () => {
     await expect(
       registerMobileUser(
         { email: 'test@example.com', password: 'Password1', username: 'abc' },
-        store
+        store,
+        createProfanityFilter()
       )
     ).rejects.toMatchObject({
       message: 'Username must be 5-15 characters',
@@ -148,10 +153,26 @@ describe('mobile auth registration', () => {
     await expect(
       registerMobileUser(
         { email: 'test@example.com', password: 'Password1', username: 'bad-name' },
-        store
+        store,
+        createProfanityFilter()
       )
     ).rejects.toMatchObject({
       message: 'Username can only contain letters, numbers, and underscores',
+      status: 400,
+    });
+  });
+
+  it('rejects profane usernames', async () => {
+    const { store } = createInMemoryStore();
+
+    await expect(
+      registerMobileUser(
+        { email: 'test@example.com', password: 'Password1', username: 'asshole' },
+        store,
+        createProfanityFilter()
+      )
+    ).rejects.toMatchObject({
+      message: 'Username is not allowed',
       status: 400,
     });
   });
@@ -166,7 +187,6 @@ describe('mobile auth registration', () => {
         passwordHash: existingHash,
         username: 'ExistingUser',
         usernameLower: 'existinguser',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
     ]);
@@ -174,7 +194,8 @@ describe('mobile auth registration', () => {
     await expect(
       registerMobileUser(
         { email: 'existing@example.com', password: 'Password1', username: 'new_user' },
-        store
+        store,
+        createProfanityFilter()
       )
     ).rejects.toMatchObject({
       message: 'Email already in use',
@@ -192,7 +213,6 @@ describe('mobile auth registration', () => {
         passwordHash: existingHash,
         username: 'ExistingUser',
         usernameLower: 'existinguser',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
     ]);
@@ -200,7 +220,8 @@ describe('mobile auth registration', () => {
     await expect(
       registerMobileUser(
         { email: 'new@example.com', password: 'Password1', username: 'ExistingUser' },
-        store
+        store,
+        createProfanityFilter()
       )
     ).rejects.toMatchObject({
       message: 'Username already in use',
@@ -213,14 +234,14 @@ describe('mobile auth registration', () => {
 
     const user = await registerMobileUser(
       { email: 'User@Example.com', password: 'Password1', username: 'Valid_User' },
-      store
+      store,
+      createProfanityFilter()
     );
 
     expect(user.email).toBe('User@Example.com');
     expect(user.emailLower).toBe('user@example.com');
     expect(user.username).toBe('Valid_User');
     expect(user.usernameLower).toBe('valid_user');
-    expect(user.usernameChangeCount).toBe(0);
     expect(user.createdAt).toBeInstanceOf(Date);
     expect(users).toHaveLength(1);
   });
@@ -255,7 +276,7 @@ describe('mobile auth login', () => {
     await expect(
       loginMobileUser({ email: 'missing@example.com', password: 'Password1' }, store)
     ).rejects.toMatchObject({
-      message: 'Invalid email or password',
+      message: 'Invalid username or password',
       status: 401,
     });
   });
@@ -270,7 +291,6 @@ describe('mobile auth login', () => {
         passwordHash: existingHash,
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
     ]);
@@ -278,7 +298,7 @@ describe('mobile auth login', () => {
     await expect(
       loginMobileUser({ email: 'user@example.com', password: 'WrongPassword' }, store)
     ).rejects.toMatchObject({
-      message: 'Invalid email or password',
+      message: 'Invalid username or password',
       status: 401,
     });
   });
@@ -293,7 +313,6 @@ describe('mobile auth login', () => {
         passwordHash,
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
     ]);
@@ -336,7 +355,6 @@ describe('mobile username availability', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'ExistingUser',
         usernameLower: 'existinguser',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
     ]);
@@ -384,7 +402,7 @@ describe('mobile username update', () => {
     });
   });
 
-  it('rejects update when change limit reached', async () => {
+  it('rejects update when within cooldown window', async () => {
     const { store } = createInMemoryStore([
       {
         id: 'user-1',
@@ -393,7 +411,7 @@ describe('mobile username update', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 3,
+        usernameChangedAt: new Date(),
         createdAt: new Date(),
       },
     ]);
@@ -406,7 +424,7 @@ describe('mobile username update', () => {
         filter
       )
     ).rejects.toMatchObject({
-      message: 'Username change limit reached',
+      message: 'Must wait 30 days before changing username again',
       status: 403,
     });
   });
@@ -420,7 +438,6 @@ describe('mobile username update', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
     ]);
@@ -447,7 +464,6 @@ describe('mobile username update', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
     ]);
@@ -474,7 +490,6 @@ describe('mobile username update', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
       {
@@ -484,7 +499,6 @@ describe('mobile username update', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'TakenUser',
         usernameLower: 'takenuser',
-        usernameChangeCount: 1,
         createdAt: new Date(),
       },
     ]);
@@ -502,7 +516,7 @@ describe('mobile username update', () => {
     });
   });
 
-  it('updates username and increments change count', async () => {
+  it('updates username when cooldown has elapsed', async () => {
     const { store, users } = createInMemoryStore([
       {
         id: 'user-1',
@@ -511,7 +525,7 @@ describe('mobile username update', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 1,
+        usernameChangedAt: new Date(Date.now() - 31 * 24 * 60 * 60 * 1000),
         createdAt: new Date(),
       },
     ]);
@@ -525,8 +539,6 @@ describe('mobile username update', () => {
 
     expect(result.user.username).toBe('NewUser');
     expect(result.user.usernameLower).toBe('newuser');
-    expect(result.user.usernameChangeCount).toBe(2);
-    expect(result.remainingChanges).toBe(1);
     expect(users[0].username).toBe('NewUser');
   });
 });
@@ -549,7 +561,6 @@ describe('mobile oauth login', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 0,
         oauthProvider: 'google',
         oauthSubject: 'subject-123',
         createdAt: new Date(),
@@ -575,7 +586,6 @@ describe('mobile oauth login', () => {
         passwordHash: await bcrypt.hash('Password1', 12),
         username: 'UserOne',
         usernameLower: 'userone',
-        usernameChangeCount: 0,
         createdAt: new Date(),
       },
     ]);

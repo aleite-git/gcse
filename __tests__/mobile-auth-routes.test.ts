@@ -79,7 +79,7 @@ function createMobileStoreMock(seed: Array<{ id?: string; data: Record<string, u
     },
     updateUsername: async (
       userId: string,
-      update: { username: string; usernameLower: string; usernameChangeCount: number }
+      update: { username: string; usernameLower: string; usernameChangedAt: Date }
     ) => {
       const index = records.findIndex((record) => record.id === userId);
       if (index >= 0) {
@@ -145,7 +145,6 @@ describe('mobile auth routes', () => {
           passwordHash,
           username: 'ExistingUser',
           usernameLower: 'existinguser',
-          usernameChangeCount: 0,
           createdAt: new Date(),
         },
       },
@@ -193,6 +192,28 @@ describe('mobile auth routes', () => {
     expect(createSessionToken).not.toHaveBeenCalled();
   });
 
+  it('returns 400 for profane username on registration', async () => {
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
+
+    const request = new Request('http://localhost/api/mobile/register', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email: 'user@example.com',
+        password: 'Password1',
+        username: 'asshole',
+      }),
+    }) as NextRequest;
+
+    const response = await registerPost(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(payload).toMatchObject({ error: 'Username is not allowed' });
+    expect(createSessionToken).not.toHaveBeenCalled();
+  });
+
   it('returns 409 for duplicate username (case-insensitive) on registration', async () => {
     const passwordHash = await bcrypt.hash('Password1', 12);
     const { store } = createMobileStoreMock([
@@ -203,7 +224,6 @@ describe('mobile auth routes', () => {
           passwordHash,
           username: 'ExistingUser',
           usernameLower: 'existinguser',
-          usernameChangeCount: 0,
           createdAt: new Date(),
         },
       },
@@ -263,7 +283,6 @@ describe('mobile auth routes', () => {
           passwordHash,
           username: 'UserOne',
           usernameLower: 'userone',
-          usernameChangeCount: 1,
           createdAt: new Date(),
         },
       },
@@ -302,7 +321,6 @@ describe('mobile auth routes', () => {
           passwordHash,
           username: 'UserOne',
           usernameLower: 'userone',
-          usernameChangeCount: 1,
           createdAt: new Date(),
         },
       },
@@ -341,7 +359,6 @@ describe('mobile auth routes', () => {
           passwordHash,
           username: 'UserOne',
           usernameLower: 'userone',
-          usernameChangeCount: 1,
           createdAt: new Date(),
         },
       },
@@ -433,7 +450,6 @@ describe('mobile auth routes', () => {
           passwordHash,
           username: 'UserOne',
           usernameLower: 'userone',
-          usernameChangeCount: 1,
           createdAt: new Date(),
         },
       },
@@ -455,11 +471,43 @@ describe('mobile auth routes', () => {
       success: true,
       token: 'token-123',
       username: 'NewUser',
-      remainingChanges: 1,
     });
     expect(createSessionToken).toHaveBeenCalledWith('NewUser', false);
     expect(records[0].data.usernameLower).toBe('newuser');
-    expect(records[0].data.usernameChangeCount).toBe(2);
+  });
+
+  it('returns 403 when username change is within cooldown', async () => {
+    const passwordHash = await bcrypt.hash('Password1', 12);
+    const { store } = createMobileStoreMock([
+      {
+        id: 'user-1',
+        data: {
+          email: 'user@example.com',
+          emailLower: 'user@example.com',
+          passwordHash,
+          username: 'UserOne',
+          usernameLower: 'userone',
+          usernameChangedAt: new Date(),
+          createdAt: new Date(),
+        },
+      },
+    ]);
+
+    createFirestoreMobileUserStore.mockReturnValue(store);
+
+    const request = new Request('http://localhost/api/mobile/username/update', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ username: 'NewUser' }),
+    }) as NextRequest;
+
+    const response = await updateUsernamePost(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(403);
+    expect(payload).toMatchObject({
+      error: 'Must wait 30 days before changing username again',
+    });
   });
 
   it('returns 401 when updating username without session', async () => {
@@ -506,7 +554,6 @@ describe('mobile auth routes', () => {
           passwordHash: await bcrypt.hash('Password1', 12),
           username: 'UserOne',
           usernameLower: 'userone',
-          usernameChangeCount: 0,
           createdAt: new Date(),
         },
       },
