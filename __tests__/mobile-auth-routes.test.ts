@@ -3,17 +3,14 @@ import bcrypt from 'bcryptjs';
 import type { NextRequest } from 'next/server';
 import { MobileAuthError } from '@/lib/mobile-auth';
 
-const getDb = jest.fn();
+const createFirestoreMobileUserStore = jest.fn();
 const createSessionToken = jest.fn();
 const getSessionFromRequest = jest.fn();
 const verifyGoogleIdToken = jest.fn();
 const verifyAppleIdToken = jest.fn();
 
-jest.unstable_mockModule('@/lib/firebase', () => ({
-  getDb,
-  COLLECTIONS: {
-    MOBILE_USERS: 'mobileUsers',
-  },
+jest.unstable_mockModule('@/lib/mobile-user-store', () => ({
+  createFirestoreMobileUserStore,
 }));
 
 jest.unstable_mockModule('@/lib/auth', () => ({
@@ -42,7 +39,7 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-  getDb.mockReset();
+  createFirestoreMobileUserStore.mockReset();
   createSessionToken.mockReset();
   getSessionFromRequest.mockReset();
   verifyGoogleIdToken.mockReset();
@@ -51,61 +48,68 @@ beforeEach(() => {
   getSessionFromRequest.mockResolvedValue({ label: 'UserOne', isAdmin: false, iat: 0, exp: 0 });
 });
 
-function createFirestoreMock(seed: Array<{ id?: string; data: Record<string, unknown> }> = []) {
+function createMobileStoreMock(seed: Array<{ id?: string; data: Record<string, unknown> }> = []) {
   const records = seed.map((record, index) => ({
     id: record.id ?? `seed-${index + 1}`,
     data: record.data,
   }));
 
-  const buildQuery = (filters: Array<{ field: string; value: unknown }>) => ({
-    where: (field: string, _op: string, value: unknown) =>
-      buildQuery([...filters, { field, value }]),
-    limit: (_limit: number) => ({
-      get: async () => {
-        const matches = records.filter((record) =>
-          filters.every((filter) => record.data[filter.field] === filter.value)
-        );
-        return {
-          empty: matches.length === 0,
-          docs: matches.map((record) => ({
-            id: record.id,
-            data: () => record.data,
-          })),
-        };
-      },
-    }),
-  });
+  const findBy = (predicate: (record: (typeof records)[number]) => boolean) =>
+    records.find(predicate) ?? null;
 
-  const collection = {
-    where: (field: string, _op: string, value: unknown) =>
-      buildQuery([{ field, value }]),
-    doc: (id: string) => ({
-      update: async (update: Record<string, unknown>) => {
-        const index = records.findIndex((record) => record.id === id);
-        if (index >= 0) {
-          records[index] = { ...records[index], data: { ...records[index].data, ...update } };
-        }
-      },
-    }),
-    add: async (data: Record<string, unknown>) => {
+  const store = {
+    getByEmail: async (emailLower: string) => {
+      const match = findBy((record) => record.data.emailLower === emailLower);
+      return match ? { id: match.id, ...(match.data as Record<string, unknown>) } : null;
+    },
+    getByUsername: async (usernameLower: string) => {
+      const match = findBy((record) => record.data.usernameLower === usernameLower);
+      return match ? { id: match.id, ...(match.data as Record<string, unknown>) } : null;
+    },
+    getByOAuth: async (provider: string, subject: string) => {
+      const match = findBy(
+        (record) => record.data.oauthProvider === provider && record.data.oauthSubject === subject
+      );
+      return match ? { id: match.id, ...(match.data as Record<string, unknown>) } : null;
+    },
+    createUser: async (data: Record<string, unknown>) => {
       const id = `user-${records.length + 1}`;
       records.push({ id, data });
-      return { id };
+      return { id, ...(data as Record<string, unknown>) };
+    },
+    updateUsername: async (
+      userId: string,
+      update: { username: string; usernameLower: string; usernameChangeCount: number }
+    ) => {
+      const index = records.findIndex((record) => record.id === userId);
+      if (index >= 0) {
+        records[index] = { ...records[index], data: { ...records[index].data, ...update } };
+      }
+    },
+    updateOAuth: async (
+      userId: string,
+      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string }
+    ) => {
+      const index = records.findIndex((record) => record.id === userId);
+      if (index >= 0) {
+        records[index] = { ...records[index], data: { ...records[index].data, ...update } };
+      }
+    },
+    updateProfile: async (userId: string, update: Record<string, unknown>) => {
+      const index = records.findIndex((record) => record.id === userId);
+      if (index >= 0) {
+        records[index] = { ...records[index], data: { ...records[index].data, ...update } };
+      }
     },
   };
 
-  return { collection, records };
+  return { store, records };
 }
 
 describe('mobile auth routes', () => {
   it('registers a user and returns a token', async () => {
-    const { collection, records } = createFirestoreMock();
-    getDb.mockReturnValue({
-      collection: (name: string) => {
-        expect(name).toBe('mobileUsers');
-        return collection;
-      },
-    });
+    const { store, records } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/register', {
       method: 'POST',
@@ -133,7 +137,7 @@ describe('mobile auth routes', () => {
 
   it('returns 409 for duplicate email on registration', async () => {
     const passwordHash = await bcrypt.hash('Password1', 12);
-    const { collection } = createFirestoreMock([
+    const { store } = createMobileStoreMock([
       {
         data: {
           email: 'existing@example.com',
@@ -147,9 +151,7 @@ describe('mobile auth routes', () => {
       },
     ]);
 
-    getDb.mockReturnValue({
-      collection: () => collection,
-    });
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/register', {
       method: 'POST',
@@ -169,10 +171,68 @@ describe('mobile auth routes', () => {
     expect(createSessionToken).not.toHaveBeenCalled();
   });
 
+  it('returns 400 for invalid username format on registration', async () => {
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
+
+    const request = new Request('http://localhost/api/mobile/register', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email: 'user@example.com',
+        password: 'Password1',
+        username: 'bad',
+      }),
+    }) as NextRequest;
+
+    const response = await registerPost(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(payload).toMatchObject({ error: 'Username must be 5-15 characters' });
+    expect(createSessionToken).not.toHaveBeenCalled();
+  });
+
+  it('returns 409 for duplicate username (case-insensitive) on registration', async () => {
+    const passwordHash = await bcrypt.hash('Password1', 12);
+    const { store } = createMobileStoreMock([
+      {
+        data: {
+          email: 'existing@example.com',
+          emailLower: 'existing@example.com',
+          passwordHash,
+          username: 'ExistingUser',
+          usernameLower: 'existinguser',
+          usernameChangeCount: 0,
+          createdAt: new Date(),
+        },
+      },
+    ]);
+
+    createFirestoreMobileUserStore.mockReturnValue(store);
+
+    const request = new Request('http://localhost/api/mobile/register', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email: 'new@example.com',
+        password: 'Password1',
+        username: 'EXISTINGUSER',
+      }),
+    }) as NextRequest;
+
+    const response = await registerPost(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(409);
+    expect(payload).toMatchObject({ error: 'Username already in use' });
+    expect(createSessionToken).not.toHaveBeenCalled();
+  });
+
   it('returns 500 when registration token creation fails', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    const { collection } = createFirestoreMock();
-    getDb.mockReturnValue({ collection: () => collection });
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
     createSessionToken.mockRejectedValueOnce(new Error('boom'));
 
     const request = new Request('http://localhost/api/mobile/register', {
@@ -195,7 +255,7 @@ describe('mobile auth routes', () => {
 
   it('logs in a user and returns a token', async () => {
     const passwordHash = await bcrypt.hash('Password1', 12);
-    const { collection } = createFirestoreMock([
+    const { store } = createMobileStoreMock([
       {
         data: {
           email: 'user@example.com',
@@ -209,7 +269,7 @@ describe('mobile auth routes', () => {
       },
     ]);
 
-    getDb.mockReturnValue({ collection: () => collection });
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/login', {
       method: 'POST',
@@ -234,7 +294,7 @@ describe('mobile auth routes', () => {
 
   it('logs in a user with username and returns a token', async () => {
     const passwordHash = await bcrypt.hash('Password1', 12);
-    const { collection } = createFirestoreMock([
+    const { store } = createMobileStoreMock([
       {
         data: {
           email: 'user@example.com',
@@ -248,7 +308,7 @@ describe('mobile auth routes', () => {
       },
     ]);
 
-    getDb.mockReturnValue({ collection: () => collection });
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/login', {
       method: 'POST',
@@ -273,7 +333,7 @@ describe('mobile auth routes', () => {
 
   it('returns 401 for invalid password on login', async () => {
     const passwordHash = await bcrypt.hash('Password1', 12);
-    const { collection } = createFirestoreMock([
+    const { store } = createMobileStoreMock([
       {
         data: {
           email: 'user@example.com',
@@ -287,7 +347,7 @@ describe('mobile auth routes', () => {
       },
     ]);
 
-    getDb.mockReturnValue({ collection: () => collection });
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/login', {
       method: 'POST',
@@ -307,8 +367,8 @@ describe('mobile auth routes', () => {
   });
 
   it('returns 401 for unknown user on login', async () => {
-    const { collection } = createFirestoreMock();
-    getDb.mockReturnValue({ collection: () => collection });
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/login', {
       method: 'POST',
@@ -329,7 +389,7 @@ describe('mobile auth routes', () => {
   it('returns 500 when login token creation fails', async () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     const passwordHash = await bcrypt.hash('Password1', 12);
-    const { collection } = createFirestoreMock([
+    const { store } = createMobileStoreMock([
       {
         data: {
           email: 'user@example.com',
@@ -342,7 +402,7 @@ describe('mobile auth routes', () => {
       },
     ]);
 
-    getDb.mockReturnValue({ collection: () => collection });
+    createFirestoreMobileUserStore.mockReturnValue(store);
     createSessionToken.mockRejectedValueOnce(new Error('boom'));
 
     const request = new Request('http://localhost/api/mobile/login', {
@@ -364,7 +424,7 @@ describe('mobile auth routes', () => {
 
   it('updates username and returns a new token', async () => {
     const passwordHash = await bcrypt.hash('Password1', 12);
-    const { collection, records } = createFirestoreMock([
+    const { store, records } = createMobileStoreMock([
       {
         id: 'user-1',
         data: {
@@ -379,7 +439,7 @@ describe('mobile auth routes', () => {
       },
     ]);
 
-    getDb.mockReturnValue({ collection: () => collection });
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/username/update', {
       method: 'POST',
@@ -404,8 +464,8 @@ describe('mobile auth routes', () => {
 
   it('returns 401 when updating username without session', async () => {
     getSessionFromRequest.mockResolvedValueOnce(null);
-    const { collection } = createFirestoreMock();
-    getDb.mockReturnValue({ collection: () => collection });
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/username/update', {
       method: 'POST',
@@ -421,8 +481,8 @@ describe('mobile auth routes', () => {
   });
 
   it('returns 400 for invalid usernames on update', async () => {
-    const { collection } = createFirestoreMock();
-    getDb.mockReturnValue({ collection: () => collection });
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request('http://localhost/api/mobile/username/update', {
       method: 'POST',
@@ -438,7 +498,7 @@ describe('mobile auth routes', () => {
   });
 
   it('checks username availability', async () => {
-    const { collection } = createFirestoreMock([
+    const { store } = createMobileStoreMock([
       {
         data: {
           email: 'user@example.com',
@@ -452,7 +512,7 @@ describe('mobile auth routes', () => {
       },
     ]);
 
-    getDb.mockReturnValue({ collection: () => collection });
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request(
       'http://localhost/api/mobile/username/check?username=UserOne',
@@ -470,8 +530,8 @@ describe('mobile auth routes', () => {
   });
 
   it('returns 400 for invalid username check', async () => {
-    const { collection } = createFirestoreMock();
-    getDb.mockReturnValue({ collection: () => collection });
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
 
     const request = new Request(
       'http://localhost/api/mobile/username/check?username=bad',
@@ -486,8 +546,8 @@ describe('mobile auth routes', () => {
   });
 
   it('logs in with Google OAuth', async () => {
-    const { collection } = createFirestoreMock();
-    getDb.mockReturnValue({ collection: () => collection });
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
     verifyGoogleIdToken.mockResolvedValue({
       provider: 'google',
       subject: 'subject-123',
@@ -548,8 +608,8 @@ describe('mobile auth routes', () => {
   });
 
   it('logs in with Apple OAuth', async () => {
-    const { collection } = createFirestoreMock();
-    getDb.mockReturnValue({ collection: () => collection });
+    const { store } = createMobileStoreMock();
+    createFirestoreMobileUserStore.mockReturnValue(store);
     verifyAppleIdToken.mockResolvedValue({
       provider: 'apple',
       subject: 'subject-apple',

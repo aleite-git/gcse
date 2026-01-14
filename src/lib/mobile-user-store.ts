@@ -1,4 +1,4 @@
-import { getDb, COLLECTIONS } from './firebase';
+import { getDb, COLLECTIONS } from '@/lib/firebase';
 import { MobileUserRecord, MobileUserStore, NewMobileUser } from './mobile-auth';
 import type { ActiveSubject } from './active-subjects';
 
