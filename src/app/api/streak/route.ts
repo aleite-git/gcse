@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
-import { getStreakStatus, recordActivity, useFreeze, updateTimezone } from '@/lib/streak';
-import { Subject, SUBJECTS } from '@/types';
+import {
+  getStreakStatus,
+  recordActivity,
+  useFreeze,
+  updateTimezone,
+  OVERALL_STREAK_SUBJECT,
+} from '@/lib/streak';
+import { Subject, SUBJECTS, StreakSubject } from '@/types';
 
 // GET /api/streak - Get current streak status for a subject or all subjects
 export async function GET(request: NextRequest) {
@@ -18,25 +24,28 @@ export async function GET(request: NextRequest) {
     // Get timezone and subject from query params
     const { searchParams } = new URL(request.url);
     const timezone = searchParams.get('timezone') || 'Europe/Lisbon';
-    const subject = searchParams.get('subject') as Subject | null;
+    const subject = searchParams.get('subject') as StreakSubject | null;
 
     // If subject is specified, return streak for that subject
     if (subject) {
-      if (!SUBJECTS[subject]) {
+      if (subject !== OVERALL_STREAK_SUBJECT && !SUBJECTS[subject as Subject]) {
         return NextResponse.json(
           { error: 'Invalid subject' },
           { status: 400 }
         );
       }
 
-      // Record login activity for this subject
-      await recordActivity(session.label, subject, 'login', timezone);
+      // Record login activity for subject streaks only
+      if (subject !== OVERALL_STREAK_SUBJECT) {
+        await recordActivity(session.label, subject, 'login', timezone);
+      }
       const status = await getStreakStatus(session.label, subject, timezone);
 
       return NextResponse.json(status);
     }
 
     // If no subject specified, return streaks for all subjects
+    const overallStreak = await getStreakStatus(session.label, OVERALL_STREAK_SUBJECT, timezone);
     const allSubjects = Object.keys(SUBJECTS) as Subject[];
     const streaks: Record<Subject, Awaited<ReturnType<typeof getStreakStatus>>> = {} as Record<
       Subject,
@@ -47,7 +56,7 @@ export async function GET(request: NextRequest) {
       streaks[subj] = await getStreakStatus(session.label, subj, timezone);
     }
 
-    return NextResponse.json({ streaks });
+    return NextResponse.json({ overallStreak, streaks });
   } catch (error) {
     console.error('Error getting streak status:', error);
     return NextResponse.json(
@@ -73,8 +82,17 @@ export async function POST(request: NextRequest) {
     const { action, subject, timezone } = body;
 
     // Validate subject for actions that require it
-    if (action === 'use_freeze' || action === 'update_timezone') {
-      if (!subject || !SUBJECTS[subject as Subject]) {
+    if (action === 'use_freeze') {
+      if (subject !== OVERALL_STREAK_SUBJECT) {
+        return NextResponse.json(
+          { error: 'Overall streak is required' },
+          { status: 400 }
+        );
+      }
+    }
+
+    if (action === 'update_timezone') {
+      if (!subject || (subject !== OVERALL_STREAK_SUBJECT && !SUBJECTS[subject as Subject])) {
         return NextResponse.json(
           { error: 'Valid subject is required' },
           { status: 400 }

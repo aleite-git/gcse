@@ -195,10 +195,12 @@ export interface QuestionStats {
   lastAttemptedAt: Date;
 }
 
+export type StreakSubject = Subject | 'overall';
+
 // Streak system types
 export interface UserStreak {
   userLabel: string;
-  subject: Subject;
+  subject: StreakSubject;
   currentStreak: number;
   longestStreak: number;
   lastActivityDate: string; // YYYY-MM-DD in user's timezone
@@ -212,7 +214,7 @@ export interface UserStreak {
 
 export interface StreakActivity {
   userLabel: string;
-  subject: Subject;
+  subject: StreakSubject;
   date: string; // YYYY-MM-DD
   activityType: 'quiz_submit' | 'login';
   createdAt: Date;

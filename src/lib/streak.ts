@@ -1,9 +1,14 @@
 import { getDb, COLLECTIONS } from './firebase';
-import { UserStreak, StreakStatus, Subject } from '@/types';
+import { UserStreak, StreakStatus, StreakSubject } from '@/types';
 
 // Configuration
 const MAX_FREEZES = 2; // Maximum freeze days a user can hold
 const FREEZE_EARN_INTERVAL = 5; // Earn 1 freeze every N consecutive streak days
+export const OVERALL_STREAK_SUBJECT: StreakSubject = 'overall';
+
+function isOverallSubject(subject: StreakSubject): subject is 'overall' {
+  return subject === OVERALL_STREAK_SUBJECT;
+}
 
 /**
  * Get today's date in the user's timezone (YYYY-MM-DD)
@@ -37,7 +42,7 @@ function daysBetween(date1: string, date2: string): number {
  */
 export async function getOrCreateUserStreak(
   userLabel: string,
-  subject: Subject,
+  subject: StreakSubject,
   timezone: string = 'Europe/Lisbon'
 ): Promise<UserStreak> {
   const db = getDb();
@@ -47,6 +52,14 @@ export async function getOrCreateUserStreak(
 
   if (doc.exists) {
     const data = doc.data()!;
+    const updatedAtValue = data.updatedAt;
+    const updatedAt =
+      updatedAtValue && typeof updatedAtValue.toDate === 'function'
+        ? updatedAtValue.toDate()
+        : updatedAtValue instanceof Date
+          ? updatedAtValue
+          : new Date();
+
     return {
       userLabel: data.userLabel,
       subject: data.subject,
@@ -58,7 +71,7 @@ export async function getOrCreateUserStreak(
       timezone: data.timezone || timezone,
       streakStartDate: data.streakStartDate || '',
       lastFreezeEarnedAt: data.lastFreezeEarnedAt || 0,
-      updatedAt: data.updatedAt?.toDate() || new Date(),
+      updatedAt,
     };
   }
 
@@ -87,9 +100,14 @@ export async function getOrCreateUserStreak(
  */
 export async function checkAndApplyFreeze(
   userLabel: string,
-  subject: Subject,
+  subject: StreakSubject,
   timezone: string
 ): Promise<{ streak: UserStreak; frozeApplied: boolean; missedDays: number }> {
+  if (!isOverallSubject(subject)) {
+    const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
+    return { streak, frozeApplied: false, missedDays: 0 };
+  }
+
   const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
   const today = getTodayInTimezone(timezone);
 
@@ -148,13 +166,14 @@ export async function checkAndApplyFreeze(
  */
 export async function recordActivity(
   userLabel: string,
-  subject: Subject,
+  subject: StreakSubject,
   activityType: 'quiz_submit' | 'login',
   timezone: string = 'Europe/Lisbon'
 ): Promise<{ streak: UserStreak; isNewDay: boolean; freezeEarned: boolean }> {
   const db = getDb();
   const today = getTodayInTimezone(timezone);
   const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
+  const overallSubject = isOverallSubject(subject);
 
   // Check if we already had activity today
   if (streak.lastActivityDate === today) {
@@ -174,8 +193,8 @@ export async function recordActivity(
   let newStreak = streak.currentStreak;
   let newStreakStartDate = streak.streakStartDate;
   let freezeEarned = false;
-  let newFreezeDays = streak.freezeDays;
-  let lastFreezeEarnedAt = streak.lastFreezeEarnedAt;
+  let newFreezeDays = overallSubject ? streak.freezeDays : 0;
+  let lastFreezeEarnedAt = overallSubject ? streak.lastFreezeEarnedAt : 0;
 
   const yesterday = getYesterdayInTimezone(timezone);
 
@@ -192,22 +211,28 @@ export async function recordActivity(
     const missedDays = daysBetween(streak.lastActivityDate, today) - 1;
 
     if (missedDays > 0) {
-      // Check if we have freeze days to cover
-      if (streak.freezeDays >= missedDays) {
-        // Use freeze days to cover the gap
-        newFreezeDays = streak.freezeDays - missedDays;
-        newStreak = streak.currentStreak + 1; // Continue streak
-      } else if (streak.freezeDays > 0) {
-        // Partial coverage - use all freezes but still reset
-        newFreezeDays = 0;
-        newStreak = 1;
-        newStreakStartDate = today;
-        lastFreezeEarnedAt = 0;
+      if (overallSubject) {
+        // Check if we have freeze days to cover
+        if (streak.freezeDays >= missedDays) {
+          // Use freeze days to cover the gap
+          newFreezeDays = streak.freezeDays - missedDays;
+          newStreak = streak.currentStreak + 1; // Continue streak
+        } else if (streak.freezeDays > 0) {
+          // Partial coverage - use all freezes but still reset
+          newFreezeDays = 0;
+          newStreak = 1;
+          newStreakStartDate = today;
+          lastFreezeEarnedAt = 0;
+        } else {
+          // No freezes - reset streak
+          newStreak = 1;
+          newStreakStartDate = today;
+          lastFreezeEarnedAt = 0;
+        }
       } else {
-        // No freezes - reset streak
+        // No freezes for non-overall streaks
         newStreak = 1;
         newStreakStartDate = today;
-        lastFreezeEarnedAt = 0;
       }
     } else {
       // Same day (shouldn't happen due to earlier check) or future day (shouldn't happen)
@@ -217,7 +242,12 @@ export async function recordActivity(
 
   // Check if user earned a new freeze day
   // Earn freeze every FREEZE_EARN_INTERVAL days, capped at MAX_FREEZES
-  if (newStreak > 0 && newStreak % FREEZE_EARN_INTERVAL === 0 && newStreak > lastFreezeEarnedAt) {
+  if (
+    overallSubject &&
+    newStreak > 0 &&
+    newStreak % FREEZE_EARN_INTERVAL === 0 &&
+    newStreak > lastFreezeEarnedAt
+  ) {
     if (newFreezeDays < MAX_FREEZES) {
       newFreezeDays++;
       freezeEarned = true;
@@ -236,7 +266,7 @@ export async function recordActivity(
     longestStreak: newLongestStreak,
     lastActivityDate: today,
     freezeDays: newFreezeDays,
-    freezeDaysUsed: streak.freezeDaysUsed + (streak.freezeDays - newFreezeDays),
+    freezeDaysUsed: overallSubject ? streak.freezeDaysUsed + (streak.freezeDays - newFreezeDays) : 0,
     streakStartDate: newStreakStartDate,
     lastFreezeEarnedAt,
     updatedAt: new Date(),
@@ -251,9 +281,14 @@ export async function recordActivity(
  */
 export async function useFreeze(
   userLabel: string,
-  subject: Subject,
+  subject: StreakSubject,
   timezone: string = 'Europe/Lisbon'
 ): Promise<{ success: boolean; message: string; streak: UserStreak }> {
+  if (!isOverallSubject(subject)) {
+    const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
+    return { success: false, message: 'Freeze applies to overall streak only', streak };
+  }
+
   const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
   const today = getTodayInTimezone(timezone);
 
@@ -300,16 +335,18 @@ export async function useFreeze(
  */
 export async function getStreakStatus(
   userLabel: string,
-  subject: Subject,
+  subject: StreakSubject,
   timezone: string = 'Europe/Lisbon'
 ): Promise<StreakStatus> {
   const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
+  const overallSubject = isOverallSubject(subject);
   const today = getTodayInTimezone(timezone);
   const yesterday = getYesterdayInTimezone(timezone);
 
   let streakActive = false;
   let daysUntilStreakLoss = 0;
   let frozeToday = false;
+  const effectiveFreezeDays = overallSubject ? streak.freezeDays : 0;
 
   if (!streak.lastActivityDate) {
     // No activity yet
@@ -327,7 +364,7 @@ export async function getStreakStatus(
     // Missed at least one day
     const missedDays = daysBetween(streak.lastActivityDate, today) - 1;
 
-    if (missedDays <= streak.freezeDays) {
+    if (missedDays <= effectiveFreezeDays) {
       // Can be covered by freezes
       streakActive = true;
       daysUntilStreakLoss = 0;
@@ -340,8 +377,8 @@ export async function getStreakStatus(
 
   return {
     currentStreak: streak.currentStreak,
-    freezeDays: streak.freezeDays,
-    maxFreezes: MAX_FREEZES,
+    freezeDays: effectiveFreezeDays,
+    maxFreezes: overallSubject ? MAX_FREEZES : 0,
     streakActive,
     lastActivityDate: streak.lastActivityDate || null,
     daysUntilStreakLoss,
@@ -354,7 +391,7 @@ export async function getStreakStatus(
  */
 export async function updateTimezone(
   userLabel: string,
-  subject: Subject,
+  subject: StreakSubject,
   timezone: string
 ): Promise<void> {
   const db = getDb();

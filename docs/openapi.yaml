@@ -289,6 +289,80 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /api/streak:
+    get:
+      summary: Get streak status for a subject or overall + all subjects
+      parameters:
+        - in: query
+          name: subject
+          required: false
+          schema:
+            $ref: '#/components/schemas/StreakSubject'
+        - in: query
+          name: timezone
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Streak status response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/StreakStatus'
+                  - $ref: '#/components/schemas/StreaksResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Streak actions (use freeze, update timezone)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StreakActionRequest'
+      responses:
+        '200':
+          description: Action result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreakActionResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/mobile/oauth/google:
     post:
       summary: Login or register with Google OAuth
@@ -544,3 +618,77 @@ components:
         - Biology
         - Chemistry
         - Computer Science
+    StreakSubject:
+      type: string
+      enum:
+        - overall
+        - computer-science
+        - biology
+        - chemistry
+    StreakStatus:
+      type: object
+      required:
+        - currentStreak
+        - freezeDays
+        - maxFreezes
+        - streakActive
+        - daysUntilStreakLoss
+        - frozeToday
+      properties:
+        currentStreak:
+          type: integer
+        freezeDays:
+          type: integer
+        maxFreezes:
+          type: integer
+        streakActive:
+          type: boolean
+        lastActivityDate:
+          type: string
+          nullable: true
+        daysUntilStreakLoss:
+          type: integer
+        frozeToday:
+          type: boolean
+    StreaksResponse:
+      type: object
+      required:
+        - overallStreak
+        - streaks
+      properties:
+        overallStreak:
+          $ref: '#/components/schemas/StreakStatus'
+        streaks:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/StreakStatus'
+    StreakActionRequest:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum:
+            - use_freeze
+            - update_timezone
+        subject:
+          $ref: '#/components/schemas/StreakSubject'
+        timezone:
+          type: string
+    StreakActionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        streak:
+          type: object
+          properties:
+            currentStreak:
+              type: integer
+            freezeDays:
+              type: integer
+        status:
+          $ref: '#/components/schemas/StreakStatus'

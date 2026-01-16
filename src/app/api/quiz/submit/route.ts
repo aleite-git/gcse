@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { submitQuizAttempt } from '@/lib/quiz';
-import { recordActivity, getStreakStatus } from '@/lib/streak';
+import { recordActivity, OVERALL_STREAK_SUBJECT } from '@/lib/streak';
 import { SubmitRequest, SubmitResponse, QuestionFeedback, SUBJECTS } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -95,10 +95,16 @@ export async function POST(request: NextRequest) {
       'quiz_submit',
       timezone
     );
-    const streakStatus = await getStreakStatus(session.label, subject, timezone);
+    const { streak: overallStreak, freezeEarned: overallFreezeEarned } = await recordActivity(
+      session.label,
+      OVERALL_STREAK_SUBJECT,
+      'quiz_submit',
+      timezone
+    );
 
     const response: SubmitResponse & {
       streak: { currentStreak: number; freezeDays: number; freezeEarned: boolean };
+      overallStreak: { currentStreak: number; freezeDays: number; freezeEarned: boolean };
     } = {
       attemptId: attempt.id,
       score: attempt.score,
@@ -108,6 +114,11 @@ export async function POST(request: NextRequest) {
         currentStreak: updatedStreak.currentStreak,
         freezeDays: updatedStreak.freezeDays,
         freezeEarned,
+      },
+      overallStreak: {
+        currentStreak: overallStreak.currentStreak,
+        freezeDays: overallStreak.freezeDays,
+        freezeEarned: overallFreezeEarned,
       },
     };
 
