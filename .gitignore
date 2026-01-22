@@ -110,6 +110,10 @@ logs/
 
 # Temporary question bank files
 gcse_cs_daily5_questions*.json
+biology_all_questions*.json
+gemini_*.json
+gemini_all.json
+21Jan-gcse_biology_200_gold_questions.json
 
 # Large datasets and separate app
 question_bank/
