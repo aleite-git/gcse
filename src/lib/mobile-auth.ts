@@ -354,6 +354,12 @@ export async function loginMobileOAuthUser(
     onboardingComplete: false,
     oauthProvider: profile.provider,
     oauthSubject: profile.subject,
+    // New OAuth users start as free until a purchase is verified.
+    subscriptionStart: null,
+    subscriptionExpiry: null,
+    graceUntil: null,
+    subscriptionProvider: null,
+    adminOverride: false,
     deletionRequestedAt: null,
     deletionScheduledFor: null,
     deletionCancelledAt: null,
