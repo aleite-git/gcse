@@ -20,13 +20,35 @@ function createFirestoreMock(seed: Record<string, StreakDoc> = {}) {
 
   const collection = (name: string) => {
     if (name === 'userStreaks') {
+      const where = (field: string, _op: string, value: unknown) => ({
+        get: async () => {
+          const matches = Array.from(userStreaks.entries())
+            .filter(([, data]) => data?.[field] === value)
+            .map(([id, data]) => ({
+              id,
+              data: () => data,
+            }));
+          return {
+            forEach: (callback: (doc: { id: string; data: () => StreakDoc }) => void) => {
+              matches.forEach(callback);
+            },
+          };
+        },
+      });
+
       return {
+        where,
         doc: (id: string) => ({
           get: async () => ({
             exists: userStreaks.has(id),
             data: () => userStreaks.get(id),
           }),
-          set: async (data: StreakDoc) => {
+          set: async (data: StreakDoc, options?: { merge?: boolean }) => {
+            if (options?.merge) {
+              const current = userStreaks.get(id) || {};
+              userStreaks.set(id, { ...current, ...data });
+              return;
+            }
             userStreaks.set(id, data);
           },
           update: async (data: StreakDoc) => {
@@ -95,12 +117,25 @@ describe('recordActivity', () => {
         currentStreak: 3,
         longestStreak: 3,
         lastActivityDate: '2026-01-12',
-        freezeDays: 2,
+        freezeDays: 1,
         freezeDaysUsed: 0,
         timezone: 'Europe/Lisbon',
         streakStartDate: '2026-01-10',
         lastFreezeEarnedAt: 0,
         updatedAt: { toDate: () => new Date('2026-01-12T12:00:00Z') },
+      },
+      'user-biology': {
+        userLabel: 'user',
+        subject: 'biology',
+        currentStreak: 5,
+        longestStreak: 5,
+        lastActivityDate: '2026-01-13',
+        freezeDays: 0,
+        freezeDaysUsed: 0,
+        timezone: 'Europe/Lisbon',
+        streakStartDate: '2026-01-09',
+        lastFreezeEarnedAt: 0,
+        updatedAt: { toDate: () => new Date('2026-01-13T12:00:00Z') },
       },
     });
 
@@ -115,8 +150,8 @@ describe('recordActivity', () => {
 
     expect(result.freezeEarned).toBe(false);
     expect(result.streak.currentStreak).toBe(4);
-    expect(result.streak.freezeDays).toBe(1);
+    expect(result.streak.freezeDays).toBe(0);
     expect(result.streak.lastActivityDate).toBe('2026-01-14');
-    expect(userStreaks.get('user-overall')?.freezeDays).toBe(1);
+    expect(userStreaks.get('user-overall')?.freezeDays).toBe(0);
   });
 });

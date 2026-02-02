@@ -53,6 +53,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Premium required for multiple subjects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Unauthorized
           content:
@@ -91,6 +97,12 @@ paths:
                 $ref: '#/components/schemas/ProfileResponse'
         '400':
           description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Premium required for multiple subjects
           content:
             application/json:
               schema:
@@ -279,6 +291,227 @@ paths:
                     error: Must wait 30 days before changing username again
         '409':
           description: Username already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/mobile/account/delete/request:
+    post:
+      summary: Request account deletion (email/password only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Deletion request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletionRequestResponse'
+        '400':
+          description: Validation error or not supported for OAuth accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Deletion already scheduled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/mobile/account/delete/confirm:
+    post:
+      summary: Confirm account deletion (email/password only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeletionConfirmRequest'
+      responses:
+        '200':
+          description: Deletion confirmed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletionConfirmResponse'
+        '400':
+          description: Validation error or invalid code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Deletion already confirmed or cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: Code expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many attempts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/mobile/account/delete/cancel/request:
+    post:
+      summary: Request cancellation of scheduled deletion (email/password only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Cancellation request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletionRequestResponse'
+        '400':
+          description: Validation error or not supported for OAuth accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No pending deletion to cancel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/mobile/account/delete/cancel/confirm:
+    post:
+      summary: Confirm deletion cancellation (email/password only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeletionConfirmRequest'
+      responses:
+        '200':
+          description: Cancellation confirmed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletionConfirmResponse'
+        '400':
+          description: Validation error or invalid code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Cancellation already confirmed or already cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '410':
+          description: Code expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too many attempts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/admin/account-deletion/run:
+    post:
+      summary: Run account deletion job (cron)
+      parameters:
+        - in: header
+          name: x-cron-secret
+          required: true
+          schema:
+            type: string
+          description: Shared secret for Cloud Scheduler.
+      responses:
+        '200':
+          description: Job run summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletionJobResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -566,6 +799,50 @@ components:
           type: string
         username:
           type: string
+    DeletionRequestResponse:
+      type: object
+      required:
+        - requestId
+        - expiresAt
+      properties:
+        requestId:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+    DeletionConfirmRequest:
+      type: object
+      required:
+        - requestId
+        - code
+      properties:
+        requestId:
+          type: string
+        code:
+          type: string
+          minLength: 6
+          maxLength: 6
+          pattern: '^[0-9]{6}$'
+    DeletionConfirmResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+    DeletionJobResponse:
+      type: object
+      required:
+        - processed
+        - deleted
+        - errors
+      properties:
+        processed:
+          type: integer
+        deleted:
+          type: integer
+        errors:
+          type: integer
     ErrorResponse:
       type: object
       required:
@@ -612,12 +889,44 @@ components:
             $ref: '#/components/schemas/ActiveSubject'
         onboardingComplete:
           type: boolean
+        entitlement:
+          $ref: '#/components/schemas/Entitlement'
+        subscriptionStatus:
+          $ref: '#/components/schemas/SubscriptionStatus'
+        subscriptionStart:
+          type: string
+          format: date-time
+          nullable: true
+        subscriptionExpiry:
+          type: string
+          format: date-time
+          nullable: true
+        graceUntil:
+          type: string
+          format: date-time
+          nullable: true
+        subscriptionProvider:
+          type: string
+          nullable: true
+        adminOverride:
+          type: boolean
     ActiveSubject:
       type: string
       enum:
         - Biology
         - Chemistry
         - Computer Science
+    Entitlement:
+      type: string
+      enum:
+        - premium
+        - free
+    SubscriptionStatus:
+      type: string
+      enum:
+        - active
+        - grace
+        - expired
     StreakSubject:
       type: string
       enum:

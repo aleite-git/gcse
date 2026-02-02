@@ -3,12 +3,30 @@ import { getSessionFromRequest } from '@/lib/auth';
 import { createFirestoreMobileUserStore } from '@/lib/mobile-user-store';
 import { validateActiveSubjects } from '@/lib/active-subjects';
 import { createUserProfileStore } from '@/lib/user-profile-store';
+import { getSubscriptionSummary, isPremiumUser } from '@/lib/subscription';
 
-function toProfileResponse(user: { id: string; activeSubjects: string[]; onboardingComplete: boolean }) {
+function toProfileResponse(user: {
+  id: string;
+  activeSubjects: string[];
+  onboardingComplete: boolean;
+  subscriptionStart?: Date | { toDate: () => Date } | number | null;
+  subscriptionExpiry?: Date | { toDate: () => Date } | number | null;
+  graceUntil?: Date | { toDate: () => Date } | number | null;
+  subscriptionProvider?: string | null;
+  adminOverride?: boolean | null;
+}) {
+  const subscription = getSubscriptionSummary(user);
   return {
     id: user.id,
     activeSubjects: user.activeSubjects,
     onboardingComplete: user.onboardingComplete,
+    entitlement: subscription.entitlement,
+    subscriptionStatus: subscription.subscriptionStatus,
+    subscriptionStart: subscription.subscriptionStart,
+    subscriptionExpiry: subscription.subscriptionExpiry,
+    graceUntil: subscription.graceUntil,
+    subscriptionProvider: subscription.subscriptionProvider,
+    adminOverride: subscription.adminOverride,
   };
 }
 
@@ -34,6 +52,12 @@ export async function PUT(request: NextRequest) {
     if ('error' in result) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
+    if (result.value.length > 1 && !isPremiumUser(user)) {
+      return NextResponse.json(
+        { error: 'Premium required to select multiple subjects' },
+        { status: 403 }
+      );
+    }
 
     if (mobileUser) {
       await mobileStore.updateProfile(user.id, {
@@ -49,7 +73,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(
       toProfileResponse({
-        id: user.id,
+        ...user,
         activeSubjects: result.value,
         onboardingComplete: true,
       })

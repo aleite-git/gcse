@@ -59,6 +59,11 @@ function createFirestoreMock(seed: Array<{ id?: string; data: Record<string, unk
   const collection = {
     where: (field: string, _op: string, value: unknown) =>
       buildQuery([{ field, value }]),
+    add: async (data: Record<string, unknown>) => {
+      const id = `seed-${records.length + 1}`;
+      records.push({ id, data });
+      return { id };
+    },
     doc: (id: string) => ({
       update: async (update: Record<string, unknown>) => {
         const index = records.findIndex((record) => record.id === id);
@@ -173,7 +178,7 @@ describe('mobile onboarding routes', () => {
     const request = new Request('http://localhost/api/v1/me/subjects', {
       method: 'PUT',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ activeSubjects: ['Biology', 'Physics'] }),
+      body: JSON.stringify({ activeSubjects: ['Biology'] }),
     }) as NextRequest;
 
     const response = await subjectsPut(request);
@@ -181,11 +186,93 @@ describe('mobile onboarding routes', () => {
 
     expect(response.status).toBe(200);
     expect(payload).toMatchObject({
-      activeSubjects: ['Biology', 'Physics'],
+      activeSubjects: ['Biology'],
       onboardingComplete: true,
     });
-    expect(records[0].data.activeSubjects).toEqual(['Biology', 'Physics']);
+    expect(records[0].data.activeSubjects).toEqual(['Biology']);
     expect(records[0].data.onboardingComplete).toBe(true);
+  });
+
+  it('rejects multiple subjects for free users', async () => {
+    const { collection } = createFirestoreMock([
+      {
+        id: 'user-1',
+        data: { usernameLower: 'userone' },
+      },
+    ]);
+    getDb.mockReturnValue({ collection: () => collection });
+
+    const request = new Request('http://localhost/api/v1/me/subjects', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology', 'Chemistry'] }),
+    }) as NextRequest;
+
+    const response = await subjectsPut(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(403);
+    expect(payload).toMatchObject({
+      error: 'Premium required to select multiple subjects',
+    });
+  });
+
+  it('allows multiple subjects for premium users', async () => {
+    const { collection, records } = createFirestoreMock([
+      {
+        id: 'user-1',
+        data: {
+          usernameLower: 'userone',
+          subscriptionExpiry: new Date('2999-01-01T00:00:00.000Z'),
+        },
+      },
+    ]);
+    getDb.mockReturnValue({ collection: () => collection });
+
+    const request = new Request('http://localhost/api/v1/me/subjects', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology', 'Chemistry'] }),
+    }) as NextRequest;
+
+    const response = await subjectsPut(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      activeSubjects: ['Biology', 'Chemistry'],
+      onboardingComplete: true,
+    });
+    expect(records[0].data.activeSubjects).toEqual(['Biology', 'Chemistry']);
+  });
+
+  it('allows multiple subjects for admin overrides', async () => {
+    const { collection, records } = createFirestoreMock([
+      {
+        id: 'user-1',
+        data: {
+          usernameLower: 'userone',
+          adminOverride: true,
+        },
+      },
+    ]);
+    getDb.mockReturnValue({ collection: () => collection });
+
+    const request = new Request('http://localhost/api/v1/me/subjects', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology', 'Chemistry'] }),
+    }) as NextRequest;
+
+    const response = await subjectsPut(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      activeSubjects: ['Biology', 'Chemistry'],
+      onboardingComplete: true,
+    });
+    expect(records[0].data.activeSubjects).toEqual(['Biology', 'Chemistry']);
   });
 
   it('returns stored profile on GET', async () => {
@@ -254,5 +341,33 @@ describe('mobile onboarding routes', () => {
 
     expect(response.status).toBe(400);
     expect(payload).toMatchObject({ error: 'activeSubjects must contain at least one subject' });
+  });
+
+  it('rejects multiple subjects in profile patch for free users', async () => {
+    const { collection } = createFirestoreMock([
+      {
+        id: 'user-1',
+        data: {
+          usernameLower: 'userone',
+          activeSubjects: ['Biology'],
+          onboardingComplete: true,
+        },
+      },
+    ]);
+    getDb.mockReturnValue({ collection: () => collection });
+
+    const request = new Request('http://localhost/api/v1/me', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology', 'Chemistry'] }),
+    }) as NextRequest;
+
+    const response = await mePatch(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(403);
+    expect(payload).toMatchObject({
+      error: 'Premium required to select multiple subjects',
+    });
   });
 });

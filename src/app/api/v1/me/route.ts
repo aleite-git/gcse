@@ -3,6 +3,7 @@ import { getSessionFromRequest } from '@/lib/auth';
 import { createFirestoreMobileUserStore } from '@/lib/mobile-user-store';
 import { ACTIVE_SUBJECTS, validateActiveSubjects } from '@/lib/active-subjects';
 import { createUserProfileStore } from '@/lib/user-profile-store';
+import { getSubscriptionSummary, isPremiumUser } from '@/lib/subscription';
 
 function toProfileResponse(user: {
   id: string;
@@ -10,12 +11,25 @@ function toProfileResponse(user: {
   onboardingComplete?: boolean;
   username?: string;
   label?: string;
+  subscriptionStart?: Date | { toDate: () => Date } | number | null;
+  subscriptionExpiry?: Date | { toDate: () => Date } | number | null;
+  graceUntil?: Date | { toDate: () => Date } | number | null;
+  subscriptionProvider?: string | null;
+  adminOverride?: boolean | null;
 }) {
+  const subscription = getSubscriptionSummary(user);
   return {
     id: user.id,
     username: user.username ?? user.label ?? null,
     activeSubjects: user.activeSubjects ?? [],
     onboardingComplete: user.onboardingComplete ?? false,
+    entitlement: subscription.entitlement,
+    subscriptionStatus: subscription.subscriptionStatus,
+    subscriptionStart: subscription.subscriptionStart,
+    subscriptionExpiry: subscription.subscriptionExpiry,
+    graceUntil: subscription.graceUntil,
+    subscriptionProvider: subscription.subscriptionProvider,
+    adminOverride: subscription.adminOverride,
   };
 }
 
@@ -38,6 +52,11 @@ async function getOrCreateProfile(label: string) {
     labelLower,
     activeSubjects: [...ACTIVE_SUBJECTS],
     onboardingComplete: true,
+    subscriptionStart: null,
+    subscriptionExpiry: null,
+    graceUntil: null,
+    subscriptionProvider: null,
+    adminOverride: false,
     createdAt: new Date(),
   });
 
@@ -76,6 +95,12 @@ export async function PATCH(request: NextRequest) {
       if ('error' in result) {
         return NextResponse.json({ error: result.error }, { status: 400 });
       }
+      if (result.value.length > 1 && !isPremiumUser(user)) {
+        return NextResponse.json(
+          { error: 'Premium required to select multiple subjects' },
+          { status: 403 }
+        );
+      }
       activeSubjects = result.value;
     } else if (onboardingComplete && activeSubjects.length === 0) {
       return NextResponse.json(
@@ -98,7 +123,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(
       toProfileResponse({
-        id: user.id,
+        ...user,
         activeSubjects,
         onboardingComplete: Boolean(onboardingComplete),
       })

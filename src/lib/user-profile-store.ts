@@ -7,6 +7,11 @@ export type UserProfileRecord = {
   labelLower: string;
   activeSubjects: ActiveSubject[];
   onboardingComplete: boolean;
+  subscriptionStart?: Date | { toDate: () => Date } | number | null;
+  subscriptionExpiry?: Date | { toDate: () => Date } | number | null;
+  graceUntil?: Date | { toDate: () => Date } | number | null;
+  subscriptionProvider?: string | null;
+  adminOverride?: boolean | null;
   createdAt: Date;
 };
 

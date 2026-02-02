@@ -4,6 +4,13 @@ export type MeProfile = {
   id: string;
   activeSubjects: ActiveSubject[];
   onboardingComplete: boolean;
+  entitlement?: 'premium' | 'free';
+  subscriptionStatus?: 'active' | 'grace' | 'expired';
+  subscriptionStart?: string | null;
+  subscriptionExpiry?: string | null;
+  graceUntil?: string | null;
+  subscriptionProvider?: string | null;
+  adminOverride?: boolean;
 };
 
 type ApiError = { error: string };

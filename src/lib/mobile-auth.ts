@@ -18,6 +18,15 @@ export interface MobileUserRecord {
   onboardingComplete?: boolean;
   oauthProvider?: 'google' | 'apple';
   oauthSubject?: string;
+  subscriptionStart?: Date | { toDate: () => Date } | number | null;
+  subscriptionExpiry?: Date | { toDate: () => Date } | number | null;
+  graceUntil?: Date | { toDate: () => Date } | number | null;
+  subscriptionProvider?: string | null;
+  adminOverride?: boolean | null;
+  deletionRequestedAt?: Date | { toDate: () => Date } | number | null;
+  deletionScheduledFor?: Date | { toDate: () => Date } | number | null;
+  deletionCancelledAt?: Date | { toDate: () => Date } | number | null;
+  deletionStatus?: 'none' | 'pending' | 'cancelled' | 'deleted';
   createdAt: Date;
 }
 
@@ -32,6 +41,15 @@ export interface NewMobileUser {
   onboardingComplete: boolean;
   oauthProvider?: 'google' | 'apple';
   oauthSubject?: string;
+  subscriptionStart: Date | null;
+  subscriptionExpiry: Date | null;
+  graceUntil: Date | null;
+  subscriptionProvider: string | null;
+  adminOverride: boolean;
+  deletionRequestedAt: Date | null;
+  deletionScheduledFor: Date | null;
+  deletionCancelledAt: Date | null;
+  deletionStatus: 'none' | 'pending' | 'cancelled' | 'deleted';
   createdAt: Date;
 }
 
@@ -51,6 +69,15 @@ export interface MobileUserStore {
   updateProfile(
     userId: string,
     update: { activeSubjects?: ActiveSubject[]; onboardingComplete?: boolean }
+  ): Promise<void>;
+  updateDeletion(
+    userId: string,
+    update: {
+      deletionRequestedAt?: Date | null;
+      deletionScheduledFor?: Date | null;
+      deletionCancelledAt?: Date | null;
+      deletionStatus?: 'none' | 'pending' | 'cancelled' | 'deleted';
+    }
   ): Promise<void>;
 }
 
@@ -209,6 +236,15 @@ export async function registerMobileUser(
     usernameChangedAt: null,
     activeSubjects: [],
     onboardingComplete: false,
+    deletionRequestedAt: null,
+    deletionScheduledFor: null,
+    deletionCancelledAt: null,
+    deletionStatus: 'none',
+    subscriptionStart: null,
+    subscriptionExpiry: null,
+    graceUntil: null,
+    subscriptionProvider: null,
+    adminOverride: false,
     createdAt: new Date(),
   });
 }
@@ -318,6 +354,10 @@ export async function loginMobileOAuthUser(
     onboardingComplete: false,
     oauthProvider: profile.provider,
     oauthSubject: profile.subject,
+    deletionRequestedAt: null,
+    deletionScheduledFor: null,
+    deletionCancelledAt: null,
+    deletionStatus: 'none',
     createdAt: new Date(),
   });
 }
