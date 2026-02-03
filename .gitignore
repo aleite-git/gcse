@@ -51,6 +51,7 @@ next-env.d.ts
 .env.development
 .env.production
 .env.test
+.envrc
 !.env.example
 
 # Service account keys and credentials
@@ -67,9 +68,16 @@ credentials.json
 *.key
 *.pem
 *.p12
+*.p8
+*.p7b
+*.p7c
+*.mobileprovision
+*.keychain
 *.pfx
 *.crt
 *.cer
+*.csr
+*.der
 
 # Google Cloud
 .gcloud/
@@ -97,6 +105,19 @@ ui-debug.log
 *.local.js
 config.local.*
 secrets.*
+.secrets/
+secrets/
+credentials/
+.npmrc
+.pnpmrc
+.yarnrc
+.yarnrc.yml
+.netrc
+.runtimeconfig.json
+google-services.json
+GoogleService-Info.plist
+*.keystore
+*.jks
 
 # Backup files that might contain secrets
 *.bak
@@ -110,6 +131,9 @@ logs/
 
 # Temporary question bank files
 gcse_cs_daily5_questions*.json
+gemini_*.json
+biology_all_questions*.json
+21Jan-gcse_biology_200_gold_questions.json
 
 # Large datasets and separate app
 question_bank/

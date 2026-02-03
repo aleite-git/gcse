@@ -54,6 +54,7 @@ export interface NewMobileUser {
 }
 
 export interface MobileUserStore {
+  getById(userId: string): Promise<MobileUserRecord | null>;
   getByEmail(emailLower: string): Promise<MobileUserRecord | null>;
   getByUsername(usernameLower: string): Promise<MobileUserRecord | null>;
   getByOAuth(provider: 'google' | 'apple', subject: string): Promise<MobileUserRecord | null>;
@@ -70,6 +71,16 @@ export interface MobileUserStore {
     userId: string,
     update: { activeSubjects?: ActiveSubject[]; onboardingComplete?: boolean }
   ): Promise<void>;
+  updateSubscription(
+    userId: string,
+    update: {
+      subscriptionStart?: Date | null;
+      subscriptionExpiry?: Date | null;
+      graceUntil?: Date | null;
+      subscriptionProvider?: string | null;
+    }
+  ): Promise<void>;
+  updateAdminOverride(userId: string, adminOverride: boolean): Promise<void>;
   updateDeletion(
     userId: string,
     update: {

@@ -10,6 +10,69 @@ function isOverallSubject(subject: StreakSubject): subject is 'overall' {
   return subject === OVERALL_STREAK_SUBJECT;
 }
 
+async function getMaxSubjectStreak(userLabel: string): Promise<number> {
+  const db = getDb();
+  const snapshot = await db
+    .collection(COLLECTIONS.USER_STREAKS)
+    .where('userLabel', '==', userLabel)
+    .get();
+
+  let maxStreak = 0;
+  let overallLongest = 0;
+
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    const subject = data.subject;
+    const longest = data.longestStreak || 0;
+
+    if (subject === OVERALL_STREAK_SUBJECT) {
+      overallLongest = longest;
+      return;
+    }
+
+    if (!subject) {
+      return;
+    }
+
+    if (longest > maxStreak) {
+      maxStreak = longest;
+    }
+  });
+
+  return maxStreak > 0 ? maxStreak : overallLongest;
+}
+
+function getEarnedFreezeCount(maxStreak: number): number {
+  if (maxStreak <= 0) return 0;
+  return Math.floor(maxStreak / FREEZE_EARN_INTERVAL);
+}
+
+async function syncOverallFreezeDays(
+  userLabel: string,
+  timezone: string
+): Promise<{ maxStreak: number; earnedFreezes: number }> {
+  const db = getDb();
+  const overall = await getOrCreateUserStreak(userLabel, OVERALL_STREAK_SUBJECT, timezone);
+  const maxStreak = await getMaxSubjectStreak(userLabel);
+  const earnedFreezes = getEarnedFreezeCount(maxStreak);
+
+  const freezeDaysUsed = overall.freezeDaysUsed || 0;
+  const freezeDays = Math.min(MAX_FREEZES, Math.max(0, earnedFreezes - freezeDaysUsed));
+  const lastFreezeEarnedAt = earnedFreezes * FREEZE_EARN_INTERVAL;
+
+  const docId = `${userLabel}-${OVERALL_STREAK_SUBJECT}`;
+  await db.collection(COLLECTIONS.USER_STREAKS).doc(docId).set(
+    {
+      freezeDays,
+      lastFreezeEarnedAt,
+      updatedAt: new Date(),
+    },
+    { merge: true }
+  );
+
+  return { maxStreak, earnedFreezes };
+}
+
 /**
  * Get today's date in the user's timezone (YYYY-MM-DD)
  */
@@ -172,8 +235,13 @@ export async function recordActivity(
 ): Promise<{ streak: UserStreak; isNewDay: boolean; freezeEarned: boolean }> {
   const db = getDb();
   const today = getTodayInTimezone(timezone);
-  const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
   const overallSubject = isOverallSubject(subject);
+  let streak = await getOrCreateUserStreak(userLabel, subject, timezone);
+
+  if (overallSubject) {
+    await syncOverallFreezeDays(userLabel, timezone);
+    streak = await getOrCreateUserStreak(userLabel, subject, timezone);
+  }
 
   // Check if we already had activity today
   if (streak.lastActivityDate === today) {
@@ -240,21 +308,6 @@ export async function recordActivity(
     }
   }
 
-  // Check if user earned a new freeze day
-  // Earn freeze every FREEZE_EARN_INTERVAL days, capped at MAX_FREEZES
-  if (
-    overallSubject &&
-    newStreak > 0 &&
-    newStreak % FREEZE_EARN_INTERVAL === 0 &&
-    newStreak > lastFreezeEarnedAt
-  ) {
-    if (newFreezeDays < MAX_FREEZES) {
-      newFreezeDays++;
-      freezeEarned = true;
-    }
-    lastFreezeEarnedAt = newStreak;
-  }
-
   // Update longest streak
   const newLongestStreak = Math.max(streak.longestStreak, newStreak);
 
@@ -273,6 +326,15 @@ export async function recordActivity(
   });
 
   const updatedStreak = await getOrCreateUserStreak(userLabel, subject, timezone);
+  const beforeFreezeDays = overallSubject ? streak.freezeDays : 0;
+  await syncOverallFreezeDays(userLabel, timezone);
+
+  if (overallSubject) {
+    const refreshedOverall = await getOrCreateUserStreak(userLabel, OVERALL_STREAK_SUBJECT, timezone);
+    freezeEarned = refreshedOverall.freezeDays > beforeFreezeDays;
+    return { streak: refreshedOverall, isNewDay: true, freezeEarned };
+  }
+
   return { streak: updatedStreak, isNewDay: true, freezeEarned };
 }
 
@@ -346,7 +408,8 @@ export async function getStreakStatus(
   let streakActive = false;
   let daysUntilStreakLoss = 0;
   let frozeToday = false;
-  const effectiveFreezeDays = overallSubject ? streak.freezeDays : 0;
+  const effectiveFreezeDays = overallSubject ? Math.min(MAX_FREEZES, streak.freezeDays) : 0;
+  const earnedFreezes = overallSubject ? getEarnedFreezeCount(await getMaxSubjectStreak(userLabel)) : 0;
 
   if (!streak.lastActivityDate) {
     // No activity yet
@@ -378,7 +441,7 @@ export async function getStreakStatus(
   return {
     currentStreak: streak.currentStreak,
     freezeDays: effectiveFreezeDays,
-    maxFreezes: overallSubject ? MAX_FREEZES : 0,
+    maxFreezes: overallSubject ? Math.min(MAX_FREEZES, earnedFreezes) : 0,
     streakActive,
     lastActivityDate: streak.lastActivityDate || null,
     daysUntilStreakLoss,

@@ -68,4 +68,5 @@ export const COLLECTIONS = {
   STREAK_ACTIVITIES: 'streakActivities',
   MOBILE_USERS: 'mobileUsers',
   USER_PROFILES: 'userProfiles',
+  ACCOUNT_DELETION_REQUESTS: 'accountDeletionRequests',
 } as const;

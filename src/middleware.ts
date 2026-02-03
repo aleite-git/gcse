@@ -18,7 +18,10 @@ const publicApiRoutes = [
   '/api/mobile/username/check',
   '/api/mobile/oauth/google',
   '/api/mobile/oauth/apple',
+  '/api/admin/account-deletion/run',
+  '/api/admin/subscription-override',
 ];
+const HSTS_HEADER = 'max-age=31536000; includeSubDomains; preload';
 
 function getSecretKey(): Uint8Array {
   const secret = process.env.SESSION_SECRET;
@@ -61,7 +64,11 @@ export async function middleware(request: NextRequest) {
   const isPublicApiRoute = publicApiRoutes.some((route) => pathname.startsWith(route));
 
   if (isPublicRoute || isPublicApiRoute) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    if (process.env.NODE_ENV === 'production') {
+      response.headers.set('Strict-Transport-Security', HSTS_HEADER);
+    }
+    return response;
   }
 
   // API routes check
@@ -112,10 +119,17 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.next();
     response.headers.set('x-user-label', session.label);
     response.headers.set('x-user-is-admin', session.isAdmin ? 'true' : 'false');
+    if (process.env.NODE_ENV === 'production') {
+      response.headers.set('Strict-Transport-Security', HSTS_HEADER);
+    }
     return response;
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  if (process.env.NODE_ENV === 'production') {
+    response.headers.set('Strict-Transport-Security', HSTS_HEADER);
+  }
+  return response;
 }
 
 export const config = {

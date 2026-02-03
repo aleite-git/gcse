@@ -493,6 +493,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /api/mobile/subscription/verify:
+    post:
+      summary: Verify a subscription purchase and unlock premium access
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionVerifyRequest'
+      responses:
+        '200':
+          description: Subscription status after verification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionVerifyResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/admin/account-deletion/run:
     post:
       summary: Run account deletion job (cron)
@@ -512,6 +554,53 @@ paths:
                 $ref: '#/components/schemas/DeletionJobResponse'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/admin/subscription-override:
+    post:
+      summary: Set admin override for a mobile user (backend-only)
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+          description: Google ID token (`Bearer <token>`) with Cloud Run Invoker access.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminOverrideRequest'
+      responses:
+        '200':
+          description: Admin override updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminOverrideResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
           content:
             application/json:
               schema:
@@ -843,6 +932,85 @@ components:
           type: integer
         errors:
           type: integer
+    SubscriptionVerifyRequest:
+      type: object
+      required:
+        - provider
+      properties:
+        provider:
+          type: string
+          enum: [apple, google]
+        transactionId:
+          type: string
+          description: Apple transaction ID (required if appReceipt is not provided).
+        appReceipt:
+          type: string
+          description: Apple app receipt (optional if transactionId is provided).
+        purchaseToken:
+          type: string
+          description: Google Play purchase token (required for Google).
+        packageName:
+          type: string
+          description: Android package name (required if not configured on the backend).
+    SubscriptionVerifyResponse:
+      type: object
+      required:
+        - entitlement
+        - subscriptionStatus
+        - subscriptionStart
+        - subscriptionExpiry
+        - graceUntil
+        - subscriptionProvider
+        - adminOverride
+      properties:
+        entitlement:
+          $ref: '#/components/schemas/Entitlement'
+        subscriptionStatus:
+          type: string
+          enum: [active, grace, expired]
+        subscriptionStart:
+          type: string
+          nullable: true
+          format: date-time
+        subscriptionExpiry:
+          type: string
+          nullable: true
+          format: date-time
+        graceUntil:
+          type: string
+          nullable: true
+          format: date-time
+        subscriptionProvider:
+          type: string
+          nullable: true
+        adminOverride:
+          type: boolean
+    AdminOverrideRequest:
+      type: object
+      required:
+        - adminOverride
+      properties:
+        userId:
+          type: string
+          description: Optional if email is provided.
+        email:
+          type: string
+          format: email
+          description: Optional if userId is provided.
+        adminOverride:
+          type: boolean
+          description: Set true to unlock all subjects for the user.
+      description: Provide either userId or email to target a user.
+    AdminOverrideResponse:
+      type: object
+      required:
+        - userId
+        - adminOverride
+      properties:
+        userId:
+          type: string
+        adminOverride:
+          type: boolean
     ErrorResponse:
       type: object
       required:

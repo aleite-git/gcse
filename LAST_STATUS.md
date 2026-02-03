@@ -1,6 +1,6 @@
 # GCSE Quiz App - Status Document
 
-**Last Updated:** 2026-01-10
+**Last Updated:** 2026-02-03
 
 ## Application Overview
 
@@ -16,6 +16,7 @@ A daily quiz application for GCSE students covering three subjects:
 - Retry functionality with fresh questions
 - Admin dashboard for results and question management
 - Multi-user support with simple label-based authentication
+- Mobile API endpoints for account deletion + subscription gating
 
 ### Tech Stack
 - **Frontend:** Next.js 16 with TypeScript, Tailwind CSS
@@ -29,7 +30,7 @@ A daily quiz application for GCSE students covering three subjects:
 - **URL:** https://gcse-quiz-997951122924.europe-west1.run.app
 - **Project ID:** gcse-cs-1
 - **Region:** europe-west1
-- **Current Version:** v25
+- **Latest Revision (last confirmed):** gcse-quiz-00051-c97
 
 ## Database Collections
 
@@ -40,6 +41,9 @@ A daily quiz application for GCSE students covering three subjects:
 | `attempts` | User quiz attempts and scores |
 | `streaks` | User streak data per subject |
 | `questionStats` | Per-question performance statistics |
+| `mobileUsers` | Mobile user profiles and subscription fields |
+| `accountDeletionRequests` | Account deletion workflow records |
+| `userProfiles` | Mobile user profile data |
 
 ### Question Counts (as of last update)
 - Computer Science: ~1000 questions
@@ -168,7 +172,8 @@ src/
 │   ├── questions.ts    # Question selection logic
 │   ├── quiz.ts         # Quiz management
 │   ├── streak.ts       # Streak tracking
-│   └── studyNotes.ts   # Study notes content
+│   ├── studyNotes.ts   # Study notes content
+│   └── subscription.ts # Subscription entitlement logic
 └── types/              # TypeScript types
 
 scripts/                # Data loading and maintenance scripts
@@ -181,16 +186,47 @@ Admin users are defined by email in `src/lib/auth.ts`. Check the `ADMIN_EMAILS` 
 
 ## Recent Changes
 
-1. **Multi-subject support** - Added Biology and Chemistry alongside Computer Science
-2. **Subject-specific streaks** - Each subject has independent streak tracking
-3. **Admin improvements** - Subject filtering, topic grouping in results
-4. **Chemistry data refresh** - Replaced with ExamGrade dataset (1000 questions)
+1. **Subscriptions (backend)**
+   - Added subscription fields to mobile users and `/api/v1/me` responses.
+   - Added entitlement logic (active/grace/expired/admin override).
+   - Added `/api/mobile/subscription/verify` to validate purchases and set 18-month unlock.
+
+2. **Account deletion**
+   - Added per-user cleanup to prevent cross-user deletion status leaks.
+   - Added CRON secret for the deletion job and updated Cloud Run env vars.
+   - Updated resend emails to include the help link: https://www.quizzwizz.app/.
+
+3. **Cloud build configuration**
+   - Cloud Build now injects `RESEND_API_KEY` and `RESEND_FROM_EMAIL` secrets.
+
+4. **Admin override (backend-only)**
+   - Added a backend-only admin override endpoint protected by Google ID tokens (Cloud Run Invoker).
+   - Admin override unlocks all subjects regardless of subscription status.
+   - Documentation is in `docs/admin-override.md`.
+5. **Subscription verification**
+   - Added backend verification endpoint for Apple/Google receipts.
+   - Documentation is in `docs/subscriptions.md`.
+
+## Account Deletion Status
+
+Backend implementation exists for the account deletion flow:
+- Request/confirm deletion and request/confirm cancellation endpoints are implemented.
+- Deletion requests are stored in Firestore with rate limits, code TTL, and attempt limits.
+- User records include deletion fields (requested/scheduled/cancelled/status).
+- A deletion job function exists to remove user data when scheduled.
+- Manual job run endpoint exists (`/api/admin/account-deletion/run`) and requires `x-cron-secret`.
+
+**Scheduler status:** Verified. Cloud Scheduler job `account-deletion-job` is ENABLED and targets `/api/admin/account-deletion/run` on the Cloud Run URL.
 
 ## Pending/Future Work
 
-- Consider adding more question variety for Chemistry difficulty 3
-- Monitor question performance and update weak questions
-- Add more study notes as needed
+- Confirm Cloud Scheduler job exists and points at the deletion run endpoint.
+- Implement subscription purchase validation/receipts and 18-month unlock enforcement (backend).
+- Configure Apple App Store Server API and Google Play Developer API credentials in production.
+- Add audit/admin logging for deletion + subscription changes (if needed).
+- Ensure callers use a Google ID token with Cloud Run Invoker access for admin override.
+- Optional: set `ADMIN_OVERRIDE_AUDIENCE` if using a custom domain.
+- Keep `docs/firestore-indexes.md` in sync with new Firestore queries.
 
 ## Useful Commands
 

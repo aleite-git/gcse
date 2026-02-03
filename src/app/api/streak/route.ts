@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import {
+  checkAndApplyFreeze,
   getStreakStatus,
   recordActivity,
   useFreeze,
@@ -25,6 +26,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const timezone = searchParams.get('timezone') || 'Europe/Lisbon';
     const subject = searchParams.get('subject') as StreakSubject | null;
+
+    await checkAndApplyFreeze(session.label, OVERALL_STREAK_SUBJECT, timezone);
 
     // If subject is specified, return streak for that subject
     if (subject) {

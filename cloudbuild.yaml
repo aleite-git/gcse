@@ -47,7 +47,7 @@ steps:
       - '--set-env-vars'
       - 'NODE_ENV=production'
       - '--set-secrets'
-      - 'SESSION_SECRET=SESSION_SECRET:latest'
+      - 'SESSION_SECRET=SESSION_SECRET:latest,RESEND_API_KEY=RESEND_API_KEY:latest,RESEND_FROM_EMAIL=RESEND_FROM_EMAIL:latest'
 
 images:
   - 'europe-west1-docker.pkg.dev/$PROJECT_ID/gcse-repo/gcse-quiz:$COMMIT_SHA'

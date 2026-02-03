@@ -8,6 +8,7 @@ import { useMe } from '@/lib/use-me';
 import { getActiveSubjectsForApp } from '@/lib/onboarding';
 import { studyNotes, StudyNote } from '@/lib/studyNotes';
 import { StreakDisplay, StreakCelebration } from '@/components/StreakDisplay';
+import { MathText } from '@/components/MathText';
 
 type QuizState = 'loading' | 'quiz' | 'submitting' | 'results' | 'no-subject';
 
@@ -453,7 +454,7 @@ function QuestionCard({
           <span className={`mr-2 ${isBonus ? 'text-amber-400' : 'text-purple-400'}`}>
             {isBonus ? 'B.' : `Q${index + 1}.`}
           </span>
-          {question.stem}
+          <MathText text={question.stem} />
         </h2>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={`px-3 py-1 text-xs font-medium rounded-full ${
@@ -513,7 +514,7 @@ function QuestionCard({
                 <div className="w-2 h-2 bg-white rounded-full" />
               )}
             </div>
-            <span className="text-white/80">{option}</span>
+            <MathText text={option} className="text-white/80" />
           </label>
         ))}
       </div>
@@ -577,7 +578,7 @@ function QuestionNotesPanel({
             </svg>
           </button>
         </div>
-        <p className="text-sm text-white/60 whitespace-pre-line">{notesText}</p>
+        <MathText text={notesText} className="text-sm text-white/60 whitespace-pre-line" block />
       </div>
     );
   }
@@ -758,7 +759,7 @@ function FeedbackCard({
           {feedback.isCorrect ? '✓' : '✗'}
         </span>
         <span className="flex-1 font-medium text-white/90 line-clamp-1">
-          Q{index + 1}. {feedback.stem}
+          Q{index + 1}. <MathText text={feedback.stem} />
         </span>
         <svg
           className={`w-5 h-5 text-white/40 transition-transform ${expanded ? 'rotate-180' : ''}`}
@@ -774,7 +775,7 @@ function FeedbackCard({
       {expanded && (
         <div className="px-4 pb-4">
           <h3 className="font-semibold text-white/80 mb-4 pl-11">
-            {feedback.stem}
+            <MathText text={feedback.stem} />
           </h3>
           <div className="space-y-2 mb-4 pl-11">
             {feedback.options.map((option, i) => (
@@ -791,13 +792,13 @@ function FeedbackCard({
                 <span className="font-medium mr-2">
                   {i === feedback.correctIndex ? '✓' : i === feedback.selectedIndex && !feedback.isCorrect ? '✗' : ''}
                 </span>
-                {option}
+                <MathText text={option} />
               </div>
             ))}
           </div>
           <div className="bg-white/5 rounded-xl p-4 border border-white/10 ml-11">
             <p className="text-sm text-white/60">
-              <span className="font-medium text-white/80">Explanation:</span> {feedback.explanation}
+              <span className="font-medium text-white/80">Explanation:</span> <MathText text={feedback.explanation} />
             </p>
           </div>
           <div className="mt-3 flex items-center gap-2 pl-11">
