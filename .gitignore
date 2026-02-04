@@ -52,6 +52,11 @@ next-env.d.ts
 .env.production
 .env.test
 .envrc
+
+# Local scratch folders (do not commit)
+android/
+sources/
+storeFile=/
 !.env.example
 
 # Service account keys and credentials
