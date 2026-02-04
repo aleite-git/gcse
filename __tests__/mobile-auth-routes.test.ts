@@ -88,7 +88,7 @@ function createMobileStoreMock(seed: Array<{ id?: string; data: Record<string, u
     },
     updateOAuth: async (
       userId: string,
-      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string }
+      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string }
     ) => {
       const index = records.findIndex((record) => record.id === userId);
       if (index >= 0) {
@@ -669,6 +669,86 @@ describe('mobile auth routes', () => {
 
     expect(response.status).toBe(401);
     expect(payload).toMatchObject({ error: 'Invalid OAuth token' });
+  });
+
+  it('asks to link when Google email already exists', async () => {
+    const passwordHash = await bcrypt.hash('Password1', 12);
+    const { store } = createMobileStoreMock([
+      {
+        data: {
+          email: 'user@example.com',
+          emailLower: 'user@example.com',
+          passwordHash,
+          username: 'UserOne',
+          usernameLower: 'userone',
+          createdAt: new Date(),
+        },
+      },
+    ]);
+    createFirestoreMobileUserStore.mockReturnValue(store);
+    verifyGoogleIdToken.mockResolvedValue({
+      provider: 'google',
+      subject: 'subject-123',
+      email: 'user@example.com',
+      emailLower: 'user@example.com',
+      emailVerified: true,
+    });
+    process.env.GOOGLE_CLIENT_ID = 'google-client';
+
+    const request = new Request('http://localhost/api/mobile/oauth/google', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ idToken: 'token-123' }),
+    }) as NextRequest;
+
+    const response = await googleOauthPost(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(409);
+    expect(payload).toMatchObject({
+      code: 'oauth_link_required',
+    });
+  });
+
+  it('links existing user when linkExisting is true', async () => {
+    const passwordHash = await bcrypt.hash('Password1', 12);
+    const { store } = createMobileStoreMock([
+      {
+        data: {
+          email: 'user@example.com',
+          emailLower: 'user@example.com',
+          passwordHash,
+          username: 'UserOne',
+          usernameLower: 'userone',
+          createdAt: new Date(),
+        },
+      },
+    ]);
+    createFirestoreMobileUserStore.mockReturnValue(store);
+    verifyGoogleIdToken.mockResolvedValue({
+      provider: 'google',
+      subject: 'subject-123',
+      email: 'user@example.com',
+      emailLower: 'user@example.com',
+      emailVerified: true,
+    });
+    process.env.GOOGLE_CLIENT_ID = 'google-client';
+
+    const request = new Request('http://localhost/api/mobile/oauth/google', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ idToken: 'token-123', linkExisting: true }),
+    }) as NextRequest;
+
+    const response = await googleOauthPost(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      success: true,
+      token: 'token-123',
+      username: 'UserOne',
+    });
   });
 
   it('logs in with Apple OAuth', async () => {

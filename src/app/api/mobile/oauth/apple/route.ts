@@ -28,10 +28,12 @@ export async function POST(request: NextRequest) {
     const profile = await verifyAppleIdToken(idToken, clientId);
     const store = createFirestoreMobileUserStore();
     const filter = createProfanityFilter();
+    const allowLinkExisting = Boolean(body?.linkExisting);
     const user = await loginMobileOAuthUser(
       {
         profile,
         username: body?.username,
+        allowLinkExisting,
       },
       store,
       filter
@@ -47,7 +49,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof MobileAuthError) {
       return NextResponse.json(
-        { error: error.message },
+        { error: error.message, code: error.code },
         { status: error.status }
       );
     }

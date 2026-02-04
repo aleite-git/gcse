@@ -59,7 +59,7 @@ function createInMemoryStore(seed: Array<{
     },
     updateOAuth: async (
       userId: string,
-      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string }
+      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string }
     ) => {
       const index = users.findIndex((user) => user.id === userId);
       if (index >= 0) {
@@ -577,7 +577,35 @@ describe('mobile oauth login', () => {
     expect(user.username).toBe('UserOne');
   });
 
-  it('updates existing user by email with oauth info', async () => {
+  it('asks to link when email already exists', async () => {
+    const { store } = createInMemoryStore([
+      {
+        id: 'user-1',
+        email: 'user@example.com',
+        emailLower: 'user@example.com',
+        passwordHash: await bcrypt.hash('Password1', 12),
+        username: 'UserOne',
+        usernameLower: 'userone',
+        createdAt: new Date(),
+      },
+    ]);
+    const filter = createProfanityFilter();
+
+    await expect(
+      loginMobileOAuthUser(
+        { profile: baseProfile, username: 'IgnoredUser' },
+        store,
+        filter
+      )
+    ).rejects.toMatchObject({
+      message:
+        'An account already exists with this email. Do you want to link Google sign-in and replace your password login?',
+      status: 409,
+      code: 'oauth_link_required',
+    });
+  });
+
+  it('links existing user by email when confirmed', async () => {
     const { store, users } = createInMemoryStore([
       {
         id: 'user-1',
@@ -592,13 +620,14 @@ describe('mobile oauth login', () => {
     const filter = createProfanityFilter();
 
     const user = await loginMobileOAuthUser(
-      { profile: baseProfile, username: 'IgnoredUser' },
+      { profile: baseProfile, username: 'IgnoredUser', allowLinkExisting: true },
       store,
       filter
     );
 
     expect(user.oauthProvider).toBe('google');
     expect(users[0].oauthSubject).toBe('subject-123');
+    expect(users[0].passwordHash).not.toBeNull();
   });
 
   it('rejects oauth signup when email is missing', async () => {

@@ -163,6 +163,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
               examples:
+                linkRequired:
+                  summary: OAuth link required
+                  value:
+                    error: An account already exists with this email. Do you want to link Apple sign-in and replace your password login?
+                    code: oauth_link_required
+              examples:
+                linkRequired:
+                  summary: OAuth link required
+                  value:
+                    error: An account already exists with this email. Do you want to link Google sign-in and replace your password login?
+                    code: oauth_link_required
+              examples:
                 emailTaken:
                   summary: Email already in use
                   value:
@@ -851,6 +863,9 @@ components:
           minLength: 5
           maxLength: 15
           pattern: '^[A-Za-z0-9_]+$'
+        linkExisting:
+          type: boolean
+          description: Set true to link OAuth to an existing email/password account.
     AuthResponse:
       type: object
       required:
@@ -1018,6 +1033,10 @@ components:
       properties:
         error:
           type: string
+        code:
+          type: string
+          nullable: true
+          description: Optional machine-readable error code.
     SubjectsUpdateRequest:
       type: object
       required:

@@ -65,7 +65,7 @@ export interface MobileUserStore {
   ): Promise<void>;
   updateOAuth(
     userId: string,
-    update: { oauthProvider: 'google' | 'apple'; oauthSubject: string }
+    update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string }
   ): Promise<void>;
   updateProfile(
     userId: string,
@@ -106,10 +106,12 @@ export interface OAuthProfile {
 
 export class MobileAuthError extends Error {
   status: number;
+  code?: string;
 
-  constructor(message: string, status: number) {
+  constructor(message: string, status: number, code?: string) {
     super(message);
     this.status = status;
+    this.code = code;
   }
 }
 
@@ -302,7 +304,7 @@ export async function loginMobileUser(
 }
 
 export async function loginMobileOAuthUser(
-  input: { profile: OAuthProfile; username: unknown },
+  input: { profile: OAuthProfile; username: unknown; allowLinkExisting?: boolean },
   store: MobileUserStore,
   profanityFilter: ProfanityFilter
 ): Promise<MobileUserRecord> {
@@ -315,9 +317,24 @@ export async function loginMobileOAuthUser(
   if (profile.emailLower) {
     const existingByEmail = await store.getByEmail(profile.emailLower);
     if (existingByEmail) {
+      if (existingByEmail.oauthProvider || existingByEmail.oauthSubject) {
+        throw new MobileAuthError('Email already in use', 409);
+      }
+      // Ask the client to confirm linking before replacing password login with OAuth.
+      if (!input.allowLinkExisting) {
+        const providerLabel = profile.provider === 'apple' ? 'Apple' : 'Google';
+        throw new MobileAuthError(
+          `An account already exists with this email. Do you want to link ${providerLabel} sign-in and replace your password login?`,
+          409,
+          'oauth_link_required'
+        );
+      }
+      // Link OAuth and replace the password hash so OAuth becomes the login method.
+      const passwordHash = await bcrypt.hash(profile.subject, 12);
       await store.updateOAuth(existingByEmail.id, {
         oauthProvider: profile.provider,
         oauthSubject: profile.subject,
+        passwordHash,
       });
       return {
         ...existingByEmail,
@@ -325,6 +342,7 @@ export async function loginMobileOAuthUser(
         emailLower: profile.emailLower || existingByEmail.emailLower,
         oauthProvider: profile.provider,
         oauthSubject: profile.subject,
+        passwordHash,
       };
     }
   }
