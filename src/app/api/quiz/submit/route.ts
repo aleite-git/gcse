@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Record streak activity for this subject
-    const timezone = request.headers.get('x-timezone') || 'Europe/Lisbon';
+    const timezone = request.headers.get('x-timezone') || 'Europe/London';
     const { streak: updatedStreak, freezeEarned } = await recordActivity(
       session.label,
       subject,

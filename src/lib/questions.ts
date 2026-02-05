@@ -1,6 +1,17 @@
 import { getDb, COLLECTIONS } from './firebase';
 import { Question, QuestionInput, Topic, Subject } from '@/types';
-import { getTodayLisbon, getLastNDaysLisbon } from './date';
+import { getTodayLondon, getLastNDaysLondon } from './date';
+
+// Firestore returns Timestamp objects in production, while tests often use Date directly.
+function resolveCreatedAt(value: unknown): Date {
+  if (value instanceof Date) {
+    return value;
+  }
+  if (value && typeof value === 'object' && typeof (value as { toDate?: () => Date }).toDate === 'function') {
+    return (value as { toDate: () => Date }).toDate();
+  }
+  return new Date();
+}
 
 /**
  * Get all active questions, optionally filtered by subject
@@ -18,7 +29,7 @@ export async function getActiveQuestions(subject?: Subject): Promise<Question[]>
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-    createdAt: doc.data().createdAt?.toDate() || new Date(),
+    createdAt: resolveCreatedAt(doc.data().createdAt),
   })) as Question[];
 }
 
@@ -37,7 +48,7 @@ export async function getQuestionById(id: string): Promise<Question | null> {
   return {
     id: doc.id,
     ...data,
-    createdAt: data.createdAt?.toDate() || new Date(),
+    createdAt: resolveCreatedAt(data.createdAt),
   } as Question;
 }
 
@@ -64,7 +75,7 @@ export async function getQuestionsByIds(ids: string[]): Promise<Question[]> {
       questions.push({
         id: doc.id,
         ...data,
-        createdAt: data.createdAt?.toDate() || new Date(),
+        createdAt: resolveCreatedAt(data.createdAt),
       } as Question);
     }
   }
@@ -79,7 +90,7 @@ export async function getQuestionsByIds(ids: string[]): Promise<Question[]> {
  */
 export async function getRecentlyUsedQuestionIds(days: number, subject: Subject): Promise<Set<string>> {
   const db = getDb();
-  const recentDates = getLastNDaysLisbon(days);
+  const recentDates = getLastNDaysLondon(days);
   const usedIds = new Set<string>();
 
   for (const date of recentDates) {
@@ -100,7 +111,7 @@ export async function getRecentlyUsedQuestionIds(days: number, subject: Subject)
   // Also check attempts for questions used today for this subject
   const attemptsSnapshot = await db
     .collection(COLLECTIONS.ATTEMPTS)
-    .where('date', '==', getTodayLisbon())
+    .where('date', '==', getTodayLondon())
     .where('subject', '==', subject)
     .get();
 
@@ -226,6 +237,13 @@ export async function selectQuizQuestions(
   // Add bonus question at the end if found
   if (bonusQuestion) {
     selected.push(bonusQuestion);
+  } else {
+    // No hard questions available: fall back to any remaining question so we still return 6.
+    const remaining = allQuestions.filter((q) => !selectedIds.has(q.id));
+    if (remaining.length > 0) {
+      shuffleArray(remaining);
+      selected.push(remaining[0]);
+    }
   }
 
   return selected.slice(0, 6);
@@ -319,7 +337,7 @@ export async function getAllQuestions(subject?: Subject): Promise<Question[]> {
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-    createdAt: doc.data().createdAt?.toDate() || new Date(),
+    createdAt: resolveCreatedAt(doc.data().createdAt),
   })) as Question[];
 }
 
@@ -328,8 +346,9 @@ export async function getAllQuestions(subject?: Subject): Promise<Question[]> {
  */
 export async function bulkImportQuestions(questions: QuestionInput[]): Promise<number> {
   const db = getDb();
-  const batch = db.batch();
+  let batch = db.batch();
   let count = 0;
+  let batchCount = 0;
 
   for (const q of questions) {
     const docRef = db.collection(COLLECTIONS.QUESTIONS).doc();
@@ -339,14 +358,18 @@ export async function bulkImportQuestions(questions: QuestionInput[]): Promise<n
       createdAt: new Date(),
     });
     count++;
+    batchCount++;
 
     // Firestore batches are limited to 500 operations
-    if (count % 500 === 0) {
+    if (batchCount >= 500) {
       await batch.commit();
+      // Important: create a fresh batch after each commit.
+      batch = db.batch();
+      batchCount = 0;
     }
   }
 
-  if (count % 500 !== 0) {
+  if (batchCount > 0) {
     await batch.commit();
   }
 

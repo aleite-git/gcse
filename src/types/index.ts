@@ -107,7 +107,7 @@ export interface TopicBreakdown {
 
 export interface Attempt {
   id: string;
-  date: string; // YYYY-MM-DD in Europe/Lisbon
+  date: string; // YYYY-MM-DD in Europe/London
   subject: Subject;
   attemptNumber: number;
   quizVersion: number;
@@ -206,7 +206,7 @@ export interface UserStreak {
   lastActivityDate: string; // YYYY-MM-DD in user's timezone
   freezeDays: number; // earned freeze days available
   freezeDaysUsed: number; // total freeze days used historically
-  timezone: string; // e.g., "Europe/Lisbon"
+  timezone: string; // e.g., "Europe/London"
   streakStartDate: string; // when current streak began
   lastFreezeEarnedAt: number; // streak day when last freeze was earned (to track 5-day intervals)
   updatedAt: Date;

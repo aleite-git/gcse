@@ -106,7 +106,7 @@ function daysBetween(date1: string, date2: string): number {
 export async function getOrCreateUserStreak(
   userLabel: string,
   subject: StreakSubject,
-  timezone: string = 'Europe/Lisbon'
+  timezone: string = 'Europe/London'
 ): Promise<UserStreak> {
   const db = getDb();
   const docId = `${userLabel}-${subject}`;
@@ -231,7 +231,7 @@ export async function recordActivity(
   userLabel: string,
   subject: StreakSubject,
   activityType: 'quiz_submit' | 'login',
-  timezone: string = 'Europe/Lisbon'
+  timezone: string = 'Europe/London'
 ): Promise<{ streak: UserStreak; isNewDay: boolean; freezeEarned: boolean }> {
   const db = getDb();
   const today = getTodayInTimezone(timezone);
@@ -344,7 +344,7 @@ export async function recordActivity(
 export async function useFreeze(
   userLabel: string,
   subject: StreakSubject,
-  timezone: string = 'Europe/Lisbon'
+  timezone: string = 'Europe/London'
 ): Promise<{ success: boolean; message: string; streak: UserStreak }> {
   if (!isOverallSubject(subject)) {
     const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
@@ -398,7 +398,7 @@ export async function useFreeze(
 export async function getStreakStatus(
   userLabel: string,
   subject: StreakSubject,
-  timezone: string = 'Europe/Lisbon'
+  timezone: string = 'Europe/London'
 ): Promise<StreakStatus> {
   const streak = await getOrCreateUserStreak(userLabel, subject, timezone);
   const overallSubject = isOverallSubject(subject);

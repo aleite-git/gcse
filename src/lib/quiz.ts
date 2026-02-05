@@ -1,6 +1,6 @@
 import { getDb, COLLECTIONS } from './firebase';
 import { DailyAssignment, Attempt, Answer, TopicBreakdown, Question, Subject } from '@/types';
-import { getTodayLisbon } from './date';
+import { getLastNDaysLondon, getTodayLondon, getTomorrowLondon } from './date';
 import { selectQuizQuestions, getQuestionsByIds } from './questions';
 import { recordQuestionAttempts } from './questionStats';
 import crypto from 'crypto';
@@ -10,7 +10,7 @@ import crypto from 'crypto';
  */
 export async function getOrCreateDailyAssignment(subject: Subject): Promise<DailyAssignment> {
   const db = getDb();
-  const today = getTodayLisbon();
+  const today = getTodayLondon();
   const docId = `${today}-${subject}`;
   const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId);
 
@@ -73,7 +73,7 @@ export async function generateNewQuizVersion(subject: Subject): Promise<{
   questions: Question[];
 }> {
   const db = getDb();
-  const today = getTodayLisbon();
+  const today = getTodayLondon();
   const docId = `${today}-${subject}`;
   const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId);
 
@@ -128,7 +128,7 @@ export async function generateNewQuizVersion(subject: Subject): Promise<{
  */
 export async function getTodayAttempts(userLabel: string, subject: Subject): Promise<Attempt[]> {
   const db = getDb();
-  const today = getTodayLisbon();
+  const today = getTodayLondon();
 
   const snapshot = await db
     .collection(COLLECTIONS.ATTEMPTS)
@@ -178,7 +178,7 @@ export async function submitQuizAttempt(
   questions: Question[];
 }> {
   const db = getDb();
-  const today = getTodayLisbon();
+  const today = getTodayLondon();
   const assignment = await getOrCreateDailyAssignment(subject);
 
   // Validate answers (5 regular + 1 bonus = 6 questions)
@@ -330,10 +330,8 @@ export async function generateTomorrowPreview(subject: Subject): Promise<{
   subject: Subject;
   questions: Question[];
 }> {
-  // Get tomorrow's date
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  // Get tomorrow's date in Europe/London (avoid UTC drift)
+  const tomorrowStr = getTomorrowLondon();
   const docId = `${tomorrowStr}-${subject}`;
 
   // Check if tomorrow's assignment already exists
@@ -353,7 +351,7 @@ export async function generateTomorrowPreview(subject: Subject): Promise<{
   }
 
   // Get today's questions to exclude from tomorrow's selection
-  const today = getTodayLisbon();
+  const today = getTodayLondon();
   const todayDocId = `${today}-${subject}`;
   const todayDoc = await db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(todayDocId).get();
   const todayQuestionIds = new Set<string>();
@@ -401,15 +399,10 @@ export async function getProgressSummary(
   weakTopics: { topic: string; correctRate: number; totalQuestions: number }[];
 }> {
   const db = getDb();
-  const today = getTodayLisbon();
+  const today = getTodayLondon();
 
   // Get attempts for last N days
-  const dates: string[] = [];
-  for (let i = 0; i < days; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    dates.push(date.toISOString().split('T')[0]);
-  }
+  const dates = getLastNDaysLondon(days);
 
   const snapshot = await db
     .collection(COLLECTIONS.ATTEMPTS)

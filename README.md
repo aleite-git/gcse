@@ -119,7 +119,7 @@ npm test
 Tests cover:
 - Submission validation (must answer all 6 questions)
 - Scoring correctness
-- Date handling in Europe/Lisbon timezone
+- Date handling in Europe/London timezone
 
 ## Project Structure
 
@@ -272,7 +272,7 @@ rm key.json
 #### `attempts`
 | Field | Type | Description |
 |-------|------|-------------|
-| date | string | YYYY-MM-DD in Lisbon |
+| date | string | YYYY-MM-DD in London |
 | attemptNumber | number | Attempt counter |
 | quizVersion | number | Quiz version used |
 | questionIds | array[6] | Question IDs |
@@ -322,7 +322,7 @@ Edit `scripts/seed.ts` to modify default codes before seeding, or manually updat
 Modify `TIMEZONE` constant in `src/lib/date.ts`:
 
 ```typescript
-const TIMEZONE = 'Europe/Lisbon';  // Change to your timezone
+const TIMEZONE = 'Europe/London';  // Change to your timezone
 ```
 
 ## License

@@ -56,6 +56,23 @@ describe('mobile oauth token verification', () => {
     });
   });
 
+  it('accepts boolean email_verified values', async () => {
+    jwtVerify.mockResolvedValue({
+      payload: {
+        sub: 'google-sub',
+        email: 'user@example.com',
+        email_verified: false,
+      },
+    });
+
+    const profile = await verifyGoogleIdToken('token', 'client-id');
+
+    expect(profile).toMatchObject({
+      provider: 'google',
+      emailVerified: false,
+    });
+  });
+
   it('throws MobileAuthError when token verification fails', async () => {
     jwtVerify.mockRejectedValueOnce(new Error('bad token'));
 

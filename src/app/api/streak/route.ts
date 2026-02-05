@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     // Get timezone and subject from query params
     const { searchParams } = new URL(request.url);
-    const timezone = searchParams.get('timezone') || 'Europe/Lisbon';
+    const timezone = searchParams.get('timezone') || 'Europe/London';
     const subject = searchParams.get('subject') as StreakSubject | null;
 
     await checkAndApplyFreeze(session.label, OVERALL_STREAK_SUBJECT, timezone);
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'use_freeze': {
-        const result = await useFreeze(session.label, subject, timezone || 'Europe/Lisbon');
+        const result = await useFreeze(session.label, subject, timezone || 'Europe/London');
         return NextResponse.json({
           success: result.success,
           message: result.message,

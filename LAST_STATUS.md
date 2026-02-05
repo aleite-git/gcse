@@ -1,6 +1,6 @@
 # GCSE Quiz App - Status Document
 
-**Last Updated:** 2026-02-04
+**Last Updated:** 2026-02-05
 
 ## Application Overview
 
@@ -42,6 +42,47 @@ A daily quiz application for GCSE students covering three subjects:
 
 2. **OpenAPI error shape**
    - `ErrorResponse` now includes optional `code` for machine-readable errors.
+
+3. **Timezone locked to Europe/London**
+   - App-level timezone helpers now use London for quiz dates and progress summaries.
+   - Progress summary now builds the last-N days list using London dates to avoid UTC drift.
+
+## Review Findings (Tracked)
+
+1. **Progress window uses UTC dates, not London**
+   - **Location:** `src/lib/quiz.ts:406`
+   - **Status:** Resolved (2026-02-05)
+   - **Note:** Progress dates now use London helpers (`getLastNDaysLondon`), so date keys match stored attempt dates.
+
+2. **Bulk import breaks for >500 questions**
+   - **Location:** `src/lib/questions.ts` (`bulkImportQuestions`)
+   - **Status:** Resolved (2026-02-05)
+   - **Note:** The import now creates a fresh Firestore batch after each commit, so imports >500 complete safely.
+
+3. **Timezone drift in “tomorrow preview” date**
+   - **Location:** `src/lib/quiz.ts` (`generateTomorrowPreview`)
+   - **Status:** Resolved (2026-02-05)
+   - **Note:** Uses London-aware helper (`getTomorrowLondon`) to build the YYYY-MM-DD doc ID.
+
+4. **Coverage requirement not enforced by tooling**
+   - **Location:** `jest.config.js`, `package.json`
+   - **Status:** In Progress
+   - **Note:** Coverage thresholds are set to 80%, but the test suite is still below the target. We are adding tests to close the gap.
+
+5. **Documentation mismatch**
+   - **Location:** `README.md`, `package.json`
+   - **Status:** Ignored (per decision)
+   - **Why:** README claims Next.js 15, but `package.json` pins `next` to `16.1.1`. This is intentionally left as-is.
+
+6. **Ignored folders are present**
+   - **Location:** `.gitignore`
+   - **Status:** Open
+   - **Why:** `mobile/` and `android/` are ignored but exist in the repo, which can confuse contributors about what is actually tracked.
+
+7. **Quiz length assumes 6 questions are always available**
+   - **Location:** `src/lib/questions.ts`, `src/lib/quiz.ts`
+   - **Status:** Open
+   - **Why:** `selectQuizQuestions()` can return fewer than 6 if there are not enough questions, but `submitQuizAttempt` requires exactly 6 answers.
 
 ## Account Deletion Status
 

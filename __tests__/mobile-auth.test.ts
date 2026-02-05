@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it, jest } from '@jest/globals';
 import bcrypt from 'bcryptjs';
 import {
   checkMobileUsernameAvailability,
@@ -325,6 +325,17 @@ describe('mobile auth login', () => {
     expect(user.username).toBe('UserOne');
   });
 
+  it('rejects when neither email nor username is provided', async () => {
+    const { store } = createInMemoryStore();
+
+    await expect(
+      loginMobileUser({ password: 'Password1' }, store)
+    ).rejects.toMatchObject({
+      message: 'Email or username is required',
+      status: 400,
+    });
+  });
+
   it('exposes status on MobileAuthError', () => {
     const error = new MobileAuthError('Boom', 418);
     expect(error.status).toBe(418);
@@ -540,6 +551,201 @@ describe('mobile username update', () => {
     expect(result.user.username).toBe('NewUser');
     expect(result.user.usernameLower).toBe('newuser');
     expect(users[0].username).toBe('NewUser');
+  });
+
+  it('allows updates when last change is stored as a number', async () => {
+    const past = Date.now() - 40 * 24 * 60 * 60 * 1000;
+    const { store } = createInMemoryStore([
+      {
+        id: 'user-1',
+        email: 'user@example.com',
+        emailLower: 'user@example.com',
+        passwordHash: await bcrypt.hash('Password1', 12),
+        username: 'UserOne',
+        usernameLower: 'userone',
+        usernameChangedAt: past,
+        createdAt: new Date(),
+      },
+    ]);
+    const filter = createProfanityFilter();
+
+    const result = await updateMobileUsername(
+      { currentUsername: 'UserOne', newUsername: 'NewUser' },
+      store,
+      filter
+    );
+
+    expect(result.user.username).toBe('NewUser');
+  });
+
+  it('respects cooldown when last change is stored as a Firestore timestamp', async () => {
+    const recent = { toDate: () => new Date() };
+    const { store } = createInMemoryStore([
+      {
+        id: 'user-1',
+        email: 'user@example.com',
+        emailLower: 'user@example.com',
+        passwordHash: await bcrypt.hash('Password1', 12),
+        username: 'UserOne',
+        usernameLower: 'userone',
+        usernameChangedAt: recent,
+        createdAt: new Date(),
+      },
+    ]);
+    const filter = createProfanityFilter();
+
+    await expect(
+      updateMobileUsername(
+        { currentUsername: 'UserOne', newUsername: 'NewUser' },
+        store,
+        filter
+      )
+    ).rejects.toMatchObject({
+      message: 'Must wait 30 days before changing username again',
+      status: 403,
+    });
+  });
+
+  it('treats unknown usernameChangedAt values as no cooldown', async () => {
+    const { store } = createInMemoryStore([
+      {
+        id: 'user-1',
+        email: 'user@example.com',
+        emailLower: 'user@example.com',
+        passwordHash: await bcrypt.hash('Password1', 12),
+        username: 'UserOne',
+        usernameLower: 'userone',
+        usernameChangedAt: { foo: 'bar' } as unknown as Date,
+        createdAt: new Date(),
+      },
+    ]);
+    const filter = createProfanityFilter();
+
+    const result = await updateMobileUsername(
+      { currentUsername: 'UserOne', newUsername: 'NewUser' },
+      store,
+      filter
+    );
+
+    expect(result.user.username).toBe('NewUser');
+  });
+});
+
+describe('mobile oauth login', () => {
+  it('rejects when an email is already linked to OAuth', async () => {
+    const { store } = createInMemoryStore([
+      {
+        id: 'user-1',
+        email: 'user@example.com',
+        emailLower: 'user@example.com',
+        passwordHash: await bcrypt.hash('Password1', 12),
+        username: 'UserOne',
+        usernameLower: 'userone',
+        oauthProvider: 'google',
+        oauthSubject: 'oauth-sub',
+        createdAt: new Date(),
+      },
+    ]);
+    const filter = createProfanityFilter();
+
+    await expect(
+      loginMobileOAuthUser(
+        {
+          profile: {
+            provider: 'google',
+            subject: 'new-subject',
+            email: 'user@example.com',
+            emailLower: 'user@example.com',
+            emailVerified: true,
+          } as OAuthProfile,
+          username: 'NewUser',
+        },
+        store,
+        filter
+      )
+    ).rejects.toMatchObject({
+      message: 'Email already in use',
+      status: 409,
+    });
+  });
+
+  it('rejects when username is already taken', async () => {
+    const { store } = createInMemoryStore([
+      {
+        id: 'user-1',
+        email: 'existing@example.com',
+        emailLower: 'existing@example.com',
+        passwordHash: await bcrypt.hash('Password1', 12),
+        username: 'TakenUser',
+        usernameLower: 'takenuser',
+        createdAt: new Date(),
+      },
+    ]);
+    const filter = createProfanityFilter();
+
+    await expect(
+      loginMobileOAuthUser(
+        {
+          profile: {
+            provider: 'apple',
+            subject: 'apple-sub',
+            email: 'new@example.com',
+            emailLower: 'new@example.com',
+            emailVerified: true,
+          } as OAuthProfile,
+          username: 'TakenUser',
+        },
+        store,
+        filter
+      )
+    ).rejects.toMatchObject({
+      message: 'Username already in use',
+      status: 409,
+    });
+  });
+
+  it('rejects when email becomes unavailable during oauth flow', async () => {
+    const existing = {
+      id: 'user-1',
+      email: 'user@example.com',
+      emailLower: 'user@example.com',
+      passwordHash: await bcrypt.hash('Password1', 12),
+      username: 'UserOne',
+      usernameLower: 'userone',
+      createdAt: new Date(),
+    };
+
+    const store = {
+      getByOAuth: async () => null,
+      getByEmail: jest
+        .fn()
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(existing),
+      getByUsername: async () => null,
+      createUser: async () => existing,
+      updateOAuth: async () => {},
+    };
+    const filter = createProfanityFilter();
+
+    await expect(
+      loginMobileOAuthUser(
+        {
+          profile: {
+            provider: 'google',
+            subject: 'oauth-sub',
+            email: 'user@example.com',
+            emailLower: 'user@example.com',
+            emailVerified: true,
+          } as OAuthProfile,
+          username: 'NewUser',
+        },
+        store,
+        filter
+      )
+    ).rejects.toMatchObject({
+      message: 'Email already in use',
+      status: 409,
+    });
   });
 });
 

@@ -1,19 +1,19 @@
 import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
-import { subDays, parseISO } from 'date-fns';
+import { addDays, subDays, parseISO } from 'date-fns';
 
-const TIMEZONE = 'Europe/Lisbon';
+const TIMEZONE = 'Europe/London';
 
 /**
- * Get the current date in Europe/Lisbon timezone as YYYY-MM-DD
+ * Get the current date in Europe/London timezone as YYYY-MM-DD
  */
-export function getTodayLisbon(): string {
+export function getTodayLondon(): string {
   return formatInTimeZone(new Date(), TIMEZONE, 'yyyy-MM-dd');
 }
 
 /**
- * Get date N days ago in Europe/Lisbon timezone as YYYY-MM-DD
+ * Get date N days ago in Europe/London timezone as YYYY-MM-DD
  */
-export function getDaysAgoLisbon(days: number): string {
+export function getDaysAgoLondon(days: number): string {
   const now = new Date();
   const zonedNow = toZonedTime(now, TIMEZONE);
   const daysAgo = subDays(zonedNow, days);
@@ -23,19 +23,29 @@ export function getDaysAgoLisbon(days: number): string {
 /**
  * Get the last N days including today as YYYY-MM-DD strings
  */
-export function getLastNDaysLisbon(n: number): string[] {
+export function getLastNDaysLondon(n: number): string[] {
   const dates: string[] = [];
   for (let i = 0; i < n; i++) {
-    dates.push(getDaysAgoLisbon(i));
+    dates.push(getDaysAgoLondon(i));
   }
   return dates;
 }
 
 /**
- * Check if a date string is today in Lisbon timezone
+ * Get tomorrow's date in Europe/London timezone as YYYY-MM-DD
+ */
+export function getTomorrowLondon(): string {
+  const now = new Date();
+  const zonedNow = toZonedTime(now, TIMEZONE);
+  const tomorrow = addDays(zonedNow, 1);
+  return formatInTimeZone(tomorrow, TIMEZONE, 'yyyy-MM-dd');
+}
+
+/**
+ * Check if a date string is today in London timezone
  */
 export function isToday(dateStr: string): boolean {
-  return dateStr === getTodayLisbon();
+  return dateStr === getTodayLondon();
 }
 
 /**
@@ -54,8 +64,8 @@ export function formatDisplayDate(date: Date | string): string {
 }
 
 /**
- * Get current timestamp in Lisbon timezone
+ * Get current timestamp in London timezone
  */
-export function getNowLisbon(): Date {
+export function getNowLondon(): Date {
   return toZonedTime(new Date(), TIMEZONE);
 }
