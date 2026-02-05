@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals';
-import { getSubscriptionSummary, isPremiumUser } from '@/lib/subscription';
+import { computeSubscriptionStatus, getSubscriptionSummary, isPremiumUser } from '@/lib/subscription';
 
 describe('subscription summary', () => {
   afterEach(() => {
@@ -41,6 +41,29 @@ describe('subscription summary', () => {
     expect(summary.subscriptionStatus).toBe('expired');
     expect(summary.entitlement).toBe('free');
     expect(summary.subscriptionStart).toBeNull();
+  });
+
+  it('respects explicit entitlement none even if expiry is in the future', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-02-05T12:00:00Z'));
+    const summary = getSubscriptionSummary({
+      subscriptionExpiry: new Date('2026-03-01T00:00:00Z'),
+      entitlement: 'none',
+    });
+
+    expect(summary.subscriptionStatus).toBe('expired');
+    expect(summary.entitlement).toBe('free');
+  });
+
+  it('returns unknown when no dates are available and fallback is unknown', () => {
+    const status = computeSubscriptionStatus({
+      entitlement: null,
+      subscriptionExpiry: null,
+      graceUntil: null,
+      fallbackStatus: 'unknown',
+      now: new Date('2026-02-05T12:00:00Z'),
+    });
+
+    expect(status).toBe('unknown');
   });
 
   it('treats admin override as active', () => {

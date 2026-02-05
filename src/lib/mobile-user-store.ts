@@ -50,6 +50,18 @@ export function createFirestoreMobileUserStore(): MobileUserStore {
       const doc = snapshot.docs[0];
       return { id: doc.id, ...(doc.data() as FirestoreMobileUser) };
     },
+    async getByRevenueCatAppUserId(appUserId: string): Promise<MobileUserRecord | null> {
+      const snapshot = await collection
+        .where('revenueCatAppUserId', '==', appUserId)
+        .limit(1)
+        .get();
+      if (snapshot.empty) {
+        return null;
+      }
+
+      const doc = snapshot.docs[0];
+      return { id: doc.id, ...(doc.data() as FirestoreMobileUser) };
+    },
     async createUser(user: NewMobileUser): Promise<MobileUserRecord> {
       const ref = await collection.add(user);
       return { id: ref.id, ...user };
@@ -79,6 +91,13 @@ export function createFirestoreMobileUserStore(): MobileUserStore {
         subscriptionExpiry?: Date | null;
         graceUntil?: Date | null;
         subscriptionProvider?: string | null;
+        entitlement?: 'premium' | 'free' | 'none' | null;
+        subscriptionStatus?: 'active' | 'grace' | 'expired' | 'unknown' | null;
+        productId?: string | null;
+        store?: string | null;
+        environment?: string | null;
+        revenueCatAppUserId?: string | null;
+        lastRevenueCatEventId?: string | null;
       }
     ): Promise<void> {
       await collection.doc(userId).update(update);

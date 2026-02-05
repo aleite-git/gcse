@@ -136,6 +136,10 @@ export async function selectQuizQuestions(
   excludeIds: Set<string> = new Set()
 ): Promise<Question[]> {
   const allQuestions = await getActiveQuestions(subject);
+  if (allQuestions.length === 0) {
+    // No active questions available for this subject.
+    return [];
+  }
   const recentlyUsed = await getRecentlyUsedQuestionIds(7, subject);
 
   // Combine exclusions

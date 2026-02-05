@@ -34,6 +34,9 @@ export async function GET(request: NextRequest) {
       questions: safeQuestions,
       startedAt: new Date().toISOString(),
     };
+    if (safeQuestions.length === 0) {
+      response.message = 'Question bank being revised! No quiz today!';
+    }
 
     return NextResponse.json(response);
   } catch (error) {

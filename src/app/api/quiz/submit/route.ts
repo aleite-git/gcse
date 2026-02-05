@@ -34,13 +34,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (answers.length !== 6) {
-      return NextResponse.json(
-        { error: 'Must answer all 6 questions' },
-        { status: 400 }
-      );
-    }
-
     // Validate each answer has required fields
     for (const answer of answers) {
       if (!answer.questionId || typeof answer.selectedIndex !== 'number') {
@@ -126,9 +119,15 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error submitting quiz:', error);
     const message = error instanceof Error ? error.message : 'Failed to submit quiz';
+    const isValidationError =
+      message.startsWith('Must answer all ') ||
+      message.startsWith('Question ') ||
+      message === 'No quiz available' ||
+      message === 'Invalid answer format' ||
+      message === 'Invalid answer selection';
     return NextResponse.json(
       { error: message },
-      { status: 500 }
+      { status: isValidationError ? 400 : 500 }
     );
   }
 }

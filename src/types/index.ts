@@ -144,6 +144,8 @@ export interface QuizResponse {
   subject: Subject;
   questions: QuizQuestion[];
   startedAt: string;
+  // Optional message shown when the quiz has no questions.
+  message?: string;
 }
 
 export interface SubmitRequest {

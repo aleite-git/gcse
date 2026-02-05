@@ -59,6 +59,7 @@ function QuizContent() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [timezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone);
   const router = useRouter();
+  const totalQuestions = quiz?.questions.length ?? 0;
 
   const loadQuiz = useCallback(async () => {
     // Validate subject
@@ -86,6 +87,11 @@ function QuizContent() {
       }
 
       const data: QuizResponse = await response.json();
+      const noQuestionsMessage =
+        data.questions.length === 0
+          ? data.message || 'Question bank being revised! No quiz today!'
+          : '';
+      setError(noQuestionsMessage);
       setQuiz(data);
       setAnswers(new Map());
       setStartTime(Date.now());
@@ -120,7 +126,8 @@ function QuizContent() {
   };
 
   const handleSubmit = async () => {
-    if (!quiz || !subject || answers.size !== quiz.questions.length) return;
+    if (!quiz || !subject || quiz.questions.length === 0) return;
+    if (answers.size !== quiz.questions.length) return;
 
     setState('submitting');
     setError('');
@@ -189,6 +196,11 @@ function QuizContent() {
       }
 
       const data: QuizResponse = await response.json();
+      const noQuestionsMessage =
+        data.questions.length === 0
+          ? data.message || 'Question bank being revised! No quiz today!'
+          : '';
+      setError(noQuestionsMessage);
       setQuiz(data);
       setAnswers(new Map());
       setResults(null);
@@ -326,7 +338,7 @@ function QuizContent() {
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 mb-6">
           <div className="flex justify-between items-center mb-3">
             <span className="text-sm font-medium text-white/60">
-              Answered: {answers.size}/{quiz?.questions.length || 6}
+              Answered: {answers.size}/{totalQuestions}
             </span>
             <div className="flex gap-1.5">
               {quiz?.questions.map((q, i) => (
@@ -350,7 +362,10 @@ function QuizContent() {
             <div
               className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 transition-all duration-500"
               style={{
-                width: `${(answers.size / (quiz?.questions.length || 6)) * 100}%`,
+                width:
+                  totalQuestions > 0
+                    ? `${(answers.size / totalQuestions) * 100}%`
+                    : '0%',
                 backgroundSize: '200% 100%',
                 animation: 'shimmer 2s linear infinite',
               }}
@@ -376,7 +391,11 @@ function QuizContent() {
         <div className="mt-8 flex justify-center">
           <button
             onClick={handleSubmit}
-            disabled={answers.size !== (quiz?.questions.length || 6) || state === 'submitting'}
+            disabled={
+              totalQuestions === 0 ||
+              answers.size !== totalQuestions ||
+              state === 'submitting'
+            }
             className="relative px-10 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-2xl hover:from-purple-500 hover:to-pink-500 focus:ring-4 focus:ring-purple-500/50 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:from-purple-600 disabled:hover:to-pink-600 shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105 active:scale-95"
           >
             {state === 'submitting' ? (
@@ -390,7 +409,7 @@ function QuizContent() {
           </button>
         </div>
 
-        {answers.size !== (quiz?.questions.length || 6) && (
+        {totalQuestions > 0 && answers.size !== totalQuestions && (
           <p className="mt-4 text-center text-sm text-white/40">
             Answer all questions to submit (including the bonus!)
           </p>

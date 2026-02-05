@@ -280,6 +280,7 @@ describe('mobile onboarding routes', () => {
       {
         id: 'user-1',
         data: {
+          username: 'UserOne',
           usernameLower: 'userone',
           activeSubjects: ['Chemistry'],
           onboardingComplete: true,
@@ -295,10 +296,34 @@ describe('mobile onboarding routes', () => {
     expect(response.status).toBe(200);
     expect(payload).toMatchObject({
       id: 'user-1',
+      username: 'UserOne',
       activeSubjects: ['Chemistry'],
       onboardingComplete: true,
     });
     expect(mobile.records.length).toBe(1);
+  });
+
+  it('uses defaults when optional profile fields are missing', async () => {
+    // Covers username fallback + default onboarding values.
+    const { getDbResult } = createMultiCollectionMock([
+      {
+        id: 'user-2',
+        data: {
+          usernameLower: 'userone',
+        },
+      },
+    ]);
+    getDb.mockReturnValue(getDbResult);
+
+    const request = new Request('http://localhost/api/v1/me', { method: 'GET' }) as NextRequest;
+    const response = await meGet(request);
+    const payload = await response.json();
+
+    expect(payload).toMatchObject({
+      username: null,
+      activeSubjects: [],
+      onboardingComplete: false,
+    });
   });
 
   it('creates a profile for access-code users without mobile records', async () => {
@@ -315,6 +340,62 @@ describe('mobile onboarding routes', () => {
       onboardingComplete: true,
     });
     expect(profiles.records.length).toBe(1);
+  });
+
+  it('returns existing access-code profile when present', async () => {
+    const { getDbResult, profiles } = createMultiCollectionMock();
+    profiles.records.push({
+      id: 'profile-1',
+      data: {
+        label: 'UserOne',
+        labelLower: 'userone',
+        activeSubjects: ['Biology'],
+        onboardingComplete: true,
+        productId: 'pro',
+        store: 'app_store',
+        environment: 'sandbox',
+        revenueCatAppUserId: 'rc-user',
+        lastRevenueCatEventId: 'evt-1',
+      },
+    });
+    getDb.mockReturnValue(getDbResult);
+
+    const request = new Request('http://localhost/api/v1/me', { method: 'GET' }) as NextRequest;
+    const response = await meGet(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload).toMatchObject({
+      id: 'profile-1',
+      productId: 'pro',
+      store: 'app_store',
+      environment: 'sandbox',
+      revenueCatAppUserId: 'rc-user',
+      lastRevenueCatEventId: 'evt-1',
+    });
+    expect(profiles.records.length).toBe(1);
+  });
+
+  it('rejects me requests when unauthenticated', async () => {
+    getSessionFromRequest.mockResolvedValue(null);
+    getDb.mockReturnValue({ collection: jest.fn() });
+
+    const request = new Request('http://localhost/api/v1/me', { method: 'GET' }) as NextRequest;
+    const response = await meGet(request);
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects me patch requests when unauthenticated', async () => {
+    getSessionFromRequest.mockResolvedValue(null);
+    getDb.mockReturnValue({ collection: jest.fn() });
+
+    const request = new Request('http://localhost/api/v1/me', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ onboardingComplete: true }),
+    }) as NextRequest;
+    const response = await mePatch(request);
+    expect(response.status).toBe(401);
   });
 
   it('rejects onboarding completion without subjects', async () => {
@@ -334,6 +415,32 @@ describe('mobile onboarding routes', () => {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ onboardingComplete: true, activeSubjects: [] }),
+    }) as NextRequest;
+
+    const response = await mePatch(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(payload).toMatchObject({ error: 'activeSubjects must contain at least one subject' });
+  });
+
+  it('rejects completion when subjects are missing from the patch body', async () => {
+    const { collection } = createFirestoreMock([
+      {
+        id: 'user-1',
+        data: {
+          usernameLower: 'userone',
+          activeSubjects: [],
+          onboardingComplete: false,
+        },
+      },
+    ]);
+    getDb.mockReturnValue({ collection: () => collection });
+
+    const request = new Request('http://localhost/api/v1/me', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ onboardingComplete: true }),
     }) as NextRequest;
 
     const response = await mePatch(request);
@@ -369,5 +476,143 @@ describe('mobile onboarding routes', () => {
     expect(payload).toMatchObject({
       error: 'Premium required to select multiple subjects',
     });
+  });
+
+  it('allows multiple subjects for premium users in profile patch', async () => {
+    const { collection } = createFirestoreMock([
+      {
+        id: 'user-1',
+        data: {
+          usernameLower: 'userone',
+          activeSubjects: ['Biology'],
+          onboardingComplete: true,
+          subscriptionExpiry: new Date('2999-01-01T00:00:00.000Z'),
+        },
+      },
+    ]);
+    getDb.mockReturnValue({ collection: () => collection });
+
+    const request = new Request('http://localhost/api/v1/me', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology', 'Chemistry'] }),
+    }) as NextRequest;
+
+    const response = await mePatch(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.activeSubjects).toEqual(['Biology', 'Chemistry']);
+  });
+
+  it('updates profiles for access-code users', async () => {
+    const { getDbResult, profiles } = createMultiCollectionMock([
+      {
+        id: 'profile-1',
+        data: {
+          label: 'UserOne',
+          labelLower: 'userone',
+          activeSubjects: ['Biology'],
+          onboardingComplete: false,
+        },
+      },
+    ]);
+    getDb.mockReturnValue(getDbResult);
+
+    const request = new Request('http://localhost/api/v1/me', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology'], onboardingComplete: true }),
+    }) as NextRequest;
+
+    const response = await mePatch(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.onboardingComplete).toBe(true);
+    expect(profiles.records[0].data.onboardingComplete).toBe(true);
+  });
+
+  it('allows empty subjects while onboarding is incomplete', async () => {
+    // Covers the allowEmpty branch for activeSubjects validation.
+    const { collection, records } = createFirestoreMock([
+      {
+        id: 'user-1',
+        data: {
+          usernameLower: 'userone',
+          activeSubjects: [],
+          onboardingComplete: false,
+        },
+      },
+    ]);
+    getDb.mockReturnValue({ collection: () => collection });
+
+    const request = new Request('http://localhost/api/v1/me', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: [], onboardingComplete: false }),
+    }) as NextRequest;
+
+    const response = await mePatch(request);
+    expect(response.status).toBe(200);
+    expect(records[0].data.activeSubjects).toEqual([]);
+    expect(records[0].data.onboardingComplete).toBe(false);
+  });
+
+  it('rejects subjects updates when unauthenticated', async () => {
+    getSessionFromRequest.mockResolvedValue(null);
+    getDb.mockReturnValue({ collection: jest.fn() });
+
+    const request = new Request('http://localhost/api/v1/me/subjects', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology'] }),
+    }) as NextRequest;
+    const response = await subjectsPut(request);
+    expect(response.status).toBe(401);
+  });
+
+  it('returns 404 when subjects user is missing', async () => {
+    const { getDbResult } = createMultiCollectionMock();
+    getDb.mockReturnValue(getDbResult);
+
+    const request = new Request('http://localhost/api/v1/me/subjects', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology'] }),
+    }) as NextRequest;
+    const response = await subjectsPut(request);
+    expect(response.status).toBe(404);
+  });
+
+  it('updates subjects for access-code profiles', async () => {
+    const { getDbResult, profiles } = createMultiCollectionMock();
+    profiles.records.push({
+      id: 'profile-1',
+      data: {
+        label: 'UserOne',
+        labelLower: 'userone',
+        activeSubjects: ['Biology'],
+        onboardingComplete: false,
+        productId: 'pro',
+        store: 'app_store',
+        environment: 'sandbox',
+        revenueCatAppUserId: 'rc-user',
+        lastRevenueCatEventId: 'evt-1',
+      },
+    });
+    getDb.mockReturnValue(getDbResult);
+
+    const request = new Request('http://localhost/api/v1/me/subjects', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ activeSubjects: ['Biology'] }),
+    }) as NextRequest;
+    const response = await subjectsPut(request);
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.productId).toBe('pro');
+    expect(profiles.records[0].data.onboardingComplete).toBe(true);
   });
 });

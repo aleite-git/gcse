@@ -131,6 +131,24 @@ describe('quiz lib', () => {
     expect(selectQuizQuestions).not.toHaveBeenCalled();
   });
 
+  it('uses a fallback generatedAt when stored data is missing', async () => {
+    const today = getTodayLondon();
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.DAILY_ASSIGNMENTS]: {
+        [`${today}-computer-science`]: {
+          date: today,
+          subject: 'computer-science',
+          quizVersion: 1,
+          questionIds: ['a'],
+        },
+      },
+    });
+    getDb.mockReturnValue(db);
+
+    const assignment = await getOrCreateDailyAssignment('computer-science');
+    expect(assignment.generatedAt).toBeInstanceOf(Date);
+  });
+
   it('generates a new quiz version for retry', async () => {
     const today = getTodayLondon();
     const { db } = createFirestoreMock({
@@ -151,6 +169,22 @@ describe('quiz lib', () => {
     const next = await generateNewQuizVersion('computer-science');
     expect(next.quizVersion).toBe(2);
     expect(next.questions.map((q) => q.id)).toEqual(['q3', 'q4']);
+  });
+
+  it('creates version 1 when no assignment exists yet', async () => {
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.ATTEMPTS]: {
+        attempt1: {
+          date: getTodayLondon(),
+          subject: 'computer-science',
+        },
+      },
+    });
+    getDb.mockReturnValue(db);
+    selectQuizQuestions.mockResolvedValue([baseQuestion('q1', 1)]);
+
+    const next = await generateNewQuizVersion('computer-science');
+    expect(next.quizVersion).toBe(1);
   });
 
   it('includes today attempt questions when generating a retry quiz', async () => {
@@ -272,6 +306,56 @@ describe('quiz lib', () => {
     expect(summary.last7Days[0].date).toBe(today);
   });
 
+  it('handles progress summaries with no attempts or mismatched dates', async () => {
+    const today = getTodayLondon();
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.ATTEMPTS]: {
+        a1: {
+          date: `${today}-extra`,
+          subject: 'computer-science',
+          userLabel: 'student',
+          score: 0,
+        },
+        a2: {
+          date: today,
+          subject: 'computer-science',
+          userLabel: 'student',
+          score: 0,
+          topicBreakdown: { CPU: { correct: 0, total: 0 } },
+        },
+      },
+    });
+    getDb.mockReturnValue(db);
+
+    const summary = await getProgressSummary('student', 'computer-science', 2);
+    expect(summary.attemptedToday).toBe(true);
+    expect(summary.todayBestScore).toBe(0);
+    expect(summary.weakTopics).toHaveLength(0);
+  });
+
+  it('surfaces weak topics below the accuracy threshold', async () => {
+    const today = getTodayLondon();
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.ATTEMPTS]: {
+        a1: {
+          date: today,
+          subject: 'computer-science',
+          userLabel: 'student',
+          score: 2,
+          topicBreakdown: {
+            CPU: { correct: 1, total: 3 },
+            RAM: { correct: 2, total: 2 },
+          },
+        },
+      },
+    });
+    getDb.mockReturnValue(db);
+
+    const summary = await getProgressSummary('student', 'computer-science', 3);
+    expect(summary.weakTopics).toHaveLength(1);
+    expect(summary.weakTopics[0].topic).toBe('CPU');
+  });
+
   it('submits a quiz attempt and stores stats', async () => {
     const today = getTodayLondon();
     const { db } = createFirestoreMock({
@@ -302,6 +386,93 @@ describe('quiz lib', () => {
     expect(attempts.size).toBe(1);
   });
 
+  it('submits a shorter quiz when fewer questions are assigned', async () => {
+    const today = getTodayLondon();
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.DAILY_ASSIGNMENTS]: {
+        [`${today}-computer-science`]: {
+          date: today,
+          subject: 'computer-science',
+          quizVersion: 1,
+          generatedAt: ts(new Date()),
+          questionIds: ['q1', 'q2', 'q3', 'q4'],
+        },
+      },
+    });
+    getDb.mockReturnValue(db);
+
+    const questions = Array.from({ length: 4 }, (_, i) => ({
+      ...baseQuestion(`q${i + 1}`, 1),
+    }));
+    getQuestionsByIds.mockResolvedValue(questions);
+
+    const answers = questions.map((q) => ({ questionId: q.id, selectedIndex: 0 }));
+
+    const result = await submitQuizAttempt('student', 'computer-science', answers, 12, '1.2.3.4');
+    expect(result.attempt.score).toBe(4);
+    expect(recordQuestionAttempts).toHaveBeenCalled();
+  });
+
+  it('counts incorrect answers without incrementing score', async () => {
+    const today = getTodayLondon();
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.DAILY_ASSIGNMENTS]: {
+        [`${today}-computer-science`]: {
+          date: today,
+          subject: 'computer-science',
+          quizVersion: 1,
+          generatedAt: ts(new Date()),
+          questionIds: ['q1', 'q2'],
+        },
+      },
+    });
+    getDb.mockReturnValue(db);
+
+    const questions = [baseQuestion('q1', 1), baseQuestion('q2', 1)];
+    getQuestionsByIds.mockResolvedValue(questions);
+
+    const answers = [
+      { questionId: 'q1', selectedIndex: 1 },
+      { questionId: 'q2', selectedIndex: 0 },
+    ];
+
+    const result = await submitQuizAttempt('student', 'computer-science', answers, 12);
+    expect(result.attempt.score).toBe(1);
+  });
+
+  it('submits with missing answers and no ip hash', async () => {
+    const today = getTodayLondon();
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.DAILY_ASSIGNMENTS]: {
+        [`${today}-computer-science`]: {
+          date: today,
+          subject: 'computer-science',
+          quizVersion: 1,
+          generatedAt: ts(new Date()),
+          questionIds: ['q1', 'q2', 'q3'],
+        },
+      },
+    });
+    getDb.mockReturnValue(db);
+
+    const questions = [
+      baseQuestion('q1', 1),
+      baseQuestion('q2', 1),
+      baseQuestion('q3', 1),
+    ];
+    getQuestionsByIds.mockResolvedValue(questions);
+
+    const answers = [
+      { questionId: 'q1', selectedIndex: 1 },
+      { questionId: 'q1', selectedIndex: 1 },
+      { questionId: 'q2', selectedIndex: 0 },
+    ];
+
+    const result = await submitQuizAttempt('student', 'computer-science', answers, 12);
+    expect(result.attempt.score).toBe(1);
+    expect(result.attempt.ipHash).toBeUndefined();
+  });
+
   it('reads attempts and attempt status helpers', async () => {
     const today = getTodayLondon();
     const { db } = createFirestoreMock({
@@ -313,12 +484,18 @@ describe('quiz lib', () => {
           attemptNumber: 1,
           submittedAt: ts(new Date()),
         },
+        a2: {
+          date: today,
+          subject: 'computer-science',
+          userLabel: 'student',
+          attemptNumber: 2,
+        },
       },
     });
     getDb.mockReturnValue(db);
 
     const todayAttempts = await getTodayAttempts('student', 'computer-science');
-    expect(todayAttempts).toHaveLength(1);
+    expect(todayAttempts).toHaveLength(2);
 
     const found = await getAttemptById('a1');
     expect(found?.id).toBe('a1');
@@ -326,11 +503,11 @@ describe('quiz lib', () => {
     const missing = await getAttemptById('missing');
     expect(missing).toBeNull();
 
-    const all = await getAllAttempts(10);
-    expect(all).toHaveLength(1);
+    const all = await getAllAttempts();
+    expect(all).toHaveLength(2);
 
     const range = await getAttemptsByDateRange(today, today);
-    expect(range).toHaveLength(1);
+    expect(range).toHaveLength(2);
 
     const attempted = await hasAttemptedToday('student', 'computer-science');
     expect(attempted).toBe(true);
@@ -392,5 +569,25 @@ describe('quiz lib', () => {
     await expect(
       submitQuizAttempt('student', 'computer-science', answers, 5)
     ).rejects.toThrow(`Question bad1 is not part of today's quiz`);
+  });
+
+  it('rejects submit when no questions are available', async () => {
+    const today = getTodayLondon();
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.DAILY_ASSIGNMENTS]: {
+        [`${today}-computer-science`]: {
+          date: today,
+          subject: 'computer-science',
+          quizVersion: 1,
+          generatedAt: ts(new Date()),
+          questionIds: [],
+        },
+      },
+    });
+    getDb.mockReturnValue(db);
+
+    await expect(
+      submitQuizAttempt('student', 'computer-science', [], 5)
+    ).rejects.toThrow('No quiz available');
   });
 });

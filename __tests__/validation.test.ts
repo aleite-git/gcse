@@ -7,9 +7,9 @@ describe('Quiz Submission Validation', () => {
   function validateSubmission(answers: Array<{ questionId: string; selectedIndex: number }>, assignedQuestionIds: string[]) {
     const errors: string[] = [];
 
-    // Check that exactly 6 answers are provided (5 regular + 1 bonus)
-    if (answers.length !== 6) {
-      errors.push('Must answer all 6 questions');
+    // Check that the answer count matches today's assigned questions.
+    if (answers.length !== assignedQuestionIds.length) {
+      errors.push(`Must answer all ${assignedQuestionIds.length} questions`);
     }
 
     // Check that all answers have required fields
@@ -134,5 +134,18 @@ describe('Quiz Submission Validation', () => {
     const result = validateSubmission(answers, validQuestionIds);
     expect(result.isValid).toBe(false);
     expect(result.errors).toContain('Must answer all 6 questions');
+  });
+
+  it('should reject submissions that do not match the assigned question count', () => {
+    const assigned = ['q1', 'q2', 'q3', 'q4'];
+    const answers = [
+      { questionId: 'q1', selectedIndex: 0 },
+      { questionId: 'q2', selectedIndex: 1 },
+      { questionId: 'q3', selectedIndex: 2 },
+    ];
+
+    const result = validateSubmission(answers, assigned);
+    expect(result.isValid).toBe(false);
+    expect(result.errors).toContain('Must answer all 4 questions');
   });
 });

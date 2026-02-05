@@ -227,6 +227,20 @@ describe('api routes', () => {
     expect(payload.quizVersion).toBe(1);
   });
 
+  it('returns a no-quiz message when the question bank is empty', async () => {
+    getTodayQuiz.mockResolvedValue({
+      quizVersion: 1,
+      subject: 'computer-science',
+      questions: [],
+    });
+
+    const request = new Request('http://localhost/api/quiz/today?subject=computer-science') as NextRequest;
+    const response = await quizTodayGet(request);
+    const payload = await response.json();
+    expect(payload.questions).toHaveLength(0);
+    expect(payload.message).toBe('Question bank being revised! No quiz today!');
+  });
+
   it('rejects quiz today without subject', async () => {
     const request = new Request('http://localhost/api/quiz/today') as NextRequest;
     const response = await quizTodayGet(request);
@@ -258,6 +272,25 @@ describe('api routes', () => {
     const response = await quizRetryPost(request);
     const payload = await response.json();
     expect(payload.quizVersion).toBe(2);
+  });
+
+  it('returns a no-quiz message when retry has no questions', async () => {
+    generateNewQuizVersion.mockResolvedValue({
+      quizVersion: 2,
+      subject: 'computer-science',
+      questions: [],
+    });
+
+    const request = new Request('http://localhost/api/quiz/retry', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ subject: 'computer-science' }),
+    }) as NextRequest;
+
+    const response = await quizRetryPost(request);
+    const payload = await response.json();
+    expect(payload.questions).toHaveLength(0);
+    expect(payload.message).toBe('Question bank being revised! No quiz today!');
   });
 
   it('rejects quiz retry with invalid subject', async () => {
@@ -322,7 +355,102 @@ describe('api routes', () => {
     expect(payload.score).toBe(6);
   });
 
+  it('rejects quiz submit when unauthenticated', async () => {
+    getSessionFromRequest.mockResolvedValue(null);
+
+    const request = new Request('http://localhost/api/quiz/submit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ subject: 'computer-science', answers: [], durationSeconds: 0 }),
+    }) as NextRequest;
+
+    const response = await quizSubmitPost(request);
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects quiz submit with invalid subject', async () => {
+    const request = new Request('http://localhost/api/quiz/submit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ subject: 'invalid', answers: [], durationSeconds: 0 }),
+    }) as NextRequest;
+
+    const response = await quizSubmitPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects quiz submit without answers', async () => {
+    const request = new Request('http://localhost/api/quiz/submit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ subject: 'computer-science' }),
+    }) as NextRequest;
+
+    const response = await quizSubmitPost(request);
+    const payload = await response.json();
+    expect(response.status).toBe(400);
+    expect(payload.error).toBe('Answers are required');
+  });
+
+  it('rejects quiz submit with invalid answer shapes', async () => {
+    const request = new Request('http://localhost/api/quiz/submit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        subject: 'computer-science',
+        answers: [{ selectedIndex: 0 }],
+        durationSeconds: 10,
+      }),
+    }) as NextRequest;
+
+    const response = await quizSubmitPost(request);
+    const payload = await response.json();
+    expect(response.status).toBe(400);
+    expect(payload.error).toBe('Invalid answer format');
+  });
+
+  it('rejects quiz submit with out-of-range selections', async () => {
+    const request = new Request('http://localhost/api/quiz/submit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        subject: 'computer-science',
+        answers: [{ questionId: 'q1', selectedIndex: 9 }],
+        durationSeconds: 10,
+      }),
+    }) as NextRequest;
+
+    const response = await quizSubmitPost(request);
+    const payload = await response.json();
+    expect(response.status).toBe(400);
+    expect(payload.error).toBe('Invalid answer selection');
+  });
+
+  it('uses x-real-ip when x-forwarded-for is missing', async () => {
+    submitQuizAttempt.mockResolvedValue({
+      attempt: { id: 'a2', score: 1, topicBreakdown: {} },
+      questions: [
+        { id: 'q1', stem: 'Q', options: ['1', '2', '3', '4'], correctIndex: 0, explanation: 'E', topic: 'CPU', notes: '' },
+      ],
+    });
+    recordActivity.mockResolvedValue({ streak: { currentStreak: 1, freezeDays: 0 }, freezeEarned: false });
+
+    const request = new Request('http://localhost/api/quiz/submit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-real-ip': '10.0.0.1' },
+      body: JSON.stringify({
+        subject: 'computer-science',
+        answers: [{ questionId: 'q1', selectedIndex: 0 }],
+        durationSeconds: 1,
+      }),
+    }) as NextRequest;
+
+    await quizSubmitPost(request);
+    expect(submitQuizAttempt.mock.calls[0][4]).toBe('10.0.0.1');
+  });
+
   it('rejects submit with incomplete answers', async () => {
+    submitQuizAttempt.mockRejectedValue(new Error('Must answer all 6 questions'));
     const request = new Request('http://localhost/api/quiz/submit', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -334,7 +462,25 @@ describe('api routes', () => {
     }) as NextRequest;
 
     const response = await quizSubmitPost(request);
+    const payload = await response.json();
     expect(response.status).toBe(400);
+    expect(payload.error).toBe('Must answer all 6 questions');
+  });
+
+  it('returns 500 when quiz submit throws non-validation errors', async () => {
+    submitQuizAttempt.mockRejectedValue(new Error('boom'));
+    const request = new Request('http://localhost/api/quiz/submit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        subject: 'computer-science',
+        answers: [{ questionId: 'q1', selectedIndex: 0 }],
+        durationSeconds: 10,
+      }),
+    }) as NextRequest;
+
+    const response = await quizSubmitPost(request);
+    expect(response.status).toBe(500);
   });
 
   it('returns progress summary', async () => {
@@ -377,9 +523,56 @@ describe('api routes', () => {
     expect(payload.success).toBe(true);
   });
 
+  it('returns streaks for all subjects when no subject is provided', async () => {
+    getStreakStatus.mockResolvedValue({ currentStreak: 1, freezeDays: 0, maxFreezes: 0, streakActive: false, lastActivityDate: null, daysUntilStreakLoss: 0, frozeToday: false });
+    checkAndApplyFreeze.mockResolvedValue({ streak: { currentStreak: 1, freezeDays: 0 }, frozeApplied: false, missedDays: 0 });
+
+    const request = new Request('http://localhost/api/streak?timezone=Europe/London') as NextRequest;
+    const response = await streakGet(request);
+    const payload = await response.json();
+    expect(payload.overallStreak).toBeDefined();
+  });
+
+  it('returns overall streak without recording subject activity', async () => {
+    getStreakStatus.mockResolvedValue({ currentStreak: 1, freezeDays: 0, maxFreezes: 0, streakActive: true, lastActivityDate: null, daysUntilStreakLoss: 0, frozeToday: false });
+    checkAndApplyFreeze.mockResolvedValue({ streak: { currentStreak: 1, freezeDays: 0 }, frozeApplied: false, missedDays: 0 });
+
+    const request = new Request('http://localhost/api/streak?subject=overall') as NextRequest;
+    await streakGet(request);
+    expect(recordActivity).not.toHaveBeenCalled();
+  });
+
+  it('rejects streak requests when unauthenticated', async () => {
+    getSessionFromRequest.mockResolvedValue(null);
+    const request = new Request('http://localhost/api/streak?subject=overall') as NextRequest;
+    const response = await streakGet(request);
+    expect(response.status).toBe(401);
+  });
+
   it('rejects streak with invalid subject', async () => {
     const request = new Request('http://localhost/api/streak?subject=bad') as NextRequest;
     const response = await streakGet(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects streak actions when unauthenticated', async () => {
+    getSessionFromRequest.mockResolvedValue(null);
+    const request = new Request('http://localhost/api/streak', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'use_freeze', subject: 'overall' }),
+    }) as NextRequest;
+    const response = await streakPost(request);
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects use_freeze when subject is not overall', async () => {
+    const request = new Request('http://localhost/api/streak', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'use_freeze', subject: 'biology' }),
+    }) as NextRequest;
+    const response = await streakPost(request);
     expect(response.status).toBe(400);
   });
 
@@ -388,6 +581,52 @@ describe('api routes', () => {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ action: 'update_timezone', subject: 'computer-science' }),
+    }) as NextRequest;
+    const response = await streakPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects update_timezone with invalid subject', async () => {
+    const request = new Request('http://localhost/api/streak', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'update_timezone', subject: 'invalid', timezone: 'Europe/London' }),
+    }) as NextRequest;
+    const response = await streakPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('updates timezone for valid subjects', async () => {
+    updateTimezone.mockResolvedValue(undefined);
+    getStreakStatus.mockResolvedValue({ currentStreak: 1, freezeDays: 0, maxFreezes: 0, streakActive: true, lastActivityDate: null, daysUntilStreakLoss: 0, frozeToday: false });
+
+    const request = new Request('http://localhost/api/streak', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'update_timezone', subject: 'computer-science', timezone: 'Europe/London' }),
+    }) as NextRequest;
+    const response = await streakPost(request);
+    const payload = await response.json();
+    expect(payload.success).toBe(true);
+  });
+
+  it('defaults timezone when use_freeze omits it', async () => {
+    useFreeze.mockResolvedValue({ success: true, message: 'ok', streak: { currentStreak: 1, freezeDays: 0 } });
+
+    const request = new Request('http://localhost/api/streak', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'use_freeze', subject: 'overall' }),
+    }) as NextRequest;
+    await streakPost(request);
+    expect(useFreeze.mock.calls[0][2]).toBe('Europe/London');
+  });
+
+  it('rejects unknown streak actions', async () => {
+    const request = new Request('http://localhost/api/streak', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'unknown' }),
     }) as NextRequest;
     const response = await streakPost(request);
     expect(response.status).toBe(400);
@@ -509,11 +748,34 @@ describe('api routes', () => {
     expect(payload.totalAttempts).toBe(1);
   });
 
+  it('returns admin results for a date range with unknown users', async () => {
+    getAttemptsByDateRange.mockResolvedValue([
+      {
+        date: '2026-02-05',
+        score: 0,
+        submittedAt: new Date('2026-02-05T10:00:00Z'),
+        topicBreakdown: { CPU: { correct: 0, total: 0 } },
+      },
+    ]);
+    const request = new Request('http://localhost/api/admin/results?startDate=2026-02-01&endDate=2026-02-05') as NextRequest;
+    const response = await adminResultsGet(request);
+    const payload = await response.json();
+    expect(payload.byUser.Unknown).toHaveLength(1);
+    expect(payload.topicStats[0].correctRate).toBe(0);
+  });
+
   it('rejects admin results for non-admin session', async () => {
     getSessionFromRequest.mockResolvedValue({ label: 'User', isAdmin: false, iat: 0, exp: 0 });
     const request = new Request('http://localhost/api/admin/results') as NextRequest;
     const response = await adminResultsGet(request);
     expect(response.status).toBe(403);
+  });
+
+  it('returns 500 when admin results retrieval fails', async () => {
+    getAllAttempts.mockRejectedValue(new Error('boom'));
+    const request = new Request('http://localhost/api/admin/results') as NextRequest;
+    const response = await adminResultsGet(request);
+    expect(response.status).toBe(500);
   });
 
   it('returns admin question stats', async () => {

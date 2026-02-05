@@ -17,6 +17,7 @@ const {
   useFreeze,
   getStreakStatus,
   updateTimezone,
+  getOrCreateUserStreak,
 } = await import('@/lib/streak');
 
 type StreakDoc = Record<string, unknown>;
@@ -160,6 +161,29 @@ describe('recordActivity', () => {
     expect(result.streak.freezeDays).toBe(0);
     expect(result.streak.lastActivityDate).toBe('2026-01-14');
     expect(userStreaks.get('user-overall')?.freezeDays).toBe(0);
+  });
+
+  it('returns early when activity already exists for today', async () => {
+    const { collection } = createFirestoreMock({
+      'user-overall': {
+        userLabel: 'user',
+        subject: 'overall',
+        currentStreak: 2,
+        longestStreak: 2,
+        lastActivityDate: '2026-01-14',
+        freezeDays: 0,
+        freezeDaysUsed: 0,
+        timezone: 'Europe/London',
+        streakStartDate: '2026-01-13',
+        lastFreezeEarnedAt: 0,
+        updatedAt: { toDate: () => new Date('2026-01-14T12:00:00Z') },
+      },
+    });
+    getDb.mockReturnValue({ collection });
+
+    const result = await recordActivity('user', OVERALL_STREAK_SUBJECT, 'login', 'Europe/London');
+    expect(result.isNewDay).toBe(false);
+    expect(result.freezeEarned).toBe(false);
   });
 });
 
@@ -608,5 +632,67 @@ describe('streak helpers', () => {
 
     await updateTimezone('user', 'biology', 'Europe/London');
     expect(userStreaks.has('user-biology')).toBe(true);
+  });
+
+  it('uses default timezone and Date updatedAt values', async () => {
+    const { collection } = createFirestoreMock({
+      'user-biology': {
+        userLabel: 'user',
+        subject: 'biology',
+        currentStreak: 1,
+        longestStreak: 1,
+        lastActivityDate: '2026-01-13',
+        freezeDays: 0,
+        freezeDaysUsed: 0,
+        timezone: '',
+        streakStartDate: '2026-01-13',
+        lastFreezeEarnedAt: 0,
+        updatedAt: new Date('2026-01-13T12:00:00Z'),
+      },
+    });
+    getDb.mockReturnValue({ collection });
+
+    const streak = await getOrCreateUserStreak('user', 'biology');
+    expect(streak.timezone).toBe('Europe/London');
+    expect(streak.updatedAt).toBeInstanceOf(Date);
+  });
+
+  it('caps max freezes based on the longest subject streak', async () => {
+    const { collection } = createFirestoreMock({
+      'user-overall': {
+        userLabel: 'user',
+        subject: 'overall',
+        currentStreak: 2,
+        longestStreak: 2,
+        lastActivityDate: '2026-01-14',
+        freezeDays: 5,
+        freezeDaysUsed: 0,
+        timezone: 'Europe/London',
+        streakStartDate: '2026-01-13',
+        lastFreezeEarnedAt: 0,
+        updatedAt: { toDate: () => new Date('2026-01-14T12:00:00Z') },
+      },
+      'user-biology': {
+        userLabel: 'user',
+        subject: 'biology',
+        currentStreak: 25,
+        longestStreak: 25,
+        lastActivityDate: '2026-01-14',
+        freezeDays: 0,
+        freezeDaysUsed: 0,
+        timezone: 'Europe/London',
+        streakStartDate: '2026-01-01',
+        lastFreezeEarnedAt: 0,
+        updatedAt: { toDate: () => new Date('2026-01-14T12:00:00Z') },
+      },
+      'user-ghost': {
+        userLabel: 'user',
+        subject: undefined,
+      },
+    });
+    getDb.mockReturnValue({ collection });
+
+    const status = await getStreakStatus('user', OVERALL_STREAK_SUBJECT);
+    expect(status.maxFreezes).toBe(2);
   });
 });

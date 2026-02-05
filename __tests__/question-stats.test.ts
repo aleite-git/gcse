@@ -54,6 +54,18 @@ describe('question stats', () => {
     expect(data?.userLabel).toBe('user1');
   });
 
+  it('records incorrect attempts with zero correct increment', async () => {
+    const { db } = createFirestoreMock();
+    getDb.mockReturnValue(db);
+
+    await recordQuestionAttempt('q2', 'user2', false);
+    const snapshot = await db.collection(COLLECTIONS.QUESTION_STATS).doc('q2_user2').get();
+    const data = snapshot.data();
+
+    expect(data?.attempts).toBe(1);
+    expect(data?.correct).toBe(0);
+  });
+
   it('records multiple question attempts in a batch', async () => {
     const { db } = createFirestoreMock();
     getDb.mockReturnValue(db);
@@ -94,6 +106,15 @@ describe('question stats', () => {
     expect(aggregate.successRate).toBeCloseTo(0.8, 5);
   });
 
+  it('returns zero success rate when no stats exist', async () => {
+    const { db } = createFirestoreMock();
+    getDb.mockReturnValue(db);
+
+    const aggregate = await getAggregatedQuestionStats('missing');
+    expect(aggregate.totalAttempts).toBe(0);
+    expect(aggregate.successRate).toBe(0);
+  });
+
   it('gets a user question stat by composite id', async () => {
     const { db } = createFirestoreMock({
       [COLLECTIONS.QUESTION_STATS]: {
@@ -105,6 +126,24 @@ describe('question stats', () => {
     const stat = await getUserQuestionStats('q9', 'user9');
     expect(stat?.questionId).toBe('q9');
     expect(stat?.attempts).toBe(1);
+  });
+
+  it('uses fallback timestamps when lastAttemptedAt is missing', async () => {
+    const { db } = createFirestoreMock({
+      [COLLECTIONS.QUESTION_STATS]: {
+        'q10_user10': { questionId: 'q10', userLabel: 'user10', attempts: 1, correct: 1 },
+      },
+    });
+    getDb.mockReturnValue(db);
+
+    const stats = await getQuestionStatsForUser('user10');
+    expect(stats[0].lastAttemptedAt).toBeInstanceOf(Date);
+
+    const questionStats = await getStatsForQuestion('q10');
+    expect(questionStats[0].lastAttemptedAt).toBeInstanceOf(Date);
+
+    const userStat = await getUserQuestionStats('q10', 'user10');
+    expect(userStat?.lastAttemptedAt).toBeInstanceOf(Date);
   });
 
   it('returns null when no user question stat exists', async () => {

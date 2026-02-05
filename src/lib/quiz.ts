@@ -181,9 +181,12 @@ export async function submitQuizAttempt(
   const today = getTodayLondon();
   const assignment = await getOrCreateDailyAssignment(subject);
 
-  // Validate answers (5 regular + 1 bonus = 6 questions)
-  if (answers.length !== 6) {
-    throw new Error('Must answer all 6 questions');
+  // Validate answers match the number of assigned questions for today.
+  if (assignment.questionIds.length === 0) {
+    throw new Error('No quiz available');
+  }
+  if (answers.length !== assignment.questionIds.length) {
+    throw new Error(`Must answer all ${assignment.questionIds.length} questions`);
   }
 
   const assignedIds = new Set(assignment.questionIds);

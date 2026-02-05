@@ -125,6 +125,125 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/subscription/identify:
+    post:
+      summary: Store RevenueCat app user id for the current user
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevenueCatIdentifyRequest'
+      responses:
+        '200':
+          description: RevenueCat app user id stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueCatIdentifyResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/subscription/sync:
+    post:
+      summary: Sync subscription state from RevenueCat
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Subscription synced
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueCatSyncResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: RevenueCat sync failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/subscription/webhook:
+    post:
+      summary: RevenueCat webhook callback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: RevenueCat webhook payload.
+      responses:
+        '200':
+          description: Webhook processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueCatWebhookResponse'
+        '400':
+          description: Invalid payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /api/mobile/register:
     post:
       summary: Register a mobile user
@@ -981,8 +1100,7 @@ components:
         entitlement:
           $ref: '#/components/schemas/Entitlement'
         subscriptionStatus:
-          type: string
-          enum: [active, grace, expired]
+          $ref: '#/components/schemas/SubscriptionStatus'
         subscriptionStart:
           type: string
           nullable: true
@@ -998,8 +1116,85 @@ components:
         subscriptionProvider:
           type: string
           nullable: true
+        productId:
+          type: string
+          nullable: true
+        store:
+          type: string
+          nullable: true
+        environment:
+          type: string
+          nullable: true
+        revenueCatAppUserId:
+          type: string
+          nullable: true
+        lastRevenueCatEventId:
+          type: string
+          nullable: true
         adminOverride:
           type: boolean
+    RevenueCatIdentifyRequest:
+      type: object
+      required:
+        - revenueCatAppUserId
+      properties:
+        revenueCatAppUserId:
+          type: string
+    RevenueCatIdentifyResponse:
+      type: object
+      required:
+        - revenueCatAppUserId
+      properties:
+        revenueCatAppUserId:
+          type: string
+    RevenueCatSyncResponse:
+      type: object
+      required:
+        - revenueCatAppUserId
+        - entitlement
+        - subscriptionStatus
+        - subscriptionStart
+        - subscriptionExpiry
+        - graceUntil
+        - subscriptionProvider
+      properties:
+        revenueCatAppUserId:
+          type: string
+        entitlement:
+          $ref: '#/components/schemas/Entitlement'
+        subscriptionStatus:
+          $ref: '#/components/schemas/SubscriptionStatus'
+        subscriptionStart:
+          type: string
+          nullable: true
+          format: date-time
+        subscriptionExpiry:
+          type: string
+          nullable: true
+          format: date-time
+        graceUntil:
+          type: string
+          nullable: true
+          format: date-time
+        subscriptionProvider:
+          type: string
+          nullable: true
+        productId:
+          type: string
+          nullable: true
+        store:
+          type: string
+          nullable: true
+        environment:
+          type: string
+          nullable: true
+    RevenueCatWebhookResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
     AdminOverrideRequest:
       type: object
       required:
@@ -1114,6 +1309,7 @@ components:
         - active
         - grace
         - expired
+        - unknown
     StreakSubject:
       type: string
       enum:

@@ -22,7 +22,13 @@ describe('mobile user store', () => {
   it('gets users by email and username and updates profile', async () => {
     const { db } = createFirestoreMock({
       [COLLECTIONS.MOBILE_USERS]: {
-        user1: { emailLower: 'user@example.com', usernameLower: 'userone', activeSubjects: [], onboardingComplete: false },
+        user1: {
+          emailLower: 'user@example.com',
+          usernameLower: 'userone',
+          revenueCatAppUserId: 'rc-user-1',
+          activeSubjects: [],
+          onboardingComplete: false,
+        },
       },
     });
     getDb.mockReturnValue(db);
@@ -30,8 +36,10 @@ describe('mobile user store', () => {
     const store = createFirestoreMobileUserStore();
     const byEmail = await store.getByEmail('user@example.com');
     const byUsername = await store.getByUsername('userone');
+    const byRevenueCat = await store.getByRevenueCatAppUserId('rc-user-1');
     expect(byEmail?.id).toBe('user1');
     expect(byUsername?.id).toBe('user1');
+    expect(byRevenueCat?.id).toBe('user1');
 
     await store.updateProfile('user1', { onboardingComplete: true });
     const updated = await store.getById('user1');
@@ -81,6 +89,13 @@ describe('mobile user store', () => {
       subscriptionExpiry: now,
       graceUntil: null,
       subscriptionProvider: 'apple',
+      entitlement: 'premium',
+      subscriptionStatus: 'active',
+      productId: 'pro',
+      store: 'app_store',
+      environment: 'production',
+      revenueCatAppUserId: 'rc-user-1',
+      lastRevenueCatEventId: 'evt-1',
     });
     await store.updateAdminOverride('user1', true);
     await store.updateDeletion('user1', { deletionStatus: 'pending', deletionRequestedAt: now });
@@ -89,6 +104,13 @@ describe('mobile user store', () => {
     expect(updated?.usernameLower).toBe('newuser');
     expect(updated?.oauthProvider).toBe('apple');
     expect(updated?.subscriptionProvider).toBe('apple');
+    expect(updated?.entitlement).toBe('premium');
+    expect(updated?.subscriptionStatus).toBe('active');
+    expect(updated?.productId).toBe('pro');
+    expect(updated?.store).toBe('app_store');
+    expect(updated?.environment).toBe('production');
+    expect(updated?.revenueCatAppUserId).toBe('rc-user-1');
+    expect(updated?.lastRevenueCatEventId).toBe('evt-1');
     expect(updated?.adminOverride).toBe(true);
     expect(updated?.deletionStatus).toBe('pending');
   });

@@ -20,6 +20,7 @@ const publicApiRoutes = [
   '/api/mobile/oauth/apple',
   '/api/admin/account-deletion/run',
   '/api/admin/subscription-override',
+  '/api/v1/subscription/webhook',
 ];
 const HSTS_HEADER = 'max-age=31536000; includeSubDomains; preload';
 

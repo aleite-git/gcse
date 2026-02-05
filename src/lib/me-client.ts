@@ -5,11 +5,16 @@ export type MeProfile = {
   activeSubjects: ActiveSubject[];
   onboardingComplete: boolean;
   entitlement?: 'premium' | 'free';
-  subscriptionStatus?: 'active' | 'grace' | 'expired';
+  subscriptionStatus?: 'active' | 'grace' | 'expired' | 'unknown';
   subscriptionStart?: string | null;
   subscriptionExpiry?: string | null;
   graceUntil?: string | null;
   subscriptionProvider?: string | null;
+  productId?: string | null;
+  store?: string | null;
+  environment?: string | null;
+  revenueCatAppUserId?: string | null;
+  lastRevenueCatEventId?: string | null;
   adminOverride?: boolean;
 };
 

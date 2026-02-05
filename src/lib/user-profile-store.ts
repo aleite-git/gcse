@@ -11,6 +11,13 @@ export type UserProfileRecord = {
   subscriptionExpiry?: Date | { toDate: () => Date } | number | null;
   graceUntil?: Date | { toDate: () => Date } | number | null;
   subscriptionProvider?: string | null;
+  entitlement?: 'premium' | 'free' | 'none' | null;
+  subscriptionStatus?: 'active' | 'grace' | 'expired' | 'unknown' | null;
+  productId?: string | null;
+  store?: string | null;
+  environment?: string | null;
+  revenueCatAppUserId?: string | null;
+  lastRevenueCatEventId?: string | null;
   adminOverride?: boolean | null;
   createdAt: Date;
 };

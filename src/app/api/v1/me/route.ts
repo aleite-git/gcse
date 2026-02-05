@@ -15,6 +15,13 @@ function toProfileResponse(user: {
   subscriptionExpiry?: Date | { toDate: () => Date } | number | null;
   graceUntil?: Date | { toDate: () => Date } | number | null;
   subscriptionProvider?: string | null;
+  entitlement?: 'premium' | 'free' | 'none' | null;
+  subscriptionStatus?: 'active' | 'grace' | 'expired' | 'unknown' | null;
+  productId?: string | null;
+  store?: string | null;
+  environment?: string | null;
+  revenueCatAppUserId?: string | null;
+  lastRevenueCatEventId?: string | null;
   adminOverride?: boolean | null;
 }) {
   const subscription = getSubscriptionSummary(user);
@@ -29,6 +36,11 @@ function toProfileResponse(user: {
     subscriptionExpiry: subscription.subscriptionExpiry,
     graceUntil: subscription.graceUntil,
     subscriptionProvider: subscription.subscriptionProvider,
+    productId: user.productId ?? null,
+    store: user.store ?? null,
+    environment: user.environment ?? null,
+    revenueCatAppUserId: user.revenueCatAppUserId ?? null,
+    lastRevenueCatEventId: user.lastRevenueCatEventId ?? null,
     adminOverride: subscription.adminOverride,
   };
 }
@@ -56,6 +68,13 @@ async function getOrCreateProfile(label: string) {
     subscriptionExpiry: null,
     graceUntil: null,
     subscriptionProvider: null,
+    entitlement: null,
+    subscriptionStatus: null,
+    productId: null,
+    store: null,
+    environment: null,
+    revenueCatAppUserId: null,
+    lastRevenueCatEventId: null,
     adminOverride: false,
     createdAt: new Date(),
   });

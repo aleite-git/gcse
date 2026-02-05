@@ -142,7 +142,7 @@ Tests live in `__tests__/` and cover:
 - Mobile auth and OAuth flows.
 - Admin subscription override route.
 
-The project requirement is 100% automated test coverage. This means any new logic should ship with tests and we should maintain or raise coverage over time.
+The project requirement is 100% automated test coverage. We are currently enforcing a **90% global coverage threshold** in Jest as an explicit override, so new logic must still ship with tests and we should work back toward 100%.
 
 ## Maintenance Guidance (Based on Current Implementation)
 Use this checklist when updating or operating the system:
@@ -157,9 +157,12 @@ Use this checklist when updating or operating the system:
 
 ## Known Design Assumptions
 These are assumptions the code currently depends on:
-- Each subject has enough questions to generate 5 regular plus 1 bonus question.
 - Daily assignments and attempt dates use a consistent timezone (London in most places).
 - Access codes are few enough to validate with bcrypt comparisons in a loop.
 - Mobile users are stored in `mobileUsers`, while access-code users use `userProfiles`.
+
+Fail-safe behavior for question counts:
+- If a subject has fewer than 6 active questions, the quiz shows whatever is available.
+- If a subject has zero active questions, the quiz response includes the message “Question bank being revised! No quiz today!” and the UI blocks submission.
 
 If any of those assumptions change, the related logic and tests will need to be updated.

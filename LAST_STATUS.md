@@ -66,8 +66,8 @@ A daily quiz application for GCSE students covering three subjects:
 
 4. **Coverage requirement not enforced by tooling**
    - **Location:** `jest.config.js`, `package.json`
-   - **Status:** In Progress
-   - **Note:** Coverage thresholds are set to 80%, but the test suite is still below the target. We are adding tests to close the gap.
+   - **Status:** Adjusted (2026-02-05)
+   - **Note:** Coverage thresholds are now set to 90% as an explicit override of the 100% guideline. We still aim to increase coverage over time.
 
 5. **Documentation mismatch**
    - **Location:** `README.md`, `package.json`
@@ -81,8 +81,8 @@ A daily quiz application for GCSE students covering three subjects:
 
 7. **Quiz length assumes 6 questions are always available**
    - **Location:** `src/lib/questions.ts`, `src/lib/quiz.ts`
-   - **Status:** Open
-   - **Why:** `selectQuizQuestions()` can return fewer than 6 if there are not enough questions, but `submitQuizAttempt` requires exactly 6 answers.
+   - **Status:** Resolved (2026-02-05)
+   - **Note:** The quiz now supports fewer than 6 questions. If no questions are available, the API returns the message “Question bank being revised! No quiz today!” and the UI blocks submission.
 
 ## Account Deletion Status
 

@@ -181,6 +181,195 @@ describe('mobile account deletion routes', () => {
     expect(response.status).toBe(400);
   });
 
+  it('rejects deletion confirm when unauthenticated', async () => {
+    getSessionFromRequest.mockResolvedValue(null);
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: '123456' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects deletion confirm when user is missing', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => null,
+    });
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: '123456' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects deletion confirm for oauth users', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: 'google' }),
+    });
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: '123456' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects deletion confirm when request id is invalid', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+    getAccountDeletionRequest.mockResolvedValue(null);
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: '123456' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects deletion confirm when request type is not delete', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req1',
+      userId: 'user1',
+      type: 'cancel',
+      status: 'pending',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: '123456' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('increments attempts when deletion code is invalid', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', email: 'user@example.com', oauthProvider: null }),
+      updateDeletion: async () => {},
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req1',
+      userId: 'user1',
+      type: 'delete',
+      status: 'pending',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+    resolveTimestamp.mockReturnValue(new Date(Date.now() + 10000));
+    verifyVerificationCode.mockResolvedValue(false);
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: 'bad' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(400);
+    expect(updateAccountDeletionRequest).toHaveBeenCalledWith('req1', { attemptCount: 1 });
+  });
+
+  it('returns 429 when invalid code reaches max attempts', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', email: 'user@example.com', oauthProvider: null }),
+      updateDeletion: async () => {},
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req1',
+      userId: 'user1',
+      type: 'delete',
+      status: 'pending',
+      attemptCount: 4,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+    resolveTimestamp.mockReturnValue(new Date(Date.now() + 10000));
+    verifyVerificationCode.mockResolvedValue(false);
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: 'bad' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(429);
+  });
+
+  it('rejects deletion confirm when already scheduled', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({
+        id: 'user1',
+        email: 'user@example.com',
+        oauthProvider: null,
+        deletionScheduledFor: new Date(Date.now() + 10000),
+        deletionStatus: 'pending',
+      }),
+      updateDeletion: async () => {},
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req1',
+      userId: 'user1',
+      type: 'delete',
+      status: 'pending',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+    resolveTimestamp.mockReturnValue(new Date(Date.now() + 10000));
+    verifyVerificationCode.mockResolvedValue(true);
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: '123456' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(409);
+  });
+
+  it('skips expiry updates when deletion request is already expired', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', email: 'user@example.com', oauthProvider: null }),
+      updateDeletion: async () => {},
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req1',
+      userId: 'user1',
+      type: 'delete',
+      status: 'expired',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() - 1000),
+    });
+    resolveTimestamp.mockReturnValue(new Date(Date.now() - 1000));
+
+    const request = new Request('http://localhost/api/mobile/account/delete/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req1', code: '123456' }),
+    }) as NextRequest;
+    const response = await deleteConfirmPost(request);
+    expect(response.status).toBe(410);
+    expect(updateAccountDeletionRequest).not.toHaveBeenCalled();
+  });
+
   it('rejects deletion confirm when code is expired', async () => {
     createFirestoreMobileUserStore.mockReturnValue({
       getByUsername: async () => ({ id: 'user1', email: 'user@example.com', oauthProvider: null }),
@@ -322,5 +511,226 @@ describe('mobile account deletion routes', () => {
     }) as NextRequest;
     const response = await cancelConfirmPost(request);
     expect(response.status).toBe(429);
+  });
+
+  it('rejects cancellation confirm when unauthenticated', async () => {
+    getSessionFromRequest.mockResolvedValue(null);
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects cancellation confirm when user is missing', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => null,
+    });
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects cancellation confirm for oauth users', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: 'google' }),
+    });
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects cancellation confirm when request is invalid', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+    getAccountDeletionRequest.mockResolvedValue(null);
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects cancellation confirm when already cancelled', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({
+        id: 'user1',
+        oauthProvider: null,
+        deletionStatus: 'cancelled',
+        deletionScheduledFor: null,
+      }),
+      updateDeletion: async () => {},
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req2',
+      userId: 'user1',
+      type: 'cancel',
+      status: 'pending',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+    verifyVerificationCode.mockResolvedValue(true);
+    resolveTimestamp.mockReturnValue(new Date(Date.now() + 10000));
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(409);
+  });
+
+  it('rejects cancellation confirm when request id or code is missing', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({}),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects cancellation confirm when request type is not cancel', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req2',
+      userId: 'user1',
+      type: 'delete',
+      status: 'pending',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects cancellation confirm when already verified', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req2',
+      userId: 'user1',
+      type: 'cancel',
+      status: 'verified',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(409);
+  });
+
+  it('marks cancellation requests as expired when the code is stale', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req2',
+      userId: 'user1',
+      type: 'cancel',
+      status: 'pending',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() - 1000),
+    });
+    resolveTimestamp.mockReturnValue(new Date(Date.now() - 1000));
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(410);
+    expect(updateAccountDeletionRequest).toHaveBeenCalledWith('req2', { status: 'expired' });
+  });
+
+  it('rejects cancellation confirm when attempts are exhausted', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req2',
+      userId: 'user1',
+      type: 'cancel',
+      status: 'pending',
+      attemptCount: 5,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+    resolveTimestamp.mockReturnValue(new Date(Date.now() + 10000));
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: '654321' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(429);
+  });
+
+  it('increments attempts and returns 400 for invalid cancellation codes', async () => {
+    createFirestoreMobileUserStore.mockReturnValue({
+      getByUsername: async () => ({ id: 'user1', oauthProvider: null }),
+    });
+    getAccountDeletionRequest.mockResolvedValue({
+      id: 'req2',
+      userId: 'user1',
+      type: 'cancel',
+      status: 'pending',
+      attemptCount: 0,
+      codeHash: 'hash',
+      expiresAt: new Date(Date.now() + 10000),
+    });
+    resolveTimestamp.mockReturnValue(new Date(Date.now() + 10000));
+    verifyVerificationCode.mockResolvedValue(false);
+
+    const request = new Request('http://localhost/api/mobile/account/delete/cancel/confirm', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ requestId: 'req2', code: 'bad' }),
+    }) as NextRequest;
+    const response = await cancelConfirmPost(request);
+    expect(response.status).toBe(400);
+    expect(updateAccountDeletionRequest).toHaveBeenCalledWith('req2', { attemptCount: 1 });
   });
 });

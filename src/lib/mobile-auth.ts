@@ -22,6 +22,13 @@ export interface MobileUserRecord {
   subscriptionExpiry?: Date | { toDate: () => Date } | number | null;
   graceUntil?: Date | { toDate: () => Date } | number | null;
   subscriptionProvider?: string | null;
+  entitlement?: 'premium' | 'free' | 'none' | null;
+  subscriptionStatus?: 'active' | 'grace' | 'expired' | 'unknown' | null;
+  productId?: string | null;
+  store?: string | null;
+  environment?: string | null;
+  revenueCatAppUserId?: string | null;
+  lastRevenueCatEventId?: string | null;
   adminOverride?: boolean | null;
   deletionRequestedAt?: Date | { toDate: () => Date } | number | null;
   deletionScheduledFor?: Date | { toDate: () => Date } | number | null;
@@ -45,6 +52,13 @@ export interface NewMobileUser {
   subscriptionExpiry: Date | null;
   graceUntil: Date | null;
   subscriptionProvider: string | null;
+  entitlement: 'premium' | 'free' | 'none' | null;
+  subscriptionStatus: 'active' | 'grace' | 'expired' | 'unknown' | null;
+  productId: string | null;
+  store: string | null;
+  environment: string | null;
+  revenueCatAppUserId: string | null;
+  lastRevenueCatEventId: string | null;
   adminOverride: boolean;
   deletionRequestedAt: Date | null;
   deletionScheduledFor: Date | null;
@@ -58,6 +72,7 @@ export interface MobileUserStore {
   getByEmail(emailLower: string): Promise<MobileUserRecord | null>;
   getByUsername(usernameLower: string): Promise<MobileUserRecord | null>;
   getByOAuth(provider: 'google' | 'apple', subject: string): Promise<MobileUserRecord | null>;
+  getByRevenueCatAppUserId(appUserId: string): Promise<MobileUserRecord | null>;
   createUser(user: NewMobileUser): Promise<MobileUserRecord>;
   updateUsername(
     userId: string,
@@ -78,6 +93,13 @@ export interface MobileUserStore {
       subscriptionExpiry?: Date | null;
       graceUntil?: Date | null;
       subscriptionProvider?: string | null;
+      entitlement?: 'premium' | 'free' | 'none' | null;
+      subscriptionStatus?: 'active' | 'grace' | 'expired' | 'unknown' | null;
+      productId?: string | null;
+      store?: string | null;
+      environment?: string | null;
+      revenueCatAppUserId?: string | null;
+      lastRevenueCatEventId?: string | null;
     }
   ): Promise<void>;
   updateAdminOverride(userId: string, adminOverride: boolean): Promise<void>;
@@ -257,6 +279,13 @@ export async function registerMobileUser(
     subscriptionExpiry: null,
     graceUntil: null,
     subscriptionProvider: null,
+    entitlement: null,
+    subscriptionStatus: null,
+    productId: null,
+    store: null,
+    environment: null,
+    revenueCatAppUserId: null,
+    lastRevenueCatEventId: null,
     adminOverride: false,
     createdAt: new Date(),
   });
@@ -388,6 +417,13 @@ export async function loginMobileOAuthUser(
     subscriptionExpiry: null,
     graceUntil: null,
     subscriptionProvider: null,
+    entitlement: null,
+    subscriptionStatus: null,
+    productId: null,
+    store: null,
+    environment: null,
+    revenueCatAppUserId: null,
+    lastRevenueCatEventId: null,
     adminOverride: false,
     deletionRequestedAt: null,
     deletionScheduledFor: null,
