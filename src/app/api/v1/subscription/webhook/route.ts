@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto';
 import { NextResponse } from 'next/server';
 import { createFirestoreMobileUserStore } from '@/lib/mobile-user-store';
 import { computeSubscriptionStatus, Entitlement } from '@/lib/subscription';
@@ -46,7 +47,8 @@ export async function POST(request: Request) {
     }
 
     const received = request.headers.get(authConfig.headerName);
-    if (!received || received.trim() !== authConfig.expected) {
+    const trimmed = received?.trim() ?? '';
+    if (!trimmed || trimmed.length !== authConfig.expected.length || !timingSafeEqual(Buffer.from(trimmed), Buffer.from(authConfig.expected))) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

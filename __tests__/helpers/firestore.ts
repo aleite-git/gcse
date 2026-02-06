@@ -282,6 +282,44 @@ class WriteBatch {
   }
 }
 
+class Transaction {
+  private ops: Array<{ type: 'set' | 'update' | 'delete'; ref: DocumentRef; data?: StoredDoc; options?: { merge?: boolean } }> = [];
+
+  constructor(private store: Map<string, Map<string, StoredDoc>>) {}
+
+  async get(ref: DocumentRef) {
+    return ref.get();
+  }
+
+  set(ref: DocumentRef, data: StoredDoc, options?: { merge?: boolean }) {
+    this.ops.push({ type: 'set', ref, data, options });
+    return this;
+  }
+
+  update(ref: DocumentRef, data: StoredDoc) {
+    this.ops.push({ type: 'update', ref, data });
+    return this;
+  }
+
+  delete(ref: DocumentRef) {
+    this.ops.push({ type: 'delete', ref });
+    return this;
+  }
+
+  async commit() {
+    for (const op of this.ops) {
+      if (op.type === 'set' && op.data) {
+        await op.ref.set(op.data, op.options);
+      } else if (op.type === 'update' && op.data) {
+        await op.ref.update(op.data);
+      } else if (op.type === 'delete') {
+        await op.ref.delete();
+      }
+    }
+    this.ops = [];
+  }
+}
+
 function ensureCollection(store: Map<string, Map<string, StoredDoc>>, name: string) {
   if (!store.has(name)) {
     store.set(name, new Map());
@@ -303,6 +341,12 @@ export function createFirestoreMock(seed: FirestoreSeed = {}) {
   const db = {
     collection: (name: string) => new CollectionRef(store, name, idCounter),
     batch: () => new WriteBatch(),
+    runTransaction: async <T>(fn: (t: Transaction) => Promise<T>): Promise<T> => {
+      const txn = new Transaction(store);
+      const result = await fn(txn);
+      await txn.commit();
+      return result;
+    },
   };
 
   return { db, store };

@@ -93,13 +93,16 @@ export async function getRecentlyUsedQuestionIds(days: number, subject: Subject)
   const recentDates = getLastNDaysLondon(days);
   const usedIds = new Set<string>();
 
-  for (const date of recentDates) {
-    // New key pattern: YYYY-MM-DD-{subject}
-    const docId = `${date}-${subject}`;
-    const doc = await db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId).get();
+  const docs = await Promise.all(
+    recentDates.map((date) => {
+      const docId = `${date}-${subject}`;
+      return db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId).get();
+    })
+  );
+
+  for (const doc of docs) {
     if (doc.exists) {
       const data = doc.data()!;
-      // Get all question IDs from all versions
       if (data.questionIds) {
         for (const id of data.questionIds) {
           usedIds.add(id);

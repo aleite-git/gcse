@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto';
 import { NextResponse } from 'next/server';
 import { runAccountDeletionJob } from '@/lib/account-deletion-job';
 
@@ -11,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     const provided = request.headers.get(SECRET_HEADER);
-    if (!provided || provided !== expected) {
+    if (!provided || provided.length !== expected.length || !timingSafeEqual(Buffer.from(provided), Buffer.from(expected))) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

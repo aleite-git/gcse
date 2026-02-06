@@ -14,36 +14,39 @@ export async function getOrCreateDailyAssignment(subject: Subject): Promise<Dail
   const docId = `${today}-${subject}`;
   const docRef = db.collection(COLLECTIONS.DAILY_ASSIGNMENTS).doc(docId);
 
-  const doc = await docRef.get();
+  // Use a transaction to prevent concurrent requests from creating duplicate assignments
+  return db.runTransaction(async (transaction: FirebaseFirestore.Transaction) => {
+    const doc = await transaction.get(docRef);
 
-  if (doc.exists) {
-    const data = doc.data()!;
-    return {
-      id: doc.id,
-      date: data.date,
-      subject: data.subject,
-      quizVersion: data.quizVersion,
-      generatedAt: data.generatedAt?.toDate() || new Date(),
-      questionIds: data.questionIds,
+    if (doc.exists) {
+      const data = doc.data()!;
+      return {
+        id: doc.id,
+        date: data.date,
+        subject: data.subject,
+        quizVersion: data.quizVersion,
+        generatedAt: data.generatedAt?.toDate() || new Date(),
+        questionIds: data.questionIds,
+      };
+    }
+
+    // Create new assignment
+    const questions = await selectQuizQuestions(subject);
+    const assignment: Omit<DailyAssignment, 'id'> = {
+      date: today,
+      subject,
+      quizVersion: 1,
+      generatedAt: new Date(),
+      questionIds: questions.map((q) => q.id),
     };
-  }
 
-  // Create new assignment
-  const questions = await selectQuizQuestions(subject);
-  const assignment: Omit<DailyAssignment, 'id'> = {
-    date: today,
-    subject,
-    quizVersion: 1,
-    generatedAt: new Date(),
-    questionIds: questions.map((q) => q.id),
-  };
+    transaction.set(docRef, assignment);
 
-  await docRef.set(assignment);
-
-  return {
-    id: docId,
-    ...assignment,
-  };
+    return {
+      id: docId,
+      ...assignment,
+    };
+  });
 }
 
 /**
