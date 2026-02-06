@@ -191,8 +191,10 @@ gcloud secrets add-iam-policy-binding SESSION_SECRET \
 
 ### 4. Deploy Using Cloud Build
 
+`cloudbuild.yaml` tags images with `$COMMIT_SHA`. When running `gcloud builds submit` locally, that substitution can be empty. Always pass it explicitly:
+
 ```bash
-gcloud builds submit --config cloudbuild.yaml
+gcloud builds submit --config cloudbuild.yaml --substitutions=COMMIT_SHA=$(git rev-parse --short HEAD)
 ```
 
 Or deploy directly with gcloud:
