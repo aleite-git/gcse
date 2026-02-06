@@ -144,6 +144,8 @@ biology_all_questions*.json
 question_bank/
 mobile/
 !src/app/api/mobile/
+# Keep API route tracked even though the folder name matches `mobile/`.
+!src/app/api/login/mobile/
 /scripts/
 /seed/*.json
 duplicate-stems-report.json
