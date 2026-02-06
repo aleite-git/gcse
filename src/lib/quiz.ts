@@ -2,7 +2,7 @@ import { getDb, COLLECTIONS } from './firebase';
 import { DailyAssignment, Attempt, Answer, Question, Subject } from '@/types';
 import { getLastNDaysLondon, getTodayLondon, getTomorrowLondon } from './date';
 import { selectQuizQuestions, getQuestionsByIds } from './questions';
-import { recordQuestionAttempts } from './questionStats';
+import { recordQuestionAttempts } from './question-stats';
 import { calculateScore } from './quiz-scoring';
 import crypto from 'crypto';
 

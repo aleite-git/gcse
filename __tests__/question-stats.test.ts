@@ -14,12 +14,12 @@ jest.unstable_mockModule('firebase-admin/firestore', () => ({
   },
 }));
 
-let recordQuestionAttempt: typeof import('@/lib/questionStats').recordQuestionAttempt;
-let recordQuestionAttempts: typeof import('@/lib/questionStats').recordQuestionAttempts;
-let getQuestionStatsForUser: typeof import('@/lib/questionStats').getQuestionStatsForUser;
-let getStatsForQuestion: typeof import('@/lib/questionStats').getStatsForQuestion;
-let getAggregatedQuestionStats: typeof import('@/lib/questionStats').getAggregatedQuestionStats;
-let getUserQuestionStats: typeof import('@/lib/questionStats').getUserQuestionStats;
+let recordQuestionAttempt: typeof import('@/lib/question-stats').recordQuestionAttempt;
+let recordQuestionAttempts: typeof import('@/lib/question-stats').recordQuestionAttempts;
+let getQuestionStatsForUser: typeof import('@/lib/question-stats').getQuestionStatsForUser;
+let getStatsForQuestion: typeof import('@/lib/question-stats').getStatsForQuestion;
+let getAggregatedQuestionStats: typeof import('@/lib/question-stats').getAggregatedQuestionStats;
+let getUserQuestionStats: typeof import('@/lib/question-stats').getUserQuestionStats;
 
 beforeAll(async () => {
   ({
@@ -29,7 +29,7 @@ beforeAll(async () => {
     getStatsForQuestion,
     getAggregatedQuestionStats,
     getUserQuestionStats,
-  } = await import('@/lib/questionStats'));
+  } = await import('@/lib/question-stats'));
 });
 
 beforeEach(() => {

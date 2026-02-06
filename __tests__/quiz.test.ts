@@ -18,7 +18,7 @@ jest.unstable_mockModule('@/lib/questions', () => ({
   getQuestionsByIds,
 }));
 
-jest.unstable_mockModule('@/lib/questionStats', () => ({
+jest.unstable_mockModule('@/lib/question-stats', () => ({
   recordQuestionAttempts,
 }));
 

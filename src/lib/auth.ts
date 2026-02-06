@@ -167,24 +167,21 @@ function parseCookies(cookieHeader: string): Record<string, string> {
   return cookies;
 }
 
-/**
- * Require authentication - throws if not authenticated
- */
-export async function requireAuth(): Promise<SessionPayload> {
-  const session = await getSession();
-  if (!session) {
-    throw new Error('Unauthorized');
-  }
-  return session;
-}
-
-/**
- * Require admin authentication - throws if not admin
- */
-export async function requireAdmin(): Promise<SessionPayload> {
-  const session = await requireAuth();
-  if (!session.isAdmin) {
-    throw new Error('Admin access required');
-  }
-  return session;
-}
+// requireAuth and requireAdmin are currently unused — all route handlers
+// check the session manually. Kept here for future adoption as shared guards.
+//
+// export async function requireAuth(): Promise<SessionPayload> {
+//   const session = await getSession();
+//   if (!session) {
+//     throw new Error('Unauthorized');
+//   }
+//   return session;
+// }
+//
+// export async function requireAdmin(): Promise<SessionPayload> {
+//   const session = await requireAuth();
+//   if (!session.isAdmin) {
+//     throw new Error('Admin access required');
+//   }
+//   return session;
+// }

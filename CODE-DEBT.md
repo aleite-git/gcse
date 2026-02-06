@@ -169,12 +169,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-023: Parallelize streak queries for all subjects
-**Area:** Performance
-**Files:** `src/app/api/streak/route.ts:58-59`
-**Problem:** When no subject specified, streak status for every subject is fetched sequentially in a `for` loop.
-**Fix:** Use `Promise.all(allSubjects.map(subj => getStreakStatus(...)))`.
-**Effort:** Small
+### ~~DEBT-023: Parallelize streak queries for all subjects~~ DONE
+**Status:** Fixed. Replaced sequential `for` loop with `Promise.all` in streak route GET handler. All tests pass.
 
 ---
 
@@ -274,12 +270,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-036: Remove or use dead code (`requireAuth` / `requireAdmin`)
-**Area:** Code Quality
-**Files:** `src/lib/auth.ts:168-185`
-**Problem:** `requireAuth()` and `requireAdmin()` utility functions exist but are never called. All routes manually check the session.
-**Fix:** Either adopt these utilities consistently across all route handlers, or delete them.
-**Effort:** Small
+### ~~DEBT-036: Remove or use dead code (`requireAuth` / `requireAdmin`)~~ DONE
+**Status:** Fixed. Commented out with explanation — kept for future adoption as shared route guards. Removed associated tests. All tests pass.
 
 ---
 
@@ -339,12 +331,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-043: Rename `questionStats.ts` to kebab-case
-**Area:** Code Quality
-**Files:** `src/lib/questionStats.ts`
-**Problem:** All other lib files use kebab-case (`mobile-auth.ts`, `account-deletion.ts`). This file uses camelCase.
-**Fix:** Rename to `question-stats.ts` and update all imports.
-**Effort:** Trivial
+### ~~DEBT-043: Rename `questionStats.ts` to kebab-case~~ DONE
+**Status:** Fixed. Renamed to `question-stats.ts` and updated all imports (source + tests). All tests pass.
 
 ---
 

@@ -55,8 +55,11 @@ export async function GET(request: NextRequest) {
       Awaited<ReturnType<typeof getStreakStatus>>
     >;
 
-    for (const subj of allSubjects) {
-      streaks[subj] = await getStreakStatus(session.label, subj, timezone);
+    const results = await Promise.all(
+      allSubjects.map((subj) => getStreakStatus(session.label, subj, timezone))
+    );
+    for (let i = 0; i < allSubjects.length; i++) {
+      streaks[allSubjects[i]] = results[i];
     }
 
     return NextResponse.json({ overallStreak, streaks });
