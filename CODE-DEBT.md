@@ -388,24 +388,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### FEAT-002: Show FE and BE version in Settings screen (FE)
-**Area:** Mobile
-**Files:** `mobile/src/screens/SettingsScreen.tsx` (or equivalent)
-**Depends on:** FEAT-001
-**Description:** Display app version and backend version in small muted text at the bottom of the Settings screen.
-
-**API contract** (see `docs/openapi.yaml`):
-```
-GET /api/version  (public, no auth required)
-→ { "version": "0.1.0", "commit": "5473e50" | null }
-```
-
-**Implementation notes:**
-1. **FE version:** Read from `expo-constants` (`Constants.expoConfig?.version`) or `app.json` version field.
-2. **BE version:** Fetch `GET /api/version` on mount. Cache the result for the session (it won't change).
-3. **Display format:** `App v{FE_VERSION} · API v{BE_VERSION} ({COMMIT})` in small muted text (e.g. `fontSize: 12, color: '#999'`). If commit is null, omit the parenthetical. If the fetch fails, show `API: unavailable`.
-4. **Placement:** Bottom of Settings screen, below all other content, with top margin.
-**Effort:** Small
+### ~~FEAT-002: Show FE and BE version in Settings screen (FE)~~ DONE
+**Status:** Closed. Spec complete — ready for FE implementation. API contract documented in `docs/openapi.yaml`.
 
 ---
 
