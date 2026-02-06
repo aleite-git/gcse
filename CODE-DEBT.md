@@ -345,12 +345,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-045: Set `min-instances: 1` for Cloud Run during school hours
-**Area:** Infrastructure
-**Files:** `cloudbuild.yaml:44`
-**Problem:** With `min-instances: 0`, the service scales to zero. Cold starts for Next.js + Firebase Admin take 3-5s. The first user each morning gets a slow response.
-**Fix:** Set `min-instances: 1`, or use Cloud Scheduler to send warmup requests before peak hours.
-**Effort:** Small
+### ~~DEBT-045: Set `min-instances: 1` for Cloud Run during school hours~~ CLOSED
+**Status:** Closed — not needed.
 
 ---
 
