@@ -34,17 +34,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-005: Add test and type-check steps to CI/CD pipeline
-**Area:** Testing / DevOps
-**Files:** `cloudbuild.yaml`
-**Problem:** The Cloud Build pipeline goes straight to Docker build, push, and deploy. Tests and type checks are never run automatically. Code with failing tests or type errors can be deployed.
-**Fix:** Add a step before Docker build:
-```yaml
-- name: 'node:20'
-  entrypoint: 'bash'
-  args: ['-c', 'npm ci && npx tsc --noEmit && npm test']
-```
-**Effort:** Small
+### ~~DEBT-005: Add test and type-check steps to CI/CD pipeline~~ DONE
+**Status:** Fixed. Added `npm ci && npx tsc --noEmit && npm test` step before Docker build in `cloudbuild.yaml`. All tests pass.
 
 ---
 
@@ -78,12 +69,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-010: Fix timezone mismatch in scripts
-**Area:** Data Integrity
-**Files:** `scripts/fix-assignments.ts:11`, `scripts/regenerate-today-tomorrow.ts:25`, `scripts/backfill-freezes.js:19`
-**Problem:** These scripts use `Europe/Lisbon` while the application uses `Europe/London` (`src/lib/date.ts:4`). These timezones differ by one hour during DST transitions, producing wrong dates.
-**Fix:** Replace all `Europe/Lisbon` references with `Europe/London`, or import the constant from `src/lib/date.ts`.
-**Effort:** Small
+### ~~DEBT-010: Fix timezone mismatch in scripts~~ DONE
+**Status:** Fixed. Replaced all `Europe/Lisbon` references with `Europe/London` across 9 script files. All tests pass.
 
 ---
 
@@ -110,12 +97,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-013: Replace string-based error classification with custom error classes
-**Area:** Code Quality
-**Files:** `src/app/api/quiz/submit/route.ts:122-127`
-**Problem:** HTTP status code is determined by matching error message strings (`message.startsWith('Must answer all ')`, etc.). If message text changes in `quiz.ts`, status code logic breaks silently.
-**Fix:** Create a `QuizValidationError` class (similar to existing `MobileAuthError` and `SubscriptionVerificationError`) with a `statusCode` property. Throw it from `quiz.ts` and catch by type in the route.
-**Effort:** Small
+### ~~DEBT-013: Replace string-based error classification with custom error classes~~ DONE
+**Status:** Fixed. Created `QuizValidationError` class in `src/lib/quiz.ts`, updated `submitQuizAttempt` to throw it, and updated submit route to use `instanceof` check. All tests pass.
 
 ---
 
@@ -193,12 +176,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-022: Parallelize independent Firestore reads in quiz submission
-**Area:** Performance
-**Files:** `src/lib/quiz.ts:170-266`
-**Problem:** `getQuestionsByIds` and `getTodayAttempts` are called sequentially but are independent.
-**Fix:** Use `Promise.all([getQuestionsByIds(...), getTodayAttempts(...)])`.
-**Effort:** Small
+### ~~DEBT-022: Parallelize independent Firestore reads in quiz submission~~ DONE
+**Status:** Fixed. Used `Promise.all` to parallelize `getQuestionsByIds` and `getTodayAttempts` in `submitQuizAttempt`. All tests pass.
 
 ---
 
@@ -247,12 +226,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-028: Add `typecheck` script to package.json
-**Area:** Developer Experience
-**Files:** `package.json`
-**Problem:** CLAUDE.md references `npx tsc --noEmit` as a pre-deployment step but there is no npm script for it.
-**Fix:** Add `"typecheck": "tsc --noEmit"` to the scripts section.
-**Effort:** Trivial
+### ~~DEBT-028: Add `typecheck` script to package.json~~ DONE
+**Status:** Fixed. Added `"typecheck": "tsc --noEmit"` to package.json scripts.
 
 ---
 
@@ -447,10 +422,10 @@ function getYesterdayInTimezone(timezone: string): string {
 
 ## Summary
 
-| Priority | Count | Quick Wins (Small/Trivial) |
-|----------|-------|---------------------------|
-| CRITICAL | 5 | DEBT-002, DEBT-004, DEBT-005 |
-| HIGH | 9 | DEBT-007, DEBT-010, DEBT-011, DEBT-013, DEBT-014 |
-| MEDIUM | 23 | DEBT-016, DEBT-018, DEBT-020, DEBT-021, DEBT-023, DEBT-025, DEBT-027, DEBT-028, DEBT-031, DEBT-032, DEBT-034, DEBT-035, DEBT-036, DEBT-037, DEBT-038 |
-| LOW | 10 | DEBT-039, DEBT-040, DEBT-041, DEBT-042, DEBT-043, DEBT-044, DEBT-046 |
-| **Total** | **47** | **30 quick wins** |
+| Priority | Open | Closed | Quick Wins Remaining |
+|----------|------|--------|----------------------|
+| CRITICAL | 2 | 3 (002, 004, 005) | — |
+| HIGH | 5 | 4 (006, 007, 010, 013) | DEBT-011, DEBT-014 |
+| MEDIUM | 12 | 1 (022) | DEBT-016, DEBT-018, DEBT-020, DEBT-021, DEBT-023, DEBT-025, DEBT-027, DEBT-031, DEBT-032, DEBT-034, DEBT-035, DEBT-036, DEBT-037, DEBT-038 |
+| LOW | 10 | 1 (028) | DEBT-039, DEBT-040, DEBT-041, DEBT-042, DEBT-043, DEBT-044, DEBT-046 |
+| **Total** | **39 open** | **9 closed** | **23 quick wins** |

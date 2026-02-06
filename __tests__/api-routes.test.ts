@@ -40,6 +40,12 @@ jest.unstable_mockModule('@/lib/auth', () => ({
   getSessionFromRequest,
 }));
 
+class QuizValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 jest.unstable_mockModule('@/lib/quiz', () => ({
   getTodayQuiz,
   generateNewQuizVersion,
@@ -48,6 +54,7 @@ jest.unstable_mockModule('@/lib/quiz', () => ({
   generateTomorrowPreview,
   getAllAttempts,
   getAttemptsByDateRange,
+  QuizValidationError,
 }));
 
 jest.unstable_mockModule('@/lib/questions', () => ({
@@ -450,7 +457,7 @@ describe('api routes', () => {
   });
 
   it('rejects submit with incomplete answers', async () => {
-    submitQuizAttempt.mockRejectedValue(new Error('Must answer all 6 questions'));
+    submitQuizAttempt.mockRejectedValue(new QuizValidationError('Must answer all 6 questions'));
     const request = new Request('http://localhost/api/quiz/submit', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

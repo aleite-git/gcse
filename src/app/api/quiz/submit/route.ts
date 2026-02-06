@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
-import { submitQuizAttempt } from '@/lib/quiz';
+import { submitQuizAttempt, QuizValidationError } from '@/lib/quiz';
 import { recordActivity, OVERALL_STREAK_SUBJECT } from '@/lib/streak';
 import { SubmitRequest, SubmitResponse, QuestionFeedback, SUBJECTS } from '@/types';
 
@@ -118,16 +118,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     console.error('Error submitting quiz:', error);
+    if (error instanceof QuizValidationError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     const message = error instanceof Error ? error.message : 'Failed to submit quiz';
-    const isValidationError =
-      message.startsWith('Must answer all ') ||
-      message.startsWith('Question ') ||
-      message === 'No quiz available' ||
-      message === 'Invalid answer format' ||
-      message === 'Invalid answer selection';
-    return NextResponse.json(
-      { error: message },
-      { status: isValidationError ? 400 : 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

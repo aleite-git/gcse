@@ -5,6 +5,12 @@ import { selectQuizQuestions, getQuestionsByIds } from './questions';
 import { recordQuestionAttempts } from './questionStats';
 import crypto from 'crypto';
 
+export class QuizValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 /**
  * Get or create today's daily assignment for a specific subject
  */
@@ -186,21 +192,25 @@ export async function submitQuizAttempt(
 
   // Validate answers match the number of assigned questions for today.
   if (assignment.questionIds.length === 0) {
-    throw new Error('No quiz available');
+    throw new QuizValidationError('No quiz available');
   }
   if (answers.length !== assignment.questionIds.length) {
-    throw new Error(`Must answer all ${assignment.questionIds.length} questions`);
+    throw new QuizValidationError(`Must answer all ${assignment.questionIds.length} questions`);
   }
 
   const assignedIds = new Set(assignment.questionIds);
   for (const answer of answers) {
     if (!assignedIds.has(answer.questionId)) {
-      throw new Error(`Question ${answer.questionId} is not part of today's quiz`);
+      throw new QuizValidationError(`Question ${answer.questionId} is not part of today's quiz`);
     }
   }
 
-  // Get questions to score
-  const questions = await getQuestionsByIds(assignment.questionIds);
+  // Fetch questions and existing attempts in parallel (independent reads)
+  const [questions, existingAttempts] = await Promise.all([
+    getQuestionsByIds(assignment.questionIds),
+    getTodayAttempts(userLabel, subject),
+  ]);
+  const attemptNumber = existingAttempts.length + 1;
 
   // Calculate score and topic breakdown
   let score = 0;
@@ -223,10 +233,6 @@ export async function submitQuizAttempt(
       topicBreakdown[question.topic].correct++;
     }
   }
-
-  // Get attempt number
-  const existingAttempts = await getTodayAttempts(userLabel, subject);
-  const attemptNumber = existingAttempts.length + 1;
 
   // Create attempt document
   const attemptData: Omit<Attempt, 'id'> = {

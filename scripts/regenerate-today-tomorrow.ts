@@ -22,8 +22,8 @@ function parseSubjects(argv: string[]): string[] {
 }
 
 function getLisbonDate(date: Date): string {
-  const lisbonDate = new Date(date.toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
-  return lisbonDate.toLocaleDateString('en-CA', { timeZone: 'Europe/Lisbon' });
+  const lisbonDate = new Date(date.toLocaleString('en-US', { timeZone: 'Europe/London' }));
+  return lisbonDate.toLocaleDateString('en-CA', { timeZone: 'Europe/London' });
 }
 
 async function regenerate() {
