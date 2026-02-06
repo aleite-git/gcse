@@ -387,6 +387,6 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 |----------|------|--------|----------------------|
 | CRITICAL | 2 | 3 (002, 004, 005) | — |
 | HIGH | 4 | 6 (006, 007, 009, 010, 013, 014) | DEBT-011 |
-| MEDIUM | 18 | 5 (016, 022, 027, 028, 035) | DEBT-018, DEBT-020, DEBT-021, DEBT-023, DEBT-025, DEBT-031, DEBT-032, DEBT-034, DEBT-036, DEBT-037, DEBT-038 |
-| LOW | 10 | 0 | DEBT-039, DEBT-040, DEBT-041, DEBT-042, DEBT-043, DEBT-044, DEBT-046 |
-| **Total** | **34 open** | **14 closed** | **19 quick wins** |
+| MEDIUM | 16 | 7 (016, 022, 023, 027, 028, 035, 036) | DEBT-018, DEBT-020, DEBT-021, DEBT-025, DEBT-031, DEBT-032, DEBT-034, DEBT-037, DEBT-038 |
+| LOW | 9 | 1 (043) | DEBT-039, DEBT-040, DEBT-041, DEBT-042, DEBT-044, DEBT-046 |
+| **Total** | **31 open** | **17 closed** | **16 quick wins** |
