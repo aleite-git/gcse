@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it, jest, beforeEach } from '@jest/globals';
 
 const exists = jest.fn((text: string) => text === 'bad');
 
@@ -10,27 +10,31 @@ jest.unstable_mockModule('@2toad/profanity', () => ({
   },
 }));
 
-let createProfanityFilter: typeof import('@/lib/profanity-filter').createProfanityFilter;
-let __resetProfanityCacheForTests: typeof import('@/lib/profanity-filter').__resetProfanityCacheForTests;
-
-beforeAll(async () => {
-  ({ createProfanityFilter, __resetProfanityCacheForTests } = await import('@/lib/profanity-filter'));
-});
-
 describe('profanity filter normalization', () => {
-  it('normalizes symbol substitutions before checking profanity', () => {
-    __resetProfanityCacheForTests();
+  beforeEach(() => {
+    jest.resetModules();
+  });
+
+  it('normalizes symbol substitutions before checking profanity', async () => {
+    const { createProfanityFilter } = await import('@/lib/profanity-filter');
     const filter = createProfanityFilter();
 
     expect(filter.isProfane('b@d')).toBe(true);
     expect(exists).toHaveBeenCalledWith('bad');
   });
 
-  it('returns false if the profanity cache is cleared', () => {
-    __resetProfanityCacheForTests();
-    const filter = createProfanityFilter();
-    __resetProfanityCacheForTests();
+  it('creates a fresh filter after module reset', async () => {
+    const mod1 = await import('@/lib/profanity-filter');
+    const filter1 = mod1.createProfanityFilter();
 
-    expect(filter.isProfane('bad')).toBe(false);
+    jest.resetModules();
+
+    const mod2 = await import('@/lib/profanity-filter');
+    const filter2 = mod2.createProfanityFilter();
+
+    // After resetModules, a new module instance is created with its own cache,
+    // so the two filters come from different module instances.
+    expect(filter1).not.toBe(filter2);
+    expect(filter2.isProfane('bad')).toBe(true);
   });
 });

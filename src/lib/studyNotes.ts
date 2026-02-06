@@ -856,8 +856,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Cell biology': {
-    topic: 'Cell biology',
+  'CellBiology': {
+    topic: 'CellBiology',
     title: 'Cell Biology – Structure and Transport',
     sections: [
       {
@@ -907,8 +907,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Homeostasis and response': {
-    topic: 'Homeostasis and response',
+  'Homeostasis': {
+    topic: 'Homeostasis',
     title: 'Homeostasis and Response – Control Systems',
     sections: [
       {
@@ -932,8 +932,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Inheritance, variation and evolution': {
-    topic: 'Inheritance, variation and evolution',
+  'Inheritance': {
+    topic: 'Inheritance',
     title: 'Inheritance, Variation and Evolution – Genetics Basics',
     sections: [
       {
@@ -1060,8 +1060,8 @@ export const studyNotes: Record<string, StudyNote> = {
   },
 
   // Chemistry Study Notes
-  'Atomic structure and the periodic table': {
-    topic: 'Atomic structure and the periodic table',
+  'AtomicStructure': {
+    topic: 'AtomicStructure',
     title: 'Atomic Structure and the Periodic Table',
     sections: [
       {
@@ -1085,8 +1085,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Bonding, structure and the properties of matter': {
-    topic: 'Bonding, structure and the properties of matter',
+  'BondingStructure': {
+    topic: 'BondingStructure',
     title: 'Bonding and Structure',
     sections: [
       {
@@ -1110,8 +1110,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Quantitative chemistry': {
-    topic: 'Quantitative chemistry',
+  'QuantitativeChemistry': {
+    topic: 'QuantitativeChemistry',
     title: 'Quantitative Chemistry',
     sections: [
       {
@@ -1135,8 +1135,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Chemical changes': {
-    topic: 'Chemical changes',
+  'ChemicalChanges': {
+    topic: 'ChemicalChanges',
     title: 'Chemical Changes',
     sections: [
       {
@@ -1160,8 +1160,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Energy changes': {
-    topic: 'Energy changes',
+  'EnergyChanges': {
+    topic: 'EnergyChanges',
     title: 'Energy Changes',
     sections: [
       {
@@ -1185,8 +1185,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'The rate and extent of chemical change': {
-    topic: 'The rate and extent of chemical change',
+  'RatesReactions': {
+    topic: 'RatesReactions',
     title: 'Rates and Equilibrium',
     sections: [
       {
@@ -1210,8 +1210,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Organic chemistry': {
-    topic: 'Organic chemistry',
+  'OrganicChemistry': {
+    topic: 'OrganicChemistry',
     title: 'Organic Chemistry',
     sections: [
       {
@@ -1235,8 +1235,8 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Chemical analysis': {
-    topic: 'Chemical analysis',
+  'ChemicalAnalysis': {
+    topic: 'ChemicalAnalysis',
     title: 'Chemical Analysis',
     sections: [
       {
@@ -1260,9 +1260,9 @@ export const studyNotes: Record<string, StudyNote> = {
     ],
   },
 
-  'Chemistry of the atmosphere': {
-    topic: 'Chemistry of the atmosphere',
-    title: 'Chemistry of the Atmosphere',
+  'AtmosphereResources': {
+    topic: 'AtmosphereResources',
+    title: 'Atmosphere and Resources',
     sections: [
       {
         heading: 'Atmospheric Gases',
@@ -1282,13 +1282,6 @@ export const studyNotes: Record<string, StudyNote> = {
           'Effects include global warming',
         ],
       },
-    ],
-  },
-
-  'Using resources': {
-    topic: 'Using resources',
-    title: 'Using Resources',
-    sections: [
       {
         heading: 'Resources and Sustainability',
         content: 'Resources can be finite or renewable.',

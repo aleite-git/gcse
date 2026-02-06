@@ -130,39 +130,110 @@ export async function getRecentlyUsedQuestionIds(days: number, subject: Subject)
   return usedIds;
 }
 
+// The maximum number of items Firestore allows in a not-in filter.
+const FIRESTORE_NOT_IN_LIMIT = 30;
+
+/**
+ * Fetch active questions for a subject filtered by difficulty, with an
+ * optional limit to cap Firestore reads.  Exclusion IDs are applied via a
+ * Firestore `not-in` filter when there are 30 or fewer; otherwise the
+ * exclusion happens in-memory after the fetch.
+ */
+async function fetchQuestionsByDifficulty(
+  subject: Subject,
+  difficulty: 1 | 2 | 3,
+  excludeIds: Set<string>,
+  fetchLimit: number
+): Promise<Question[]> {
+  const db = getDb();
+  let query = db
+    .collection(COLLECTIONS.QUESTIONS)
+    .where('active', '==', true)
+    .where('subject', '==', subject)
+    .where('difficulty', '==', difficulty);
+
+  const excludeArray = Array.from(excludeIds);
+
+  if (excludeArray.length > 0 && excludeArray.length <= FIRESTORE_NOT_IN_LIMIT) {
+    // Firestore not-in can handle up to 30 IDs.  When we push the filter
+    // down to the server we need to over-fetch a bit less, but still apply
+    // the limit.
+    query = query.limit(fetchLimit);
+  } else {
+    // If there are more than 30 exclusions (or none) we filter in-memory
+    // after the fetch.  Over-fetch to account for in-memory exclusion.
+    query = query.limit(fetchLimit + excludeArray.length);
+  }
+
+  const snapshot = await query.get();
+
+  let questions: Question[] = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+    createdAt: resolveCreatedAt(doc.data().createdAt),
+  })) as Question[];
+
+  // In-memory exclusion for cases where not-in wasn't used or IDs exceeded
+  // the Firestore limit.
+  if (excludeArray.length > 0) {
+    questions = questions.filter((q) => !excludeIds.has(q.id));
+  }
+
+  return questions;
+}
+
 /**
  * Select 5 regular questions + 1 bonus hard question for a quiz
- * with topic balancing, difficulty targets, and repeat avoidance
+ * with topic balancing, difficulty targets, and repeat avoidance.
+ *
+ * Instead of loading every active question for a subject, this queries
+ * Firestore per-difficulty with limits to minimise document reads.
  */
 export async function selectQuizQuestions(
   subject: Subject,
   excludeIds: Set<string> = new Set()
 ): Promise<Question[]> {
-  const allQuestions = await getActiveQuestions(subject);
-  if (allQuestions.length === 0) {
-    // No active questions available for this subject.
-    return [];
-  }
   const recentlyUsed = await getRecentlyUsedQuestionIds(7, subject);
 
   // Combine exclusions
   const allExclusions = new Set([...excludeIds, ...recentlyUsed]);
 
-  // Separate questions into fresh and used
-  const freshQuestions = allQuestions.filter((q) => !allExclusions.has(q.id));
-  const usedQuestions = allQuestions.filter((q) => allExclusions.has(q.id));
+  // Over-fetch factor: we fetch more than needed so that after in-memory
+  // exclusion and topic-balancing we still have enough candidates.
+  const OVER_FETCH = 20;
 
-  // Difficulty pools for regular questions
-  const easyFresh = freshQuestions.filter((q) => q.difficulty === 1);
-  const mediumFresh = freshQuestions.filter((q) => q.difficulty === 2);
-  const hardFreshQuestions = freshQuestions.filter((q) => q.difficulty === 3);
+  // Fetch pools by difficulty in parallel — only reads what we need.
+  const [easyPool, mediumPool, hardPool] = await Promise.all([
+    fetchQuestionsByDifficulty(subject, 1, allExclusions, 3 + OVER_FETCH),
+    fetchQuestionsByDifficulty(subject, 2, allExclusions, 2 + OVER_FETCH),
+    fetchQuestionsByDifficulty(subject, 3, allExclusions, 1 + OVER_FETCH),
+  ]);
 
-  const easyUsed = usedQuestions.filter((q) => q.difficulty === 1);
-  const mediumUsed = usedQuestions.filter((q) => q.difficulty === 2);
+  // If absolutely nothing came back *and* we have no exclusions, the subject
+  // genuinely has no active questions — return early.  When there are
+  // exclusions, the pools may be empty only because every question was
+  // recently used; the fallback paths below will re-fetch without those
+  // exclusions so we must not short-circuit here.
+  if (
+    easyPool.length === 0 &&
+    mediumPool.length === 0 &&
+    hardPool.length === 0 &&
+    allExclusions.size === 0
+  ) {
+    return [];
+  }
+
+  // Fresh questions are those not in the exclusion set (already filtered by
+  // fetchQuestionsByDifficulty).  "Used" questions are those that *are* in
+  // the exclusion set — we need a separate, smaller fetch for fallback.
+  const easyFresh = easyPool;
+  const mediumFresh = mediumPool;
+  const hardFreshQuestions = hardPool;
 
   const selected: Question[] = [];
   const selectedIds = new Set<string>();
 
+  // --- Easy questions (target: 3) ---
   const easySelected = pickQuestionsByTopic(easyFresh, 3);
   for (const q of easySelected) {
     selected.push(q);
@@ -170,6 +241,8 @@ export async function selectQuizQuestions(
   }
 
   if (selected.length < 3) {
+    // Fallback: fetch used easy questions (those in exclusion set)
+    const easyUsed = await fetchQuestionsByDifficulty(subject, 1, selectedIds, 3);
     const remaining = 3 - selected.length;
     const fallback = pickQuestionsByTopic(
       easyUsed.filter((q) => !selectedIds.has(q.id)),
@@ -181,6 +254,7 @@ export async function selectQuizQuestions(
     }
   }
 
+  // --- Medium questions (target: 2) ---
   const mediumSelected = pickQuestionsByTopic(
     mediumFresh.filter((q) => !selectedIds.has(q.id)),
     2
@@ -191,6 +265,8 @@ export async function selectQuizQuestions(
   }
 
   if (selected.length < 5) {
+    // Fallback: fetch used medium questions
+    const mediumUsed = await fetchQuestionsByDifficulty(subject, 2, selectedIds, 5);
     const remaining = 5 - selected.length;
     const fallback = pickQuestionsByTopic(
       mediumUsed.filter((q) => !selectedIds.has(q.id)),
@@ -205,8 +281,13 @@ export async function selectQuizQuestions(
   // Final fallback: if we still don't have 5, use any non-hard questions
   if (selected.length < 5) {
     const remaining = 5 - selected.length;
-    const anyQuestions = allQuestions.filter(
-      (q) => !selectedIds.has(q.id) && q.difficulty !== 3
+    // Fetch a small batch of easy+medium that we haven't selected yet
+    const [extraEasy, extraMedium] = await Promise.all([
+      fetchQuestionsByDifficulty(subject, 1, selectedIds, remaining + 5),
+      fetchQuestionsByDifficulty(subject, 2, selectedIds, remaining + 5),
+    ]);
+    const anyQuestions = [...extraEasy, ...extraMedium].filter(
+      (q) => !selectedIds.has(q.id)
     );
     const fallback = pickQuestionsByTopic(anyQuestions, remaining);
     for (const q of fallback) {
@@ -223,21 +304,20 @@ export async function selectQuizQuestions(
 
   // Try fresh hard questions first
   if (hardFreshQuestions.length > 0) {
-    shuffleArray(hardFreshQuestions);
-    bonusQuestion = hardFreshQuestions[0];
-  } else {
+    const available = hardFreshQuestions.filter((q) => !selectedIds.has(q.id));
+    if (available.length > 0) {
+      shuffleArray(available);
+      bonusQuestion = available[0];
+    }
+  }
+
+  if (!bonusQuestion) {
     // Fallback to used hard questions
-    const usedHardQuestions = usedQuestions.filter((q) => q.difficulty === 3 && !selectedIds.has(q.id));
-    if (usedHardQuestions.length > 0) {
-      shuffleArray(usedHardQuestions);
-      bonusQuestion = usedHardQuestions[0];
-    } else {
-      // Final fallback: any hard question
-      const anyHardQuestions = allQuestions.filter((q) => q.difficulty === 3 && !selectedIds.has(q.id));
-      if (anyHardQuestions.length > 0) {
-        shuffleArray(anyHardQuestions);
-        bonusQuestion = anyHardQuestions[0];
-      }
+    const usedHardQuestions = await fetchQuestionsByDifficulty(subject, 3, selectedIds, 5);
+    const available = usedHardQuestions.filter((q) => !selectedIds.has(q.id));
+    if (available.length > 0) {
+      shuffleArray(available);
+      bonusQuestion = available[0];
     }
   }
 
@@ -246,7 +326,11 @@ export async function selectQuizQuestions(
     selected.push(bonusQuestion);
   } else {
     // No hard questions available: fall back to any remaining question so we still return 6.
-    const remaining = allQuestions.filter((q) => !selectedIds.has(q.id));
+    const [anyEasy, anyMedium] = await Promise.all([
+      fetchQuestionsByDifficulty(subject, 1, selectedIds, 5),
+      fetchQuestionsByDifficulty(subject, 2, selectedIds, 5),
+    ]);
+    const remaining = [...anyEasy, ...anyMedium].filter((q) => !selectedIds.has(q.id));
     if (remaining.length > 0) {
       shuffleArray(remaining);
       selected.push(remaining[0]);

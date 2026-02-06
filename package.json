@@ -10,7 +10,8 @@
     "seed": "npx ts-node --project tsconfig.seed.json scripts/seed.ts",
     "seed:force": "npx ts-node --project tsconfig.seed.json scripts/seed.ts --force",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write 'src/**/*.{ts,tsx}' '__tests__/**/*.ts'"
   },
   "dependencies": {
     "@2toad/profanity": "^3.2.0",
@@ -42,6 +43,7 @@
     "tailwindcss": "^4",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
+    "prettier": "^3.5.0",
     "typescript": "^5"
   }
 }

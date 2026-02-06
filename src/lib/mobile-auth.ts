@@ -10,7 +10,7 @@ export interface MobileUserRecord {
   id: string;
   email: string;
   emailLower: string;
-  passwordHash: string;
+  passwordHash: string | null;
   username: string;
   usernameLower: string;
   usernameChangedAt?: Date | { toDate: () => Date } | number | null;
@@ -40,7 +40,7 @@ export interface MobileUserRecord {
 export interface NewMobileUser {
   email: string;
   emailLower: string;
-  passwordHash: string;
+  passwordHash: string | null;
   username: string;
   usernameLower: string;
   usernameChangedAt: Date | null;
@@ -80,7 +80,7 @@ export interface MobileUserStore {
   ): Promise<void>;
   updateOAuth(
     userId: string,
-    update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string }
+    update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string | null }
   ): Promise<void>;
   updateProfile(
     userId: string,
@@ -323,6 +323,10 @@ export async function loginMobileUser(
     throw new MobileAuthError('Invalid username or password', 401);
   }
 
+  if (!user.passwordHash) {
+    throw new MobileAuthError('Invalid username or password', 401);
+  }
+
   const passwordValue = input.password as string;
   const isMatch = await bcrypt.compare(passwordValue, user.passwordHash);
   if (!isMatch) {
@@ -358,12 +362,11 @@ export async function loginMobileOAuthUser(
           'oauth_link_required'
         );
       }
-      // Link OAuth and replace the password hash so OAuth becomes the login method.
-      const passwordHash = await bcrypt.hash(profile.subject, 12);
+      // Link OAuth and disable password login so the OAuth subject cannot be used as a credential.
       await store.updateOAuth(existingByEmail.id, {
         oauthProvider: profile.provider,
         oauthSubject: profile.subject,
-        passwordHash,
+        passwordHash: null,
       });
       return {
         ...existingByEmail,
@@ -371,7 +374,7 @@ export async function loginMobileOAuthUser(
         emailLower: profile.emailLower || existingByEmail.emailLower,
         oauthProvider: profile.provider,
         oauthSubject: profile.subject,
-        passwordHash,
+        passwordHash: null,
       };
     }
   }
@@ -399,12 +402,10 @@ export async function loginMobileOAuthUser(
     }
   }
 
-  const passwordHash = await bcrypt.hash(profile.subject, 12);
-
   return store.createUser({
     email: profile.email ? profile.email.trim() : '',
     emailLower: profile.emailLower,
-    passwordHash,
+    passwordHash: null,
     username: usernameValue,
     usernameLower,
     usernameChangedAt: null,

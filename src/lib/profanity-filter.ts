@@ -110,9 +110,3 @@ export function createProfanityFilter(): ProfanityFilter {
 
   return cachedFilter;
 }
-
-// Test-only helper to reset the cached filter so we can exercise null-cache paths.
-export function __resetProfanityCacheForTests(): void {
-  cachedFilter = null;
-  cachedProfanity = null;
-}

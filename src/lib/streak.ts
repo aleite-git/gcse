@@ -51,10 +51,11 @@ function getEarnedFreezeCount(maxStreak: number): number {
 
 async function syncOverallFreezeDays(
   userLabel: string,
-  timezone: string
-): Promise<{ maxStreak: number; earnedFreezes: number }> {
+  timezone: string,
+  prefetchedOverall?: UserStreak
+): Promise<{ maxStreak: number; earnedFreezes: number; updatedOverall: UserStreak }> {
   const db = getDb();
-  const overall = await getOrCreateUserStreak(userLabel, OVERALL_STREAK_SUBJECT, timezone);
+  const overall = prefetchedOverall ?? await getOrCreateUserStreak(userLabel, OVERALL_STREAK_SUBJECT, timezone);
   const maxStreak = await getMaxSubjectStreak(userLabel);
   const earnedFreezes = getEarnedFreezeCount(maxStreak);
 
@@ -63,16 +64,25 @@ async function syncOverallFreezeDays(
   const lastFreezeEarnedAt = earnedFreezes * FREEZE_EARN_INTERVAL;
 
   const docId = `${userLabel}-${OVERALL_STREAK_SUBJECT}`;
+  const updatedAt = new Date();
   await db.collection(COLLECTIONS.USER_STREAKS).doc(docId).set(
     {
       freezeDays,
       lastFreezeEarnedAt,
-      updatedAt: new Date(),
+      updatedAt,
     },
     { merge: true }
   );
 
-  return { maxStreak, earnedFreezes };
+  // Construct updated streak locally instead of re-reading from Firestore
+  const updatedOverall: UserStreak = {
+    ...overall,
+    freezeDays,
+    lastFreezeEarnedAt,
+    updatedAt,
+  };
+
+  return { maxStreak, earnedFreezes, updatedOverall };
 }
 
 /**
@@ -241,8 +251,11 @@ export async function recordActivity(
   let streak = await getOrCreateUserStreak(userLabel, subject, timezone);
 
   if (overallSubject) {
-    await syncOverallFreezeDays(userLabel, timezone);
-    streak = await getOrCreateUserStreak(userLabel, subject, timezone);
+    // Pass pre-fetched streak to avoid a redundant Firestore read inside syncOverallFreezeDays.
+    // syncOverallFreezeDays returns the locally-constructed updated streak so we don't need
+    // to re-read the document afterwards either.
+    const syncResult = await syncOverallFreezeDays(userLabel, timezone, streak);
+    streak = syncResult.updatedOverall;
   }
 
   // Check if we already had activity today
@@ -251,6 +264,9 @@ export async function recordActivity(
   }
 
   // Record the activity
+  // NOTE: Firestore TTL policy should be configured on the streakActivities collection
+  // (field: createdAt, expiration: 90 days) via the Firebase console to prevent
+  // unbounded document growth. This is not enforced in code.
   await db.collection(COLLECTIONS.STREAK_ACTIVITIES).add({
     userLabel,
     subject,
@@ -316,23 +332,38 @@ export async function recordActivity(
   // Update the document
   const docId = `${userLabel}-${subject}`;
   const docRef = db.collection(COLLECTIONS.USER_STREAKS).doc(docId);
+  const newFreezeDaysUsed = overallSubject ? streak.freezeDaysUsed + (streak.freezeDays - newFreezeDays) : 0;
+  const updatedAt = new Date();
   await docRef.update({
     currentStreak: newStreak,
     longestStreak: newLongestStreak,
     lastActivityDate: today,
     freezeDays: newFreezeDays,
-    freezeDaysUsed: overallSubject ? streak.freezeDaysUsed + (streak.freezeDays - newFreezeDays) : 0,
+    freezeDaysUsed: newFreezeDaysUsed,
     streakStartDate: newStreakStartDate,
     lastFreezeEarnedAt,
-    updatedAt: new Date(),
+    updatedAt,
   });
 
-  const updatedStreak = await getOrCreateUserStreak(userLabel, subject, timezone);
+  // Construct the updated streak locally instead of re-reading from Firestore
+  const updatedStreak: UserStreak = {
+    ...streak,
+    currentStreak: newStreak,
+    longestStreak: newLongestStreak,
+    lastActivityDate: today,
+    freezeDays: newFreezeDays,
+    freezeDaysUsed: newFreezeDaysUsed,
+    streakStartDate: newStreakStartDate,
+    lastFreezeEarnedAt,
+    updatedAt,
+  };
+
   const beforeFreezeDays = overallSubject ? streak.freezeDays : 0;
-  await syncOverallFreezeDays(userLabel, timezone);
+  // Pass the locally-constructed streak to avoid redundant reads inside syncOverallFreezeDays
+  const syncResult = await syncOverallFreezeDays(userLabel, timezone, updatedStreak);
 
   if (overallSubject) {
-    const refreshedOverall = await getOrCreateUserStreak(userLabel, OVERALL_STREAK_SUBJECT, timezone);
+    const refreshedOverall = syncResult.updatedOverall;
     freezeEarned = refreshedOverall.freezeDays > beforeFreezeDays;
     return { streak: refreshedOverall, isNewDay: true, freezeEarned };
   }

@@ -59,7 +59,7 @@ function createInMemoryStore(seed: Array<{
     },
     updateOAuth: async (
       userId: string,
-      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string }
+      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string | null }
     ) => {
       const index = users.findIndex((user) => user.id === userId);
       if (index >= 0) {
@@ -833,7 +833,7 @@ describe('mobile oauth login', () => {
 
     expect(user.oauthProvider).toBe('google');
     expect(users[0].oauthSubject).toBe('subject-123');
-    expect(users[0].passwordHash).not.toBeNull();
+    expect(users[0].passwordHash).toBeNull();
   });
 
   it('rejects oauth signup when email is missing', async () => {

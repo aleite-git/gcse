@@ -303,7 +303,8 @@ export async function getAllAttempts(limit: number = 100): Promise<Attempt[]> {
  * Hash an IP address for privacy
  */
 function hashIp(ip: string): string {
-  return crypto.createHash('sha256').update(ip).digest('hex').substring(0, 16);
+  const salt = process.env.IP_HASH_SALT || 'gcse-quiz-default-salt';
+  return crypto.createHash('sha256').update(salt + ip).digest('hex').substring(0, 16);
 }
 
 /**

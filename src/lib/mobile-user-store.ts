@@ -74,7 +74,7 @@ export function createFirestoreMobileUserStore(): MobileUserStore {
     },
     async updateOAuth(
       userId: string,
-      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string }
+      update: { oauthProvider: 'google' | 'apple'; oauthSubject: string; passwordHash?: string | null }
     ): Promise<void> {
       await collection.doc(userId).update(update);
     },
