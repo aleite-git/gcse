@@ -381,6 +381,28 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
+## FEATURE
+
+### FEAT-001: Add `/api/version` endpoint (BE)
+**Area:** Backend
+**Files:** `src/app/api/version/route.ts` (new), `package.json`
+**Description:** Create a public GET endpoint that returns the backend version. Return `package.json` version and the build commit SHA (from `COMMIT_SHA` env var set by Cloud Build). Example response:
+```json
+{ "version": "0.1.0", "commit": "5473e50" }
+```
+**Effort:** Trivial
+
+---
+
+### FEAT-002: Show FE and BE version in Settings screen (FE)
+**Area:** Mobile
+**Files:** `mobile/src/screens/SettingsScreen.tsx` (or equivalent)
+**Depends on:** FEAT-001
+**Description:** Display app version (from `expo-constants` or `app.json`) and backend version (fetched from `/api/version`) in small muted text at the bottom of the Settings screen. Format: `App v0.1.0 · API v0.1.0 (5473e50)`. Fetch BE version on mount; show placeholder if the call fails.
+**Effort:** Small
+
+---
+
 ## Summary
 
 | Priority | Open | Closed | Quick Wins Remaining |
