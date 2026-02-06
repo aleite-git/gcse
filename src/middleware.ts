@@ -21,6 +21,7 @@ const publicApiRoutes = [
   '/api/admin/account-deletion/run',
   '/api/admin/subscription-override',
   '/api/v1/subscription/webhook',
+  '/api/version',
 ];
 const HSTS_HEADER = 'max-age=31536000; includeSubDomains; preload';
 

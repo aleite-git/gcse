@@ -6,6 +6,20 @@ info:
 servers:
   - url: https://gcse-quiz-997951122924.europe-west1.run.app
 paths:
+  /api/version:
+    get:
+      summary: Get backend version and build info
+      description: Public endpoint returning the app version from package.json and the build commit SHA.
+      responses:
+        '200':
+          description: Version info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionResponse'
+              example:
+                version: '0.1.0'
+                commit: '5473e50'
   /api/v1/me:
     get:
       summary: Get current user profile
@@ -1221,6 +1235,18 @@ components:
           type: string
         adminOverride:
           type: boolean
+    VersionResponse:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          description: App version from package.json (semver).
+        commit:
+          type: string
+          nullable: true
+          description: Short git commit SHA from the build. Null in local development.
     ErrorResponse:
       type: object
       required:

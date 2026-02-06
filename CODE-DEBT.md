@@ -383,14 +383,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ## FEATURE
 
-### FEAT-001: Add `/api/version` endpoint (BE)
-**Area:** Backend
-**Files:** `src/app/api/version/route.ts` (new), `package.json`
-**Description:** Create a public GET endpoint that returns the backend version. Return `package.json` version and the build commit SHA (from `COMMIT_SHA` env var set by Cloud Build). Example response:
-```json
-{ "version": "0.1.0", "commit": "5473e50" }
-```
-**Effort:** Trivial
+### ~~FEAT-001: Add `/api/version` endpoint (BE)~~ DONE
+**Status:** Implemented. `GET /api/version` returns `{ version, commit }` from package.json + `COMMIT_SHA` env var. Added to `publicApiRoutes` in middleware, documented in `openapi.yaml`, tests pass.
 
 ---
 
@@ -398,7 +392,19 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 **Area:** Mobile
 **Files:** `mobile/src/screens/SettingsScreen.tsx` (or equivalent)
 **Depends on:** FEAT-001
-**Description:** Display app version (from `expo-constants` or `app.json`) and backend version (fetched from `/api/version`) in small muted text at the bottom of the Settings screen. Format: `App v0.1.0 · API v0.1.0 (5473e50)`. Fetch BE version on mount; show placeholder if the call fails.
+**Description:** Display app version and backend version in small muted text at the bottom of the Settings screen.
+
+**API contract** (see `docs/openapi.yaml`):
+```
+GET /api/version  (public, no auth required)
+→ { "version": "0.1.0", "commit": "5473e50" | null }
+```
+
+**Implementation notes:**
+1. **FE version:** Read from `expo-constants` (`Constants.expoConfig?.version`) or `app.json` version field.
+2. **BE version:** Fetch `GET /api/version` on mount. Cache the result for the session (it won't change).
+3. **Display format:** `App v{FE_VERSION} · API v{BE_VERSION} ({COMMIT})` in small muted text (e.g. `fontSize: 12, color: '#999'`). If commit is null, omit the parenthetical. If the fetch fails, show `API: unavailable`.
+4. **Placement:** Bottom of Settings screen, below all other content, with top margin.
 **Effort:** Small
 
 ---
