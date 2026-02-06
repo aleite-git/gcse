@@ -1,5 +1,7 @@
 import { getDb, COLLECTIONS } from './firebase';
 import { UserStreak, StreakStatus, StreakSubject } from '@/types';
+import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
+import { subDays } from 'date-fns';
 
 // Configuration
 const MAX_FREEZES = 2; // Maximum freeze days a user can hold
@@ -85,9 +87,9 @@ export function getTodayInTimezone(timezone: string): string {
  * Get yesterday's date in the user's timezone (YYYY-MM-DD)
  */
 function getYesterdayInTimezone(timezone: string): string {
-  const now = new Date();
-  now.setDate(now.getDate() - 1);
-  return now.toLocaleDateString('en-CA', { timeZone: timezone });
+  const zonedNow = toZonedTime(new Date(), timezone);
+  const zonedYesterday = subDays(zonedNow, 1);
+  return formatInTimeZone(zonedYesterday, timezone, 'yyyy-MM-dd');
 }
 
 /**

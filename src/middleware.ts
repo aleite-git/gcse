@@ -34,7 +34,10 @@ function getSecretKey(): Uint8Array {
 
 async function verifyToken(token: string): Promise<{ label: string; isAdmin: boolean } | null> {
   try {
-    const { payload } = await jwtVerify(token, getSecretKey());
+    const { payload } = await jwtVerify(token, getSecretKey(), {
+      issuer: 'gcse-quiz',
+      audience: 'gcse-quiz-web',
+    });
     return {
       label: payload.label as string,
       isAdmin: payload.isAdmin as boolean,
@@ -62,7 +65,7 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = publicRoutes.some(
     (route) => pathname === route || pathname.startsWith('/api/login')
   );
-  const isPublicApiRoute = publicApiRoutes.some((route) => pathname.startsWith(route));
+  const isPublicApiRoute = publicApiRoutes.includes(pathname);
 
   if (isPublicRoute || isPublicApiRoute) {
     const response = NextResponse.next();

@@ -66,6 +66,8 @@ export async function createSessionToken(label: string, isAdmin: boolean): Promi
   return new SignJWT(payload as unknown as JWTPayload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
+    .setIssuer('gcse-quiz')
+    .setAudience('gcse-quiz-web')
     .setExpirationTime(`${SESSION_DURATION}s`)
     .sign(getSecretKey());
 }
@@ -75,7 +77,10 @@ export async function createSessionToken(label: string, isAdmin: boolean): Promi
  */
 export async function verifySessionToken(token: string): Promise<SessionPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, getSecretKey());
+    const { payload } = await jwtVerify(token, getSecretKey(), {
+      issuer: 'gcse-quiz',
+      audience: 'gcse-quiz-web',
+    });
     return payload as unknown as SessionPayload;
   } catch {
     return null;

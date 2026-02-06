@@ -60,12 +60,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-009: Add email allowlist to admin subscription override
-**Area:** Security
-**Files:** `src/app/api/admin/subscription-override/route.ts:18-38`
-**Problem:** The endpoint verifies a Google ID token is valid but does not check which account made the request. Any valid Google token matching the audience can toggle overrides for any user.
-**Fix:** Add an env var `ADMIN_EMAILS` with a comma-separated allowlist. After verifying the token, check `ticket.getPayload().email` against the list.
-**Effort:** Small
+### ~~DEBT-009: Add email allowlist to admin subscription override~~ DONE
+**Status:** Fixed. `verifyGoogleIdToken` now extracts `payload.email` and checks against `ADMIN_EMAILS` env var (defaults to `armando.leite@gmail.com`). All tests pass.
 
 ---
 
@@ -102,12 +98,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-014: Fix `scoring.test.ts` and `validation.test.ts` to import actual source
-**Area:** Testing
-**Files:** `__tests__/scoring.test.ts`, `__tests__/validation.test.ts`
-**Problem:** Both files define their own inline copies of `calculateScore` and `validateSubmission` rather than importing from the actual source modules. Tests pass even if real logic drifts.
-**Fix:** Import the actual functions from their source modules. Remove the inline reimplementations.
-**Effort:** Small
+### ~~DEBT-014: Fix `scoring.test.ts` and `validation.test.ts` to import actual source~~ DONE
+**Status:** Fixed. Extracted `calculateScore` and `validateSubmission` into `src/lib/quiz-scoring.ts`. Tests now import from actual source. `submitQuizAttempt` uses `calculateScore` from the module. All tests pass.
 
 ---
 
@@ -122,12 +114,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ## MEDIUM
 
-### DEBT-016: Add JWT issuer and audience claims
-**Area:** Security
-**Files:** `src/lib/auth.ts:60-71`
-**Problem:** JWT has no `iss` or `aud` claims. If the same `SESSION_SECRET` is reused across environments, tokens are cross-accepted.
-**Fix:** Add `.setIssuer('gcse-quiz')` and `.setAudience('gcse-quiz-web')` to `createSessionToken`. Verify in `verifySessionToken`.
-**Effort:** Small
+### ~~DEBT-016: Add JWT issuer and audience claims~~ DONE
+**Status:** Fixed. Added `iss: gcse-quiz` and `aud: gcse-quiz-web` to token creation and verification in both `auth.ts` and `middleware.ts`. All tests pass.
 
 ---
 
@@ -217,12 +205,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-027: Use exact matching for public API routes in middleware
-**Area:** Security
-**Files:** `src/middleware.ts:65`
-**Problem:** `publicApiRoutes.some(route => pathname.startsWith(route))` allows any sub-path to bypass auth.
-**Fix:** Use exact match: `publicApiRoutes.includes(pathname)` or regex with `$` anchor.
-**Effort:** Small
+### ~~DEBT-027: Use exact matching for public API routes in middleware~~ DONE
+**Status:** Fixed. Changed `pathname.startsWith(route)` to `publicApiRoutes.includes(pathname)` for exact matching. All tests pass.
 
 ---
 
@@ -285,19 +269,8 @@ Generated from code review on 2026-02-05. Tickets ordered by priority within eac
 
 ---
 
-### DEBT-035: Fix `getYesterdayInTimezone` timezone bug
-**Area:** Code Quality / Data Integrity
-**Files:** `src/lib/streak.ts:87-91`
-**Problem:** Uses `setDate()` on system-local `new Date()`, then formats with target timezone. Near midnight, when server timezone differs from target, this yields the wrong "yesterday". The `date.ts` module correctly uses `date-fns-tz`.
-**Fix:** Rewrite using `date-fns` and `date-fns-tz` like the rest of the app:
-```typescript
-import { subDays } from 'date-fns';
-import { formatInTimeZone } from 'date-fns-tz';
-function getYesterdayInTimezone(timezone: string): string {
-  return formatInTimeZone(subDays(new Date(), 1), timezone, 'yyyy-MM-dd');
-}
-```
-**Effort:** Small
+### ~~DEBT-035: Fix `getYesterdayInTimezone` timezone bug~~ DONE
+**Status:** Fixed. Rewrote using `toZonedTime` + `subDays` + `formatInTimeZone` from date-fns-tz, matching the pattern used in `date.ts`. All tests pass.
 
 ---
 
@@ -425,7 +398,7 @@ function getYesterdayInTimezone(timezone: string): string {
 | Priority | Open | Closed | Quick Wins Remaining |
 |----------|------|--------|----------------------|
 | CRITICAL | 2 | 3 (002, 004, 005) | — |
-| HIGH | 5 | 4 (006, 007, 010, 013) | DEBT-011, DEBT-014 |
-| MEDIUM | 12 | 1 (022) | DEBT-016, DEBT-018, DEBT-020, DEBT-021, DEBT-023, DEBT-025, DEBT-027, DEBT-031, DEBT-032, DEBT-034, DEBT-035, DEBT-036, DEBT-037, DEBT-038 |
-| LOW | 10 | 1 (028) | DEBT-039, DEBT-040, DEBT-041, DEBT-042, DEBT-043, DEBT-044, DEBT-046 |
-| **Total** | **39 open** | **9 closed** | **23 quick wins** |
+| HIGH | 4 | 6 (006, 007, 009, 010, 013, 014) | DEBT-011 |
+| MEDIUM | 18 | 5 (016, 022, 027, 028, 035) | DEBT-018, DEBT-020, DEBT-021, DEBT-023, DEBT-025, DEBT-031, DEBT-032, DEBT-034, DEBT-036, DEBT-037, DEBT-038 |
+| LOW | 10 | 0 | DEBT-039, DEBT-040, DEBT-041, DEBT-042, DEBT-043, DEBT-044, DEBT-046 |
+| **Total** | **34 open** | **14 closed** | **19 quick wins** |

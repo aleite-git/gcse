@@ -11,6 +11,10 @@ type OverrideRequestBody = {
 
 const oauthClient = new OAuth2Client();
 
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'armando.leite@gmail.com')
+  .split(',')
+  .map((e) => e.trim().toLowerCase());
+
 function reject(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
@@ -31,7 +35,12 @@ async function verifyGoogleIdToken(request: Request) {
     const audience = process.env.ADMIN_OVERRIDE_AUDIENCE ?? defaultAudience;
 
     const ticket = await oauthClient.verifyIdToken({ idToken, audience });
-    return Boolean(ticket.getPayload());
+    const payload = ticket.getPayload();
+    if (!payload?.email) {
+      return false;
+    }
+
+    return ADMIN_EMAILS.includes(payload.email.toLowerCase());
   } catch (error) {
     console.warn('Admin override token verification failed:', error);
     return false;

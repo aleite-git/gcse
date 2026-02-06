@@ -1,8 +1,9 @@
 import { getDb, COLLECTIONS } from './firebase';
-import { DailyAssignment, Attempt, Answer, TopicBreakdown, Question, Subject } from '@/types';
+import { DailyAssignment, Attempt, Answer, Question, Subject } from '@/types';
 import { getLastNDaysLondon, getTodayLondon, getTomorrowLondon } from './date';
 import { selectQuizQuestions, getQuestionsByIds } from './questions';
 import { recordQuestionAttempts } from './questionStats';
+import { calculateScore } from './quiz-scoring';
 import crypto from 'crypto';
 
 export class QuizValidationError extends Error {
@@ -213,26 +214,7 @@ export async function submitQuizAttempt(
   const attemptNumber = existingAttempts.length + 1;
 
   // Calculate score and topic breakdown
-  let score = 0;
-  const topicBreakdown: TopicBreakdown = {};
-
-  for (const question of questions) {
-    const answer = answers.find((a) => a.questionId === question.id);
-    const isCorrect = answer?.selectedIndex === question.correctIndex;
-
-    if (isCorrect) {
-      score++;
-    }
-
-    // Update topic breakdown
-    if (!topicBreakdown[question.topic]) {
-      topicBreakdown[question.topic] = { correct: 0, total: 0 };
-    }
-    topicBreakdown[question.topic].total++;
-    if (isCorrect) {
-      topicBreakdown[question.topic].correct++;
-    }
-  }
+  const { score, topicBreakdown } = calculateScore(questions, answers);
 
   // Create attempt document
   const attemptData: Omit<Attempt, 'id'> = {

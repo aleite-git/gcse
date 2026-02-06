@@ -1,45 +1,7 @@
 import { describe, it, expect } from '@jest/globals';
-
-// Test validation logic for quiz submission
+import { validateSubmission } from '@/lib/quiz-scoring';
 
 describe('Quiz Submission Validation', () => {
-  // Simulate the validation logic from the submit endpoint
-  function validateSubmission(answers: Array<{ questionId: string; selectedIndex: number }>, assignedQuestionIds: string[]) {
-    const errors: string[] = [];
-
-    // Check that the answer count matches today's assigned questions.
-    if (answers.length !== assignedQuestionIds.length) {
-      errors.push(`Must answer all ${assignedQuestionIds.length} questions`);
-    }
-
-    // Check that all answers have required fields
-    for (const answer of answers) {
-      if (!answer.questionId || typeof answer.selectedIndex !== 'number') {
-        errors.push('Invalid answer format');
-        break;
-      }
-
-      if (answer.selectedIndex < 0 || answer.selectedIndex > 3) {
-        errors.push('Invalid answer selection');
-        break;
-      }
-    }
-
-    // Check that all answers refer to assigned questions
-    const assignedIds = new Set(assignedQuestionIds);
-    for (const answer of answers) {
-      if (!assignedIds.has(answer.questionId)) {
-        errors.push(`Question ${answer.questionId} is not part of today's quiz`);
-        break;
-      }
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
-  }
-
   const validQuestionIds = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'];
 
   it('should accept valid submission with 6 answers', () => {

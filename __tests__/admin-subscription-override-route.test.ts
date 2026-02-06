@@ -87,7 +87,7 @@ describe('admin subscription override route', () => {
   it('requires adminOverride in the payload', async () => {
     getDb.mockReturnValue({ collection: jest.fn() });
     verifyIdToken.mockResolvedValue({
-      getPayload: () => ({ sub: 'tester' }),
+      getPayload: () => ({ sub: 'tester', email: 'armando.leite@gmail.com' }),
     });
 
     const request = new Request('http://localhost/api/admin/subscription-override', {
@@ -109,7 +109,7 @@ describe('admin subscription override route', () => {
   it('requires a user id or email', async () => {
     getDb.mockReturnValue({ collection: jest.fn() });
     verifyIdToken.mockResolvedValue({
-      getPayload: () => ({ sub: 'tester' }),
+      getPayload: () => ({ sub: 'tester', email: 'armando.leite@gmail.com' }),
     });
 
     const request = new Request('http://localhost/api/admin/subscription-override', {
@@ -132,7 +132,7 @@ describe('admin subscription override route', () => {
     const { collection } = createFirestoreMock([]);
     getDb.mockReturnValue({ collection: () => collection });
     verifyIdToken.mockResolvedValue({
-      getPayload: () => ({ sub: 'tester' }),
+      getPayload: () => ({ sub: 'tester', email: 'armando.leite@gmail.com' }),
     });
 
     const request = new Request('http://localhost/api/admin/subscription-override', {
@@ -160,7 +160,7 @@ describe('admin subscription override route', () => {
     ]);
     getDb.mockReturnValue({ collection: () => collection });
     verifyIdToken.mockResolvedValue({
-      getPayload: () => ({ sub: 'tester' }),
+      getPayload: () => ({ sub: 'tester', email: 'armando.leite@gmail.com' }),
     });
 
     const request = new Request('http://localhost/api/admin/subscription-override', {
